@@ -1,6 +1,6 @@
 {
     "tagName": {
-        "name": "costCenter1",
+        "value": "costCenter1",
         "type": "string"
     }
 }
