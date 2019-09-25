@@ -1,4 +1,5 @@
 {
+   "mode": "ind",
    "policyRule": {
       "if": {
          "field": "[concat('tags[', parameters('tagName'), ']')]",
