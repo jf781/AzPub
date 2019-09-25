@@ -1,25 +1,23 @@
-{
-   "properties": {
-      "displayName": "Requires \"Tag Name\" tag",
-      "policyType": "Custom",
-      "mode": "Indexed",
-      "description": "Audits all applicable resources to validate if the \"Tag Name\" tag is present.",
-      "parameters": {
-         "tagName": {
-            "type": "String",
-            "metadata": {
-               "description": "Name of the tag - \"Tag Name\""
-            }
-         }
-      },
-      "policyRule": {
-         "if": {
-            "field": "[concat('tags[', parameters('tagName'), ']')]",
-            "exists": "false"
-         },
-         "then": {
-            "effect": "audit"
-         }
-      }      
+
+"displayName": "Requires \"Tag Name\" tag",
+"policyType": "Custom",
+"mode": "Indexed",
+"description": "Audits all applicable resources to validate if the \"Tag Name\" tag is present.",
+"parameters": {
+   "tagName": {
+      "type": "String",
+      "metadata": {
+         "description": "Name of the tag - \"Tag Name\""
+      }
    }
-}
+},
+"policyRule": {
+   "if": {
+      "field": "[concat('tags[', parameters('tagName'), ']')]",
+      "exists": "false"
+   },
+   "then": {
+      "effect": "audit"
+   }
+}      
+   
