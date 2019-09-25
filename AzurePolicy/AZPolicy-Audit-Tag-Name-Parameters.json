@@ -1,6 +1,9 @@
 {
     "tagName": {
-        "value": "costCenter2",
-        "type": "string"
+        "type": "string",
+        "metadata":{
+            "displayName": "CostCenter",
+            "descritpion": "This better work or I'm getting drunk tonight"
+        }
     }
 }
