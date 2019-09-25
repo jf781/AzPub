@@ -1,7 +1,14 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
-  "parameters": {},
+  "parameters": {
+    "tagName": {
+      "type": "string",
+      "metadata": {
+          "description": "Passes parameter to the Ta"
+      }
+    }
+  },
   "variables": {},
   "resources": [
     {
@@ -24,7 +31,7 @@
         },
         "policyRule": {
            "if": {
-                "field": "[concat('tags[',parameters('tagName'),']')]",
+                "field": "[parameters('tagName')]",
                 "exists": "false"
            },
            "then": {
