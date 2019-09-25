@@ -1,7 +1,8 @@
 {
    "properties": {
-       "mode": "indexed",
-       "policyType": "Custom",
+      "displayname": "Test",
+      "description": "testing",
+      "mode": "indexed",
       "parameters": {
          "tagName": {
             "type": "String",
@@ -10,16 +11,15 @@
             }
          }
       },
-      "displayname": "Test",
-   "policyRule": {
-      "if": {
-         "field": "[concat('tags[', parameters('tagName'), ']')]",
-         "exists": "false"
-      },
-      "then": {
-         "effect": "audit"
-      }
-   }
-} 
+      "policyRule": {
+         "if": {
+            "field": "[concat('tags[', parameters('tagName'), ']')]",
+            "exists": "false"
+         },
+         "then": {
+            "effect": "audit"
+         }
+      }  
+   } 
 }    
    
