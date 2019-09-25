@@ -10,13 +10,6 @@
             "metadata": {
                "description": "Name of the tag - \"Tag Name\""
             }
-         },
-         "tagValue": {
-            "type": "String",
-            "metadata": {
-                "displayname": "\"Tag Name\"",
-                "description": "Insert description of \"Tag Name\""
-            }
          }
       },
       "policyRule": {
