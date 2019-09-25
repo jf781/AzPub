@@ -5,7 +5,7 @@
     "tagName": {
       "type": "string",
       "metadata": {
-          "description": "Passes parameter to the Ta"
+          "description": "Passes parameter to the G"
       }
     }
   },
@@ -31,7 +31,7 @@
         },
         "policyRule": {
            "if": {
-                "field": "[parameters('tagName')]",
+                "field": "[concat('tags[', parameters('tagName'), ']')]",
                 "exists": "false"
            },
            "then": {
