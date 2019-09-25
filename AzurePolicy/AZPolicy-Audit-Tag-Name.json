@@ -1,12 +1,12 @@
 {
-      "policyRule": {
-         "if": {
-            "field": "[concat('tags[', parameters('tagName'), ']')]",
-            "exists": "false"
-         },
-         "then": {
-            "effect": "audit"
-         }
-      }  
-   }     
+   "policyRule": {
+      "if": {
+         "field": "[concat('tags[', parameters('tagName'), ']')]",
+         "exists": "false"
+      },
+      "then": {
+         "effect": "audit"
+      }
+   }  
+}  
    
