@@ -1,7 +1,6 @@
 {
-    "Parameters": {
-        "tagName": {
-        "value": "costCenter1"
-        }
+    "tagName": {
+        "name": "costCenter1",
+        "type": "string"
     }
 }
