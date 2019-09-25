@@ -10,6 +10,7 @@
             }
          }
       },
+      "displayname": "Test",
    "policyRule": {
       "if": {
          "field": "[concat('tags[', parameters('tagName'), ']')]",
