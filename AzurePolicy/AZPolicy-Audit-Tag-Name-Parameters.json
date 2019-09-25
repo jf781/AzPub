@@ -7,3 +7,14 @@
         }
     }
 }
+
+
+
+
+
+New-AzPolicyDefinition -Name "audit-resourceGroup-tags" 
+-DisplayName "Audit resource groups missing tags" -description "Audit resource groups that doesn't have particular tag" 
+-Policy 'https://raw.githubusercontent.com/Azure/azure-policy/master/samples/ResourceGroup/audit-resourceGroup-tags/azurepolicy.rules.json' 
+-Parameter 'https://raw.githubusercontent.com/Azure/azure-policy/master/samples/ResourceGroup/audit-resourceGroup-tags/azurepolicy.parameters.json' 
+-Mode All
+$definition
