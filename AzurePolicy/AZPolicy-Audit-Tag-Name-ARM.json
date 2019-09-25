@@ -10,8 +10,8 @@
   "resources": [
     {
       "type": "Microsoft.Authorization/policyDefinitions",
-      "name": "allowed-role-definitions-def",
-      "apiVersion": "2018-03-01",
+      "name": "Audit \"Tag Name\"",
+      "apiVersion": "2019-01-01",
       "properties": {
         "displayName": "Requires \"Tag Name\" tag",
         "policyType": "Custom",
