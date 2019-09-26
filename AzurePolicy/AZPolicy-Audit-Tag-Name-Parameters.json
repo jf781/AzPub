@@ -2,8 +2,7 @@
     "tagName": {
         "type": "string",
         "metadata":{
-            "displayName": "CostCenter",
-            "descritpion": "This better work or I'm getting drunk tonight"
+            "displayName": "Required Tag"
         }
     }
 }
