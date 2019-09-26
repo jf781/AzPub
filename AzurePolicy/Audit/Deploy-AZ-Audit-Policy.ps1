@@ -14,6 +14,7 @@ $Sub = "/subscriptions/" + (Get-AzSubscription).SubscriptionId
 # Assigns the policy to the current subscription
 New-AzPolicyAssignment -Name "Audit Resource Tags" `
 -PolicyDefinition $Definitions `
+-Description "Checks for the tags defined in the 'Parameters' section and then audits all applicable resources to verify if those tags are present" `
 -Scope $Sub `
 -PolicyParameterObject $PolicyParameters
 
