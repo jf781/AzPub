@@ -1,5 +1,4 @@
 {
-   "policyType": "Custom",
    "mode": "Indexed",
    "description": "Auditing for required tags",
    "if": {
