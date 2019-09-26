@@ -1,5 +1,4 @@
 {
-   "mode": "Indexed",
    "description": "Auditing for required tags",
    "if": {
       "field": "[concat('tags[',parameters('tagName'),']')]",
