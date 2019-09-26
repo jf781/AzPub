@@ -1,9 +1,4 @@
 {
-   "properties": {
-      "policyType": "Custom",
-      "mode": "Indexed",
-      "description": "Auditing for required tags"
-   },
    "policyRule": {
       "if": {
          "field": "[concat('tags[',parameters('tagName'),']')]",
@@ -12,6 +7,11 @@
       "then": {
          "effect": "audit"
       }  
-   } 
+   },
+   "properties": {
+      "policyType": "Custom",
+      "mode": "Indexed",
+      "description": "Auditing for required tags"
+   }
 } 
    
