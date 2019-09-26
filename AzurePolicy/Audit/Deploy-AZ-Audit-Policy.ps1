@@ -2,8 +2,8 @@
 $Definitions = New-AzPolicyDefinition -Name "Audit Resource Tags" `
 -Description "Audits all resources to ensure necessary tags are created" `
 -Mode Indexed `
--Policy /%PathtoFile%/AZPolicy-Audit-Tag-Name.json `
--Parameter /%PathToFile%/AZPolicy-Audit-Tag-Name-Parameters.json
+-Policy https://raw.githubusercontent.com/jf781/AzPub/master/AzurePolicy/Audit/AZPolicy-Audit-Tag-Name.json `
+-Parameter https://raw.githubusercontent.com/jf781/AzPub/master/AzurePolicy/Audit/AZPolicy-Audit-Tag-Name-Parameters.json
 
 # Defines the Required resource tags your auditing
 $PolicyParameters = @{tagname1="CostCenter";tagName2="Owner"}
