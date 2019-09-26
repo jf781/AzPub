@@ -1,17 +1,10 @@
 {
-   "policyRule": {
-      "if": {
-         "field": "[concat('tags[',parameters('tagName'),']')]",
-         "exists": "false"
-      },
-      "then": {
-         "effect": "audit"
-      }  
+   "if": {
+      "field": "[concat('tags[',parameters('tagName'),']')]",
+      "exists": "false"
    },
-   "properties": {
-      "policyType": "Custom",
-      "mode": "Indexed",
-      "description": "Auditing for required tags"
-   }
+   "then": {
+      "effect": "audit"
+   }  
 } 
    
