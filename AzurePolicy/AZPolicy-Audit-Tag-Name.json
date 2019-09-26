@@ -1,15 +1,13 @@
 {
-   "properties": {
-      "policyType": "Custom",
-      "mode": "Indexed",
-      "description": "Auditing for required tags",
-      "if": {
-         "field": "[concat('tags[',parameters('tagName'),']')]",
-         "exists": "false"
-      },
-      "then": {
-         "effect": "audit"
-      }  
-   } 
-} 
+   "policyType": "Custom",
+   "mode": "Indexed",
+   "description": "Auditing for required tags",
+   "if": {
+      "field": "[concat('tags[',parameters('tagName'),']')]",
+      "exists": "false"
+   },
+   "then": {
+      "effect": "audit"
+   }  
+}  
    
