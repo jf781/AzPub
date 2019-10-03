@@ -1,3 +1,8 @@
+
+#Define the tags that you wish to check for 
+$Tag1 = "CostCenter"
+$Tag2 = "MaintenanceWindow"
+
 # Creates the Policy Definition
 $Definitions = New-AzPolicyDefinition -Name "Audit Resource Tags" `
 -Description "Audits all resources to ensure necessary tags are created" `
@@ -6,7 +11,7 @@ $Definitions = New-AzPolicyDefinition -Name "Audit Resource Tags" `
 -Parameter https://raw.githubusercontent.com/jf781/AzPub/master/AzurePolicy/Audit/AZPolicy-Audit-Tag-Name-Parameters.json
 
 # Defines the Required resource tags your auditing
-$PolicyParameters = @{tagname1="CostCenter";tagName2="Owner"}
+$PolicyParameters = @{tagname1=$Tag1;tagName2=$Tag2}
 
 # Defines the current subscription as the scope for the policy
 $Sub = "/subscriptions/" + (Get-AzSubscription).SubscriptionId
