@@ -1,7 +1,7 @@
 
 #Define the tags that you wish to check for 
-$Tag1 = "CostCenter"
-$Tag2 = "MaintenanceWindow"
+$Tag1 = "costcenter"
+$Tag2 = "owner"
 
 # Creates the Policy Definition
 $Definitions = New-AzPolicyDefinition -Name "Audit Resource Tags" `
