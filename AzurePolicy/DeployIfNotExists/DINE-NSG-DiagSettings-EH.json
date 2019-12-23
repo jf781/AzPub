@@ -1,0 +1,185 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.Network/networkSecurityGroups"
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "[parameters('profileName')]",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "allOf":[
+                                {
+                                    "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                    "equals": "[parameters('eventEnabled')]"
+                                },
+                                {
+                                    "field": "Microsoft.Insights/diagnosticSettings/logs[*].category",
+                                    "equals": "NetworkSecurityGroupEvent"
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                                    "equals": "[parameters('ruleCounterEnabled')]"
+                                },
+                                {
+                                    "field": "Microsoft.Insights/diagnosticSettings/logs[*].category",
+                                    "equals": "NetworkSecurityGroupRuleCounter"
+                                }
+                            ]
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                            "matchInsensitively": "[parameters('eventHubRuleId')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                            "matchInsensitively": "[parameters('eventHub')]"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa"
+                ],
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "nsgName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "EventHub" :{
+                                    "type": "string"
+                                },
+                                "eventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eventEnabled": {
+                                    "type": "string"
+                                },
+                                "ruleCounterEnabled": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                }
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Network/networksecuritygroups/providers/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[concat(parameters('nsgName'),'/','Microsoft.Insights/',parameters('profileName'))]",
+                                    "location": "[parameters('location')]",
+                                    "dependsOn": [],
+                                    "properties": {
+                                        "eventHubName" : "[parameters('EventHub')]",
+                                        "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
+                                        "logs": [
+                                            {
+                                                "category": "NetworkSecurityGroupRuleCounter",
+                                                "enabled": "[parameters('ruleCounterEnabled')]"
+                                            },
+                                            {
+                                                "category": "NetworkSecurityGroupEvent",
+                                                "enabled": "[parameters('eventEnabled')]"
+                                            }   
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {}
+                        },
+                        "parameters": {
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "nsgName": {
+                                "value": "[field('name')]"
+                            },
+                            "EventHub":{
+                                "value": "[parameters('EventHub')]"
+                            },
+                            "eventHubRuleId": {
+                                "value": "[parameters('eventHubRuleId')]"
+                            },
+                            "eventEnabled": {
+                                "value": "[parameters('eventEnabled')]"
+                            },
+                            "ruleCounterEnabled": {
+                                "value": "[parameters('ruleCounterEnabled')]"
+                            },
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setbypolicy"
+        },
+        "EventHub":{
+            "type": "string",
+            "metadata":{
+                "displayName": "Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event Hub Authorization Rule Id",
+                "description": "The Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eventEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable NSG Event",
+                "description": "Whether to enable NSG Event stream to the Event Hub - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "ruleCounterEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable NSG Rule Counter",
+                "description": "Whether to enable NSG Rule Count stream to the Event Hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        }
+    }
+}

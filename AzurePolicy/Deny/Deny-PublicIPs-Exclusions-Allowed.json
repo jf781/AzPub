@@ -1,0 +1,29 @@
+{
+    "mode": "Indexed",
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Network/networkInterfaces"
+                },
+                {
+                    "not": {
+                        "field": "Microsoft.Network/networkInterfaces/ipconfigurations[*].publicIpAddress.id",
+                        "notLike": "*"
+                    }
+                },
+                {
+                    "not": {
+                        "field": "tags['Excluded']",
+                        "equals": "Yes"
+                    }
+                }
+            ]
+        },
+        "then": {
+            "effect": "deny"
+        }
+    },
+    "parameters": {}
+}
