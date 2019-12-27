@@ -39,10 +39,6 @@
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
                             "matchInsensitively": "[parameters('eventHubRuleId')]"
-                        },
-                        {
-                            "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
-                            "matchInsensitively": "[parameters('eventHub')]"
                         }
                     ]
                 },
@@ -77,6 +73,9 @@
                                 },
                                 "profileName": {
                                     "type": "string"
+                                },
+                                "eventHubName":{
+                                    "type":"string"
                                 }
                             },
                             "resources": [
@@ -87,7 +86,7 @@
                                     "location": "[parameters('location')]",
                                     "dependsOn": [],
                                     "properties": {
-                                        "eventHubName" : "[parameters('EventHub')]",
+                                        "eventHubName" : "[parameters('EventHubName')]",
                                         "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
                                         "logs": [
                                             {
@@ -125,6 +124,9 @@
                             },
                             "profileName": {
                                 "value": "[parameters('profileName')]"
+                            },
+                            "eventHubName": {
+                                "value": "[last(split(parameters('eventHub'),'/'))]"
                             }
                         }
                     }

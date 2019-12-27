@@ -19,10 +19,6 @@
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
                             "matchInsensitively": "[parameters('eventHubRuleId')]"
-                        },
-                        {
-                            "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
-                            "matchInsensitively": "[parameters('eventHub')]"
                         }
                     ]
                 },
@@ -51,6 +47,9 @@
                                 },
                                 "auditLoggingEnabled": {
                                     "type": "string"
+                                },
+                                "eventHubName":{
+                                    "type": "string"
                                 }
                             },
                             "resources": [
@@ -59,7 +58,7 @@
                                     "type": "Microsoft.Sql/servers/auditingSettings",
                                     "apiVersion": "2017-03-01-preview",
                                     "properties": {
-                                        "eventHubName": "[parameters('eventHub')]",
+                                        "eventHubName": "[parameters('eventHubName')]",
                                         "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
                                         "logs": "[parameters('auditLoggingEnabled')]"
                                     }
@@ -82,6 +81,9 @@
                             },
                             "auditLoggingEnabled": {
                                 "value": "[parameters('auditLoggingEnabled')]"
+                            },
+                            "eventHubName": {
+                                "value": "[last(split(parameters('eventHub'),'/'))]"
                             }
                         }
                     }
