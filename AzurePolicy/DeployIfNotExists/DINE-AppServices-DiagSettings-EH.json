@@ -1,30 +1,34 @@
 {
-    "mode": "Indexed",
+    "mode": "All",
     "policyRule": {
         "if": {
             "field": "type",
-            "equals": "Microsoft.Sql/servers"
+            "equals": "Microsoft.Web/sites"
         },
         "then": {
-            "effect": "DeployIfNotExists",
+            "effect": "deployIfNotExists",
             "details": {
-                "type": "Microsoft.Sql/servers/auditingSettings",
-                "name": "Default",
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "[parameters('profileName')]",
                 "existenceCondition": {
                     "allOf": [
                         {
-                            "field": "Microsoft.Sql/auditingSettings.state",
-                            "equals": "[parameters('auditLoggingEnabled')]"
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "equals": "true"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "equals": "true"
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
-                            "matchInsensitively": "[parameters('eventHubRuleId')]"
+                            "like": "*"
                         }
                     ]
                 },
                 "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/056cd41c-7e88-42e1-933e-88ba6a50c9c3",
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa"
+                    "/providers/microsoft.authorization/roleDefinitions/2cc479cb-7b4d-49a8-b449-8c00fd0f0a4b",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
                 ],
                 "deployment": {
                     "properties": {
@@ -39,28 +43,67 @@
                                 "profileName": {
                                     "type": "string"
                                 },
-                                "EventHub": {
-                                    "type": "string"
-                                },
                                 "eventHubRuleId": {
                                     "type": "string"
                                 },
-                                "auditLoggingEnabled": {
+                                "eventHubName":{
                                     "type": "string"
                                 },
-                                "eventHubName":{
+                                "appServiceAppLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceHTTPLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceConsoleLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceFileAuditLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceAuditLogs": {
+                                    "type": "string"
+                                },
+                                "allMetrics":{
                                     "type": "string"
                                 }
                             },
                             "resources": [
                                 {
-                                    "name": "[concat(parameters('serverName'), '/', parameters('profileName'))]",
-                                    "type": "Microsoft.Sql/servers/auditingSettings",
-                                    "apiVersion": "2017-03-01-preview",
+                                    "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                                    "name": "[concat(parameters('serverName'), '/Microsoft.Insights/', parameters('profileName'))]",
+                                    "apiVersion": "2017-05-01-preview",
                                     "properties": {
                                         "eventHubName": "[parameters('eventHubName')]",
                                         "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
-                                        "logs": "[parameters('auditLoggingEnabled')]"
+                                        "logs": [
+                                            {
+                                                "category": "AppServiceHTTPLogs",
+                                                "enabled": "[parameters('appServiceHTTPLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceConsoleLogs",
+                                                "enabled": "[parameters('appServiceConsoleLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceAppLogs",
+                                                "enabled": "[parameters('appServiceAppLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceFileAuditLogs",
+                                                "enabled": "[parameters('AppServiceFileAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceAuditLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
+                                            }
+                                        ],
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('allMetrics')]"
+                                            }
+                                        ]
                                     }
                                 }
                             ],
@@ -73,17 +116,29 @@
                             "profileName": {
                                 "value": "[parameters('profileName')]"
                             },
-                            "EventHub": {
-                                "value": "[parameters('EventHub')]"
-                            },
                             "eventHubRuleId": {
                                 "value": "[parameters('eventHubRuleId')]"
                             },
-                            "auditLoggingEnabled": {
-                                "value": "[parameters('auditLoggingEnabled')]"
-                            },
                             "eventHubName": {
                                 "value": "[last(split(parameters('eventHub'),'/'))]"
+                            },
+                            "appServiceHTTPLogs": {
+                                "value":"[parameters('appServiceHTTPLogs')]"
+                            },
+                            "appServiceConsoleLogs":{
+                                "value":"[parameters('appServiceConsoleLogs')]"
+                            },
+                            "appServiceAppLogs": {
+                                "value":"[parameters('appServiceAppLogs')]"
+                            },
+                            "appServiceFileAuditLogs": {
+                                "value":"[parameters('appServiceFileAuditLogs')]"
+                            },
+                            "appServiceAuditLogs": {
+                                "value":"[parameters('appServiceAuditLogs')]"
+                            },
+                            "allMetrics": {
+                                "value":"[parameters('allMetrics')]"
                             }
                         }
                     }
@@ -100,8 +155,8 @@
             },
             "defaultValue": "setByPolicy"
         },
-        "EventHub": {
-            "type": "string",
+        "eventHub": {
+            "type": "String",
             "metadata": {
                 "displayName": "Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
@@ -128,7 +183,7 @@
             ],
             "defaultValue": "true"
         },
-        "AppServiceConsoleLogs": {
+        "appServiceConsoleLogs": {
             "type": "String",
             "metadata": {
                 "displayName": "Enable App Service Console Logging ",
@@ -140,7 +195,7 @@
             ],
             "defaultValue": "true"
         },
-        "AppServiceAppLogs": {
+        "appServiceAppLogs": {
             "type": "String",
             "metadata": {
                 "displayName": "Enable App Service Application Logging ",
@@ -152,7 +207,7 @@
             ],
             "defaultValue": "true"
         },
-        "AppServiceFileAuditLogs": {
+        "appServiceFileAuditLogs": {
             "type": "String",
             "metadata": {
                 "displayName": "Enable App Service File Audit Logging ",
@@ -164,11 +219,23 @@
             ],
             "defaultValue": "true"
         },
-        "AppServiceAuditLogs": {
+        "appServiceAuditLogs": {
             "type": "String",
             "metadata": {
                 "displayName": "Enable App Service Audit Logging ",
                 "description": "Whether to log 'Login activity via FTP and Kudu' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "allMetrics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable metric monitoring ",
+                "description": "Logs all metrics available to Microsoft.Web/Sites provider - True or False"
             },
             "allowedValues": [
                 "true",

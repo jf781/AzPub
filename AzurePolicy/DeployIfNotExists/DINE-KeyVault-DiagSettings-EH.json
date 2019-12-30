@@ -3,7 +3,7 @@
     "policyRule": {
         "if": {
             "field": "type",
-            "equals": "Microsoft.Network/networkSecurityGroups"
+            "equals": "Microsoft.KeyVault/vaults"
         },
         "then": {
             "effect": "deployIfNotExists",
@@ -17,14 +17,19 @@
                             "equals": "true"
                         },
                         {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "equals": "true"
+                        },
+                        {
                             "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
                             "like": "*"
                         }
                     ]
                 },
                 "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7",
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa"
+                    "/providers/microsoft.authorization/roleDefinitions/f25e0fa2-a7c8-4377-a976-54943a77a395",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
                 ],
                 "deployment": {
                     "properties": {
@@ -33,50 +38,48 @@
                             "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                             "contentVersion": "1.0.0.0",
                             "parameters": {
-                                "nsgName": {
+                                "kvName": {
                                     "type": "string"
                                 },
                                 "location": {
                                     "type": "string"
                                 },
-                                "EventHub" :{
-                                    "type": "string"
-                                },
                                 "eventHubRuleId": {
                                     "type": "string"
                                 },
-                                "eventEnabled": {
+                                "auditEvent": {
                                     "type": "string"
                                 },
-                                "ruleCounterEnabled": {
+                                "captureMetrics": {
                                     "type": "string"
                                 },
                                 "profileName": {
                                     "type": "string"
                                 },
-                                "eventHubName":{
-                                    "type":"string"
+                                "eventHubName": {
+                                    "type": "string"
                                 }
                             },
                             "resources": [
                                 {
-                                    "type": "Microsoft.Network/networksecuritygroups/providers/diagnosticSettings",
+                                    "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
                                     "apiVersion": "2017-05-01-preview",
-                                    "name": "[concat(parameters('nsgName'),'/','Microsoft.Insights/',parameters('profileName'))]",
+                                    "name": "[concat(parameters('kvName'),'/','Microsoft.Insights/',parameters('profileName'))]",
                                     "location": "[parameters('location')]",
-                                    "dependsOn": [],
                                     "properties": {
-                                        "eventHubName" : "[parameters('EventHubName')]",
+                                        "eventHubName": "[parameters('EventHubName')]",
                                         "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
                                         "logs": [
                                             {
-                                                "category": "NetworkSecurityGroupRuleCounter",
-                                                "enabled": "[parameters('ruleCounterEnabled')]"
-                                            },
+                                                "category": "AuditEvent",
+                                                "enabled": "[parameters('auditEvent')]"
+                                            }
+                                        ],
+                                        "metrics": [
                                             {
-                                                "category": "NetworkSecurityGroupEvent",
-                                                "enabled": "[parameters('eventEnabled')]"
-                                            }   
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('captureMetrics')]"
+                                            }
                                         ]
                                     }
                                 }
@@ -87,20 +90,17 @@
                             "location": {
                                 "value": "[field('location')]"
                             },
-                            "nsgName": {
+                            "kvName": {
                                 "value": "[field('name')]"
-                            },
-                            "EventHub":{
-                                "value": "[parameters('EventHub')]"
                             },
                             "eventHubRuleId": {
                                 "value": "[parameters('eventHubRuleId')]"
                             },
-                            "eventEnabled": {
-                                "value": "[parameters('eventEnabled')]"
+                            "auditEvent": {
+                                "value": "[parameters('auditEvent')]"
                             },
-                            "ruleCounterEnabled": {
-                                "value": "[parameters('ruleCounterEnabled')]"
+                            "captureMetrics": {
+                                "value": "[parameters('captureMetrics')]"
                             },
                             "profileName": {
                                 "value": "[parameters('profileName')]"
@@ -123,9 +123,9 @@
             },
             "defaultValue": "setbypolicy"
         },
-        "EventHub":{
+        "EventHub": {
             "type": "string",
-            "metadata":{
+            "metadata": {
                 "displayName": "Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
@@ -139,11 +139,11 @@
                 "assignPermissions": true
             }
         },
-        "eventEnabled": {
+        "auditEvent": {
             "type": "String",
             "metadata": {
-                "displayName": "Enable NSG Event",
-                "description": "Whether to enable NSG Event stream to the Event Hub - True or False"
+                "displayName": "Audit Events",
+                "description": "Whether to stream KeyVault Events to the Event Hub - True or False"
             },
             "allowedValues": [
                 "True",
@@ -151,11 +151,11 @@
             ],
             "defaultValue": "True"
         },
-        "ruleCounterEnabled": {
+        "captureMetrics": {
             "type": "String",
             "metadata": {
-                "displayName": "Enable NSG Rule Counter",
-                "description": "Whether to enable NSG Rule Count stream to the Event Hub  - True or False"
+                "displayName": "All Metrics",
+                "description": "Whether to stream KeyVault Metrics to the Event Hub  - True or False"
             },
             "allowedValues": [
                 "True",
