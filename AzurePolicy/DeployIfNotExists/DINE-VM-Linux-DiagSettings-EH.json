@@ -1,0 +1,262 @@
+{
+    "mode": "Indexed",
+    "policyRule": {
+        "if": {
+            "allOf": [
+                {
+                    "field": "type",
+                    "equals": "Microsoft.Compute/virtualMachines"
+                },
+                {
+                    "field": "Microsoft.Compute/imagePublisher",
+                    "equals": "MicrosoftWindowsServer"
+                },
+                {
+                    "field": "Microsoft.Compute/imageOffer",
+                    "equals": "WindowsServer"
+                }
+            ]
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.Compute/virtualMachines/extensions",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Compute/virtualMachines/extensions/type",
+                            "equals": "IaaSDiagnostics"
+                        },
+                        {
+                            "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
+                            "equals": "Microsoft.Azure.Diagnostics"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+                ],
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "vmName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "diagStorageAccount": {
+                                    "type": "string"
+                                },
+                                "eventHubName": {
+                                    "type": "string"
+                                },
+                                "EventHubNs": {
+                                    "type": "string"
+                                },
+                                "eventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eventHubAccessKeyName": {
+                                    "type": "string"
+                                },
+                                "storageKey": {
+                                    "type": "string"
+                                }
+                            },
+                            "resources": [
+                                {
+                                    "name": "[concat(parameters('vmName'),'/IaasDiagnostics')]",
+                                    "type": "Microsoft.Compute/virtualMachines/extensions",
+                                    "location": "[parameters('location')]",
+                                    "apiVersion": "2017-12-01",
+                                    "properties": {
+                                        "publisher": "Microsoft.Azure.Diagnostics",
+                                        "type": "LinuxDiagnostic",
+                                        "typeHandlerVersion": "3.0",
+                                        "autoUpgradeMinorVersion": true,
+                                        "settings": {
+                                            "StorageAccount": "[parameters('diagStorageAccount')]",
+                                            "sampleRateInSeconds": 15,
+                                            "ladCfg": {
+                                                "diagnosticMonitorConfiguration": {
+                                                    "performanceCounters": {
+                                                        "sinks": "MyMetricEventHub,MyJsonMetricsBlob",
+                                                        "performanceCounterConfiguration": [
+                                                            {
+                                                                "unit": "Percent",
+                                                                "type": "builtin",
+                                                                "counter": "PercentProcessorTime",
+                                                                "counterSpecifier": "/builtin/Processor/PercentProcessorTime",
+                                                                "annotation": [
+                                                                    {
+                                                                        "locale": "en-us",
+                                                                        "displayName": "Aggregate CPU %utilization"
+                                                                    }
+                                                                ],
+                                                                "condition": "IsAggregate=TRUE",
+                                                                "class": "Processor"
+                                                            },
+                                                            {
+                                                                "unit": "Bytes",
+                                                                "type": "builtin",
+                                                                "counter": "UsedSpace",
+                                                                "counterSpecifier": "/builtin/FileSystem/UsedSpace",
+                                                                "annotation": [
+                                                                    {
+                                                                        "locale": "en-us",
+                                                                        "displayName": "Used disk space on /"
+                                                                    }
+                                                                ],
+                                                                "condition": "Name=\"/\"",
+                                                                "class": "Filesystem"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "metrics": {
+                                                        "metricAggregation": [
+                                                            {
+                                                                "scheduledTransferPeriod": "PT1H"
+                                                            },
+                                                            {
+                                                                "scheduledTransferPeriod": "PT1M"
+                                                            }
+                                                        ],
+                                                        "resourceId": "[resourceId('Microsoft.Compute/virtualMachines',parameters('vmName'))]"
+                                                    },
+                                                    "eventVolume": "Large",
+                                                    "syslogEvents": {
+                                                        "sinks": "SyslogJsonBlob,LoggingEventHub",
+                                                        "syslogEventConfiguration": {
+                                                            "LOG_USER": "LOG_INFO"
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            "perfCfg": [
+                                                {
+                                                    "query": "SELECT PercentProcessorTime, PercentIdleTime FROM SCX_ProcessorStatisticalInformation WHERE Name='_TOTAL'",
+                                                    "table": "LinuxCpu",
+                                                    "frequency": 60,
+                                                    "sinks": "LinuxCpuJsonBlob,LinuxCpuEventHub"
+                                                }
+                                            ],
+                                            "fileLogs": [
+                                                {
+                                                    "file": "/var/log/myladtestlog",
+                                                    "table": "MyLadTestLog",
+                                                    "sinks": "FilelogJsonBlob,LoggingEventHub"
+                                                }
+                                            ]
+                                        },
+                                        "protectedSettings": {
+                                            "storageAccountName": "[parameters('diagStorageAccount')]",
+                                            "storageAccountSasToken": "[listAccountSas(resourceId(parameters('diagStorageAccount'), 2019-06-01).accountSasToken)]",
+                                            "sinksConfig": {
+                                                "sink": [
+                                                    {
+                                                        "name": "SyslogJsonBlob",
+                                                        "type": "JsonBlob"
+                                                    },
+                                                    {
+                                                        "name": "FilelogJsonBlob",
+                                                        "type": "JsonBlob"
+                                                    },
+                                                    {
+                                                        "name": "LinuxCpuJsonBlob",
+                                                        "type": "JsonBlob"
+                                                    },
+                                                    {
+                                                        "name": "MyJsonMetricsBlob",
+                                                        "type": "JsonBlob"
+                                                    },
+                                                    {
+                                                        "name": "LinuxCpuEventHub",
+                                                        "type": "EventHub",
+                                                        "sasURL": "https://youreventhubnamespace.servicebus.windows.net/youreventhubpublisher?sr=https%3a%2f%2fyoureventhubnamespace.servicebus.windows.net%2fyoureventhubpublisher%2f&sig=fake_signature&se=1808096361&skn=yourehpolicy"
+                                                    },
+                                                    {
+                                                        "name": "MyMetricEventHub",
+                                                        "type": "EventHub",
+                                                        "sasURL": "https://youreventhubnamespace.servicebus.windows.net/youreventhubpublisher?sr=https%3a%2f%2fyoureventhubnamespace.servicebus.windows.net%2fyoureventhubpublisher%2f&sig=yourehpolicy&skn=yourehpolicy"
+                                                    },
+                                                    {
+                                                        "name": "LoggingEventHub",
+                                                        "type": "EventHub",
+                                                        "sasURL": "https://youreventhubnamespace.servicebus.windows.net/youreventhubpublisher?sr=https%3a%2f%2fyoureventhubnamespace.servicebus.windows.net%2fyoureventhubpublisher%2f&sig=yourehpolicy&se=1808096361&skn=yourehpolicy"
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "parameters": {
+                            "vmName": {
+                                "value": "[field('name')]"
+                            },
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "diagStorageAccount": {
+                                "value": "[parameters('diagStorageAccount')]"
+                            },
+                            "eventHubName": {
+                                "value": "[last(split(parameters('eventHub'),'/'))]"
+                            },
+                            "EventHubNs": {
+                                "value": "[first(skip(split(parameters('eventHubRuleId'),'/'),int('8')))]"
+                            },
+                            "eventHubRuleId": {
+                                "value": "[parameters('eventHubRuleId')]"
+                            },
+                            "eventHubAccessKeyName": {
+                                "value": "[last(split(parameters('eventHubRuleId'),'/'))]"
+                            },
+                            "storageKey": {
+                                "value": "[parameters('storageKey')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "diagStorageAccount": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Diagnostic Storage Account"
+            }
+        },
+        "EventHub": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event Hub Authorization Rule Id",
+                "description": "The Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "storageKey": {
+            "type": "String",
+            "metadata": {
+                "displayName": "This the key that is used to authenticate with the Storage Account.",
+                "description": "This key should only have 'Send' permissions to the the EventHub in case it was to be comprimised"
+            }
+        }
+    }
+}
