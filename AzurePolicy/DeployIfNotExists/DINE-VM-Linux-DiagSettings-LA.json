@@ -239,10 +239,10 @@
                                     }
                                 }
                             ],
-                            "outputs": {
+                            "output": {
                                 "policy": {
                                     "type": "string",
-                                    "value": "[concat('Enabled extension for VM', ': ', parameters('vmName'))]"
+                                    "value": "[concat('Enabled Diagnostic extension for VM', ': ', parameters('vmName'),'. Sending diagnostic logs to Log Analytics workspace', parameters('logAnalyticsWorkspacer'))]"
                                 }
                             }
                         },

@@ -107,7 +107,12 @@
                                     }
                                 }
                             ],
-                            "outputs": {}
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('Configured diagnostic settings to be sent to EventHub ', parameters('EventHubName'), 'for AppServer ', parameters('serverName'),'.')]"
+                                }
+                            }
                         },
                         "parameters": {
                             "serverName": {

@@ -1,0 +1,163 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.KeyVault/vaults"
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "name": "[parameters('profileName')]",
+        "existenceCondition": {
+          "allOf": [
+            {
+                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                "equals": "[parameters('logsEnabled')]"
+            },
+            {
+                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                "equals": "[parameters('metricsEnabled')]"
+            },
+            {
+                "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                "like": "*"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+          "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "kvName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "logAnalyticsWorkspace": {
+                  "type": "string"
+                },
+                "metricsEnabled": {
+                  "type": "string"
+                },
+                "logsEnabled": {
+                  "type": "string"
+                },
+                "profileName": {
+                  "type": "string"
+                }
+              },
+              "variables": {},
+              "resources": [
+                {
+                  "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('kvName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                    "metrics": [
+                      {
+                        "category": "AllMetrics",
+                        "enabled": "[parameters('metricsEnabled')]",
+                        "retentionPolicy": {
+                          "enabled": false,
+                          "days": 0
+                        }
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "AuditEvent",
+                        "enabled": "[parameters('logsEnabled')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                    "type": "string",
+                    "value": "[concat('Configured diagnostic settings to be sent to Log Analytics workspace ', parameters('logAnalyticsWorkspace'), 'for KeyVault ', parameters('kvName'),'.')]"
+                }
+              }
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "kvName": {
+                "value": "[field('name')]"
+              },
+              "logAnalyticsWorkspace": {
+                "value": "[parameters('logAnalyticsWorkspace')]"
+              },
+              "metricsEnabled": {
+                "value": "[parameters('metricsEnabled')]"
+              },
+              "logsEnabled": {
+                "value": "[parameters('logsEnabled')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setbypolicy_logAnalytics"
+    },
+    "logAnalyticsWorkspace": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Log Analytics workspace",
+        "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+        "strongType": "omsWorkspace",
+        "assignPermissions": true
+      }
+    },
+    "metricsEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable metrics",
+        "description": "Whether to enable metrics stream to the Event Hub - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "logsEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable logs",
+        "description": "Whether to enable logs stream to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    }
+  }
+}

@@ -81,7 +81,12 @@
                                     }
                                 }
                             ],
-                            "outputs": {}
+                            "output": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('NSG:',parameters('nsgName'),' - Is now sending diagnostic logs to Log Analytics Workspace:', parameters('logAnalyticsWorkspace'))]"
+                                }
+                            }
                         },
                         "parameters": {
                             "location": {

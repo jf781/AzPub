@@ -114,7 +114,7 @@
                             "outputs": {
                                 "policy": {
                                     "type": "string",
-                                    "value": "The Activity Log is sending events to EventHub"
+                                    "value": "[concat('The Activity Log is sending events to EventHub ',parameters('eventHubName'),'.')]"
                                 }
                             }
                         },

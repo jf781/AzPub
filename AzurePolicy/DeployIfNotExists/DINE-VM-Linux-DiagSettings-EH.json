@@ -195,7 +195,13 @@
                                         }
                                     }
                                 }
-                            ]
+                            ],
+                            "output": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('Enabled Diagnostic extension for VM', ': ', parameters('vmName'),'. Sending diagnostic logs to EventHub ', parameters('eventHubName'))]"
+                                }
+                            }
                         },
                         "parameters": {
                             "vmName": {

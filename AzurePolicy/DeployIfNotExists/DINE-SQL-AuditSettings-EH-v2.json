@@ -81,7 +81,12 @@
                   }
                 }
               ],
-              "outputs": {}
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat('Configured diagnostic settings to be sent to EventHub ', parameters('eventHubName'), 'for SQL server ', parameters('serverName'),'.')]"
+                }
+              }
             },
             "parameters": {
               "serverName": {
