@@ -87,7 +87,7 @@
                             "outputs": {
                                 "policy": {
                                     "type": "string",
-                                    "value": "[concat('Configured diagnostic settings to be sent to EventHub ', parameters('eventHubName'), 'for KeyVault ', parameters('kvName'),'.')]"
+                                    "value": "[concat('Configured diagnostic settings to be sent to EventHub ', parameters('eventHubName'), ' for KeyVault ', parameters('kvName'),'.')]"
                                 }
                             }
                         },
