@@ -9,7 +9,8 @@
             "effect": "deployIfNotExists",
             "details": {
                 "type": "Microsoft.Insights/diagnosticSettings",
-                "name": "[parameters('profileName')]",
+                "name": "centralus",
+                "existenceScope": "subscription",
                 "existenceCondition": {
                     "allOf": [
                         {
@@ -27,11 +28,13 @@
                     "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec",
                     "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
                 ],
+                "deploymentScope": "subscription",
                 "deployment": {
+                    "location": "centralus",
                     "properties": {
                         "mode": "incremental",
                         "template": {
-                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
                             "contentVersion": "1.0.0.0",
                             "parameters": {
                                 "profileName": {
@@ -49,16 +52,19 @@
                                 "logSecurityEvents": {
                                     "type": "string"
                                 },
+                                "logServiceHealth" : {
+                                    "type": "string"
+                                },
                                 "logAlerts": {
                                     "type": "string"
                                 },
                                 "logRecomendations": {
                                     "type": "string"
                                 },
-                                "logPolicies": {
+                                "logPolicy": {
                                     "type": "string"
                                 },
-                                "logAutoscales": {
+                                "logAutoscale": {
                                     "type": "string"
                                 },
                                 "logResourceHealth":{
@@ -97,11 +103,11 @@
                                             },
                                             {
                                                 "category": "Policy",
-                                                "enabled": "[parameters('logPolicies')]"
+                                                "enabled": "[parameters('logPolicy')]"
                                             },
                                             {
                                                 "category": "Autoscale",
-                                                "enabled": "[parameters('logAutoscales')]"
+                                                "enabled": "[parameters('logAutoScale')]"
                                             },
                                             {
                                                 "category": "ResourceHealth",
@@ -168,7 +174,7 @@
             "defaultValue": "setbypolicy"
         },
         "EventHub": {
-            "type": "string",
+            "type": "String",
             "metadata": {
                 "displayName": "Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
