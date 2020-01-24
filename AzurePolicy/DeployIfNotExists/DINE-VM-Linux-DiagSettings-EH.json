@@ -8,12 +8,165 @@
                     "equals": "Microsoft.Compute/virtualMachines"
                 },
                 {
-                    "field": "Microsoft.Compute/imagePublisher",
-                    "equals": "MicrosoftWindowsServer"
-                },
-                {
-                    "field": "Microsoft.Compute/imageOffer",
-                    "equals": "WindowsServer"
+                    "anyOf": [
+                        {
+                            "field": "Microsoft.Compute/imageId",
+                            "in": "[parameters('listOfImageIdToInclude')]"
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/imagePublisher",
+                                    "equals": "RedHat"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageOffer",
+                                    "in": [
+                                        "RHEL",
+                                        "RHEL-SAP-HANA"
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "6.*"
+                                        },
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "7*"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/imagePublisher",
+                                    "equals": "SUSE"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageOffer",
+                                    "in": [
+                                        "SLES",
+                                        "SLES-HPC",
+                                        "SLES-HPC-Priority",
+                                        "SLES-SAP",
+                                        "SLES-SAP-BYOS",
+                                        "SLES-Priority",
+                                        "SLES-BYOS",
+                                        "SLES-SAPCAL",
+                                        "SLES-Standard"
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "12*"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/imagePublisher",
+                                    "equals": "Canonical"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageOffer",
+                                    "equals": "UbuntuServer"
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "14.04*LTS"
+                                        },
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "16.04*LTS"
+                                        },
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "18.04*LTS"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/imagePublisher",
+                                    "equals": "Oracle"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageOffer",
+                                    "equals": "Oracle-Linux"
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "6.*"
+                                        },
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "7.*"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/imagePublisher",
+                                    "equals": "OpenLogic"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageOffer",
+                                    "in": [
+                                        "CentOS",
+                                        "Centos-LVM",
+                                        "CentOS-SRIOV"
+                                    ]
+                                },
+                                {
+                                    "anyOf": [
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "6.*"
+                                        },
+                                        {
+                                            "field": "Microsoft.Compute/imageSKU",
+                                            "like": "7*"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "allOf": [
+                                {
+                                    "field": "Microsoft.Compute/imagePublisher",
+                                    "equals": "cloudera"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageOffer",
+                                    "equals": "cloudera-centos-os"
+                                },
+                                {
+                                    "field": "Microsoft.Compute/imageSKU",
+                                    "like": "7*"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -25,7 +178,7 @@
                     "allOf": [
                         {
                             "field": "Microsoft.Compute/virtualMachines/extensions/type",
-                            "equals": "IaaSDiagnostics"
+                            "equals": "LinuxDiagnostics"
                         },
                         {
                             "field": "Microsoft.Compute/virtualMachines/extensions/publisher",
@@ -69,6 +222,9 @@
                                     "type": "string"
                                 }
                             },
+                            "variables":{
+                                "eventHubSAS": "[last(split(ListKeys(parameters('eventHubRuleId'), '2017-04-01').primaryConnectionString)'=')]"
+                            },
                             "resources": [
                                 {
                                     "name": "[concat(parameters('vmName'),'/IaasDiagnostics')]",
@@ -86,7 +242,7 @@
                                             "ladCfg": {
                                                 "diagnosticMonitorConfiguration": {
                                                     "performanceCounters": {
-                                                        "sinks": "MyMetricEventHub,MyJsonMetricsBlob",
+                                                        "sinks": "linuxEventHub",
                                                         "performanceCounterConfiguration": [
                                                             {
                                                                 "unit": "Percent",
@@ -131,7 +287,7 @@
                                                     },
                                                     "eventVolume": "Large",
                                                     "syslogEvents": {
-                                                        "sinks": "SyslogJsonBlob,LoggingEventHub",
+                                                        "sinks": "linuxEventHub",
                                                         "syslogEventConfiguration": {
                                                             "LOG_USER": "LOG_INFO"
                                                         }
@@ -143,14 +299,14 @@
                                                     "query": "SELECT PercentProcessorTime, PercentIdleTime FROM SCX_ProcessorStatisticalInformation WHERE Name='_TOTAL'",
                                                     "table": "LinuxCpu",
                                                     "frequency": 60,
-                                                    "sinks": "LinuxCpuJsonBlob,LinuxCpuEventHub"
+                                                    "sinks": "linuxEventHub"
                                                 }
                                             ],
                                             "fileLogs": [
                                                 {
                                                     "file": "/var/log/myladtestlog",
                                                     "table": "MyLadTestLog",
-                                                    "sinks": "FilelogJsonBlob,LoggingEventHub"
+                                                    "sinks": "linuxEventHub"
                                                 }
                                             ]
                                         },
@@ -160,35 +316,9 @@
                                             "sinksConfig": {
                                                 "sink": [
                                                     {
-                                                        "name": "SyslogJsonBlob",
-                                                        "type": "JsonBlob"
-                                                    },
-                                                    {
-                                                        "name": "FilelogJsonBlob",
-                                                        "type": "JsonBlob"
-                                                    },
-                                                    {
-                                                        "name": "LinuxCpuJsonBlob",
-                                                        "type": "JsonBlob"
-                                                    },
-                                                    {
-                                                        "name": "MyJsonMetricsBlob",
-                                                        "type": "JsonBlob"
-                                                    },
-                                                    {
-                                                        "name": "LinuxCpuEventHub",
+                                                        "name": "linuxEventHub",
                                                         "type": "EventHub",
-                                                        "sasURL": "https://youreventhubnamespace.servicebus.windows.net/youreventhubpublisher?sr=https%3a%2f%2fyoureventhubnamespace.servicebus.windows.net%2fyoureventhubpublisher%2f&sig=fake_signature&se=1808096361&skn=yourehpolicy"
-                                                    },
-                                                    {
-                                                        "name": "MyMetricEventHub",
-                                                        "type": "EventHub",
-                                                        "sasURL": "https://youreventhubnamespace.servicebus.windows.net/youreventhubpublisher?sr=https%3a%2f%2fyoureventhubnamespace.servicebus.windows.net%2fyoureventhubpublisher%2f&sig=yourehpolicy&skn=yourehpolicy"
-                                                    },
-                                                    {
-                                                        "name": "LoggingEventHub",
-                                                        "type": "EventHub",
-                                                        "sasURL": "https://youreventhubnamespace.servicebus.windows.net/youreventhubpublisher?sr=https%3a%2f%2fyoureventhubnamespace.servicebus.windows.net%2fyoureventhubpublisher%2f&sig=yourehpolicy&se=1808096361&skn=yourehpolicy"
+                                                        "sasURL": "[concat('https://',parameters('eventHubNs'),'.servicebus.windows.net/',parameters('eventHubName'),'?',variable('eventHubSAS'))]"
                                                     }
                                                 ]
                                             }
