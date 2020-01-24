@@ -393,6 +393,14 @@
                 "displayName": "This the key that is used to authenticate with the Storage Account.",
                 "description": "This key should only have 'Send' permissions to the the EventHub in case it was to be comprimised"
             }
+        },
+        "listOfImageIdToInclude": {
+            "type": "Array",
+            "metadata": {
+                "displayName": "Optional: List of VM images that have supported Linux OS to add to scope",
+                "description": "Example value: '/subscriptions/<subscriptionId>/resourceGroups/YourResourceGroup/providers/Microsoft.Compute/images/ContosoStdImage'"
+            },
+            "defaultValue": []
         }
     }
 }
