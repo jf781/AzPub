@@ -1,1 +1,2 @@
-Repo is used for publically accessible repos
+## Contains Azure Policie Templates
+
