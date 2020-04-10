@@ -179,7 +179,8 @@
             "type": "String",
             "metadata": {
                 "displayName": "Diagnostic Storage Account Name",
-                "description": "Please enter only the name of the Diagnostic Storage Account"
+                "description": "Please enter only the name of the Diagnostic Storage Account",
+                "strongType": "Microsoft.Storage/storageAccounts"
             }
         },
         "EventHub": {
