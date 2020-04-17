@@ -1,0 +1,244 @@
+{
+    "mode": "all",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.ApiManagement/service"
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/312a565d-c81f-4fd8-895a-4e21e48d571c",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                ],
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "matchInsensitively": "[parameters('gatewayRequests')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "matchInsensitively": "[parameters('gatewayRequests')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                            "matchInsensitively": "[parameters('logAnalyticsWorkspace')]"
+                        }
+                    ]
+                },
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "apiMgmtName": {
+                                    "type": "string"
+                                },
+                                "logAnalyticsWorkspace": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "profileName":{
+                                    "type": "string"
+                                },
+                                "gatewayRequests": {
+                                    "type": "string"
+                                },
+                                "capacity": {
+                                    "type": "string"
+                                },
+                                "eventHubEvents":{
+                                    "type": "string"
+                                },
+                                "gatewayLogs":{
+                                    "type": "string"
+                                },
+                                "networkStatus":{
+                                    "type": "string"
+                                }
+                            },
+                            "variables": {},
+                            "resources": [
+                                {
+                                    "type": "Microsoft.ApiManagement/service/providers/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[concat(parameters('apiMgmtName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                    "location": "[parameters('location')]",
+                                    "dependsOn": [],
+                                    "properties": {
+                                        "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                                        "metrics": [
+                                            {
+                                                "category": "Gateway Requests",
+                                                "enabled": "[parameters('gatewayRequests')]",
+                                                "retentionPolicy": {
+                                                    "days": 0,
+                                                    "enabled": false
+                                                },
+                                                "timeGrain": null
+                                            },
+                                            {
+                                                "category": "Capacity",
+                                                "enabled": "[parameters('capacity')]",
+                                                "retentionPolicy": {
+                                                    "days": 0,
+                                                    "enabled": false
+                                                },
+                                                "timeGrain": null
+                                            },
+                                            {
+                                                "category": "EventHub Events",
+                                                "enabled": "[parameters('eventHubEvents')]",
+                                                "retentionPolicy": {
+                                                    "days": 0,
+                                                    "enabled": false
+                                                },
+                                                "timeGrain": null
+                                            },
+                                            {
+                                                "category": "Network Status",
+                                                "enabled": "[parameters('networkStatus')]",
+                                                "retentionPolicy": {
+                                                    "days": 0,
+                                                    "enabled": false
+                                                },
+                                                "timeGrain": null
+                                            }
+                                        ],
+                                        "logs": [
+                                            {
+                                                "category": "GatewayLogs",
+                                                "enabled": "[parameters('gatewayLogs')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat(parameters('apiMgmtName'),' - Is now sending diagnostic logs to Log Analytics Workspace:', parameters('logAnalyticsWorkspace'))]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "logAnalyticsWorkspace": {
+                                "value": "[parameters('logAnalyticsWorkspace')]"
+                            },
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "apiMgmtName": {
+                                "value": "[field('name')]"
+                            },
+                            "profileName":{
+                                "value": "[parameters('profileName')]"
+                            },
+                            "gatewayRequests":{
+                                "value": "[parameters('gatewayRequests')]"
+                            },
+                            "capacity":{
+                                "value": "[parameters('capacity')]"
+                            },
+                            "eventHubEvents":{
+                                "value": "[parameters('eventHubEvents')]"
+                            },
+                            "gatewayLogs":{
+                                "value": "[parameters('gatewayLogs')]"
+                            },
+                            "networkStatus": {
+                                "value": "[parameters('networkStatus')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setByPolicy"
+        },
+        "logAnalyticsWorkspace": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Log Analyitcs workspace",
+                "description": "Select the Log Analytics workspace from dropdown list",
+                "strongType": "omsWorkspace"
+            }
+        },
+        "gatewayRequests": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Gateway Requests Events",
+                "description": "Whether to send Gateway Requests events to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "capacity": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Capacity data",
+                "description": "Whether to send Capacity data to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "eventHubEvents": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log EventHub events",
+                "description": "Whether to send EventHub events to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "networkStatus": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Network Status events",
+                "description": "Whether to send Network Status events to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "gatewayLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Gateway events",
+                "description": "Whether to send the Gateway Log to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        }
+    }
+}

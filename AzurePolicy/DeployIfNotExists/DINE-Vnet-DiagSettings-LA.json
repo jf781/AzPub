@@ -3,18 +3,26 @@
     "policyRule": {
         "if": {
             "field": "type",
-            "equals": "Microsoft.Network/networkSecurityGroups"
+            "equals": "Microsoft.Network/virtualNetworks"
         },
         "then": {
             "effect": "deployIfNotExists",
             "details": {
                 "type": "Microsoft.Insights/diagnosticSettings",
-                "name": "[parameters('profileName')]",
+                "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                ],
                 "existenceCondition": {
                     "allOf": [
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                            "equals": "[parameters('NetworkSecurityGroupEvent')]"
+                            "matchInsensitively": "[parameters('vmProtectionAlerts')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "matchInsensitively": "[parameters('metricsEnabled')]"
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
@@ -22,10 +30,6 @@
                         }
                     ]
                 },
-                "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
-                ],
                 "deployment": {
                     "properties": {
                         "mode": "incremental",
@@ -33,70 +37,76 @@
                             "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                             "contentVersion": "1.0.0.0",
                             "parameters": {
-                                "nsgName": {
-                                    "type": "string"
-                                },
-                                "location": {
-                                    "type": "string"
-                                },
-                                "ruleCounterEnabled": {
-                                    "type": "string"
-                                },
-                                "NetworkSecurityGroupEvent": {
+                                "vnetName": {
                                     "type": "string"
                                 },
                                 "logAnalyticsWorkspace": {
                                     "type": "string"
                                 },
-                                "profileName": {
+                                "location": {
+                                    "type": "string"
+                                },
+                                "metricsEnabled":{
+                                    "type": "string"
+                                },
+                                "vmProtectionAlerts": {
+                                    "type": "string"
+                                },
+                                "profileName":{
                                     "type": "string"
                                 }
                             },
                             "variables": {},
                             "resources": [
                                 {
-                                    "type": "Microsoft.Network/networkSecurityGroups/providers/diagnosticSettings",
+                                    "type": "Microsoft.Network/virtualNetworks/providers/diagnosticSettings",
                                     "apiVersion": "2017-05-01-preview",
-                                    "name": "[concat(parameters('nsgName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                    "name": "[concat(parameters('vnetName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [],
                                     "properties": {
                                         "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('metricsEnabled')]",
+                                                "retentionPolicy": {
+                                                    "enabled": false,
+                                                    "days": 0
+                                                }
+                                            }
+                                        ],
                                         "logs": [
                                             {
-                                                "category": "NetworkSecurityGroupRuleCounter",
-                                                "enabled": "[parameters('ruleCounterEnabled')]"
-                                            },
-                                            {
-                                                "category": "NetworkSecurityGroupEvent",
-                                                "enabled": "[parameters('NetworkSecurityGroupEvent')]"
+                                                "category": "VMProtectionAlerts",
+                                                "enabled": "[parameters('vmProtectionAlerts')]"
                                             }
                                         ]
                                     }
                                 }
                             ],
-                            "output": {
+                            "outputs": {
                                 "policy": {
                                     "type": "string",
-                                    "value": "[concat(parameters('nsgName'),' - Is now sending diagnostic logs to Log Analytics Workspace:', parameters('logAnalyticsWorkspace'))]"
+                                    "value": "[concat(parameters('vnetName'),' - Is now sending diagnostic logs to Log Analytics Workspace:', parameters('logAnalyticsWorkspace'))]"
                                 }
                             }
                         },
                         "parameters": {
-                            "location": {
-                                "value": "[field('location')]"
-                            },
-                            "nsgName": {
-                                "value": "[field('name')]"
-                            },
                             "logAnalyticsWorkspace": {
                                 "value": "[parameters('logAnalyticsWorkspace')]"
                             },
-                            "NetworkSecurityGroupEvent": {
-                                "value": "[parameters('NetworkSecurityGroupEvent')]"
+                            "location": {
+                                "value": "[field('location')]"
                             },
-                            "ruleCounterEnabled": {
-                                "value": "[parameters('ruleCounterEnabled')]"
+                            "vnetName": {
+                                "value": "[field('name')]"
+                            },
+                            "metricsEnabled":{
+                                "value": "[parameters('metricsEnabled')]"
+                            },
+                            "vmProtectionAlerts": {
+                                "value": "[parameters('vmProtectionAlerts')]"
                             },
                             "profileName": {
                                 "value": "[parameters('profileName')]"
@@ -114,22 +124,21 @@
                 "displayName": "Profile name",
                 "description": "The diagnostic settings profile name"
             },
-            "defaultValue": "setbypolicy"
+            "defaultValue": "setByPolicy"
         },
         "logAnalyticsWorkspace": {
-            "type": "String",
+            "type": "string",
             "metadata": {
-                "displayName": "Log Analytics workspace",
-                "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
-                "strongType": "omsWorkspace",
-                "assignPermissions": true
+                "displayName": "Log Analyitcs workspace",
+                "description": "Select the Log Analytics workspace from dropdown list",
+                "strongType": "omsWorkspace"
             }
         },
-        "NetworkSecurityGroupEvent": {
+        "metricsEnabled": {
             "type": "String",
             "metadata": {
-                "displayName": "Monitor NSG Events",
-                "description": "Whether to enable NSG Event stream to the Event Hub - True or False"
+                "displayName": "Enable metrics",
+                "description": "Whether to enable metrics stream to the Event Hub - True or False"
             },
             "allowedValues": [
                 "True",
@@ -137,11 +146,11 @@
             ],
             "defaultValue": "True"
         },
-        "ruleCounterEnabled": {
+        "vmProtectionAlerts": {
             "type": "String",
             "metadata": {
-                "displayName": "Enable NSG Rule Counter",
-                "description": "Whether to enable NSG Rule Count stream to the Event Hub  - True or False"
+                "displayName": "Enable VM Protection Alerts ",
+                "description": "Whether to send VM Protection Alerts to Log Analytics"
             },
             "allowedValues": [
                 "True",

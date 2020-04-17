@@ -1,0 +1,187 @@
+{
+    "mode": "all",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.Network/loadBalancers"
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                ],
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "matchInsensitively": "[parameters('LoadBalancerAlertEvent')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "matchInsensitively": "[parameters('metricsEnabled')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                            "matchInsensitively": "[parameters('logAnalyticsWorkspace')]"
+                        }
+                    ]
+                },
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "loadBalancerName": {
+                                    "type": "string"
+                                },
+                                "logAnalyticsWorkspace": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "metricsEnabled": {
+                                    "type": "string"
+                                },
+                                "LoadBalancerAlertEvent":{
+                                    "type": "string"
+                                },
+                                "LoadBalancerProbeHealthStatus": {
+                                    "type": "string"
+                                }
+                            },
+                            "variables": {
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Network/loadBalancers/providers/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[concat(parameters('loadBalancerName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                    "location": "[parameters('location')]",
+                                    "dependsOn": [
+                                    ],
+                                    "properties": {
+                                        "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "timeGrain": null,
+                                                "enabled": "[parameters('metricsEnabled')]",
+                                                "retentionPolicy": {
+                                                    "enabled": false,
+                                                    "days": 0
+                                                }
+                                            }
+                                        ],
+                                        "logs": [
+                                            {
+                                                "category": "LoadBalancerAlertEvent",
+                                                "enabled": "[parameters('LoadBalancerAlertEvent')]"
+                                            },
+                                            {
+                                                "category": "LoadBalancerProbeHealthStatus",
+                                                "enabled": "[parameters('LoadBalancerProbeHealthStatus')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat(parameters('loadBalancerName'),' - Is now sending diagnostic logs to Log Analytics Workspace:', parameters('logAnalyticsWorkspace'))]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "logAnalyticsWorkspace": {
+                                "value": "[parameters('logAnalyticsWorkspace')]"
+                            },
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "loadBalancerName": {
+                                "value": "[field('name')]"
+                            },
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "metricsEnabled": {
+                                "value": "[parameters('metricsEnabled')]"
+                            },
+                            "LoadBalancerAlertEvent": {
+                                "value": "[parameters('LoadBalancerAlertEvent')]"
+                            },
+                            "LoadBalancerProbeHealthStatus":{
+                                "value": "[parameters('LoadBalancerProbeHealthStatus')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setByPolicy"
+        },
+        "logAnalyticsWorkspace": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Log Analyitcs workspace",
+                "description": "Select the Log Analytics workspace from dropdown list",
+                "strongType": "omsWorkspace"
+            }
+        },
+        "metricsEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable metrics",
+                "description": "Whether to enable metrics stream to the Event Hub - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "LoadBalancerAlertEvent": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable Load Balancer Alerts ",
+                "description": "Whether to send Load Balancer Alerts to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "LoadBalancerProbeHealthStatus": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable Load Balancer Health Probe Events",
+                "description": "Whether to send Load Balancer Health Probe events to Log Analytics"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        }
+    }
+}
