@@ -1,0 +1,200 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.KeyVault/vaults"
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "[parameters('profileName')]",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "equals": "true"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "equals": "true"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                            "like": "*"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/f25e0fa2-a7c8-4377-a976-54943a77a395",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                ],
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "kvName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "auditEvent": {
+                                    "type": "string"
+                                },
+                                "captureMetrics": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "eastEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eastEventHubName": {
+                                    "type": "string"
+                                },
+                                "westEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "westEventHubName": {
+                                    "type": "string"
+                                }
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[concat(parameters('kvName'),'/','Microsoft.Insights/',parameters('profileName'))]",
+                                    "location": "[parameters('location')]",
+                                    "properties": {
+                                        "eventHubName": "[if(equals(parameters('location'), 'westus'), parameters('westEventHubName'), parameters('eastEventHubName'))]",
+                                        "eventHubAuthorizationRuleId": "[if(equals(parameters('location'), 'westus'), parameters('westEventHubRuleId'), parameters('eastEventHubRuleId'))]",
+                                        "logs": [
+                                            {
+                                                "category": "AuditEvent",
+                                                "enabled": "[parameters('auditEvent')]"
+                                            }
+                                        ],
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('captureMetrics')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('Configured diagnostic settings to be sent to EventHub ', parameters('eventHubName'), ' for KeyVault ', parameters('kvName'),'.')]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "kvName": {
+                                "value": "[field('name')]"
+                            },
+                            "auditEvent": {
+                                "value": "[parameters('auditEvent')]"
+                            },
+                            "captureMetrics": {
+                                "value": "[parameters('captureMetrics')]"
+                            },
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "eastEventHubRuleId": {
+                                "value": "[parameters('eastEventHubRuleId')]"
+                            },
+                            "eastEventHubName": {
+                                "value": "[last(split(parameters('eastEventHub'),'/'))]"
+                            },
+                            "westEventHubRuleId": {
+                                "value": "[parameters('westEventHubRuleId')]"
+                            },
+                            "westEventHubName": {
+                                "value": "[last(split(parameters('westEventHub'),'/'))]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setbypolicy"
+        },
+        "westEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "West Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "westEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "West Event Hub Authorization Rule Id",
+                "description": "The West Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East Event Hub Authorization Rule Id",
+                "description": "The East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "auditEvent": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Audit Events",
+                "description": "Whether to stream KeyVault Events to the Event Hub - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "captureMetrics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "All Metrics",
+                "description": "Whether to stream KeyVault Metrics to the Event Hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        }
+    }
+}
