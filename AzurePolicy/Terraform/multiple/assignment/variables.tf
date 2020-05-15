@@ -32,7 +32,7 @@ variable "policyAssignment" {
     {
       policyAsgnName            = "Sample Policy Assignment 2"
       policyAsgnDescription     = "Sample Policy Assignment Description 2"
-      policyDefName             = "Sample Policy definition 2"
+      policyDefName             = "Sample Policy definit~Tion 2"
       policyAsgnParameters      = <<PARAMS
         {
           "tagName":{
