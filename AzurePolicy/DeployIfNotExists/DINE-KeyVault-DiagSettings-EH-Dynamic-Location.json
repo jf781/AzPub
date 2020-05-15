@@ -61,37 +61,57 @@
                                 "profileName": {
                                     "type": "string"
                                 },
-                                "westUsEventHubRuleId": {
+                                "eastUsEventHubRuleId": {
                                     "type": "string"
                                 },
-                                "westUsEventHubName": {
+                                "eastUsEventHubName": {
                                     "type": "string"
                                 },
-                                "centralUsEventHubRuleId": {
+                                "eastUs2EventHubName": {
                                     "type": "string"
                                 },
-                                "centralUsEventHubName": {
+                                "eastUs2EventHubRuleId": {
                                     "type": "string"
                                 },
-                                "northCentralUsEventHubRuleId": {
+                                "ukSouthEventHubRuleId": {
                                     "type": "string"
                                 },
-                                "northCentralUsEventHubName": {
+                                "ukSouthEventHubName": {
+                                    "type": "string"
+                                },
+                                "japanEastEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "japanEastEventHubName": {
+                                    "type": "string"
+                                },
+                                "eastAsiaEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eastAsiaEventHubName": {
                                     "type": "string"
                                 }
                             },
                             "variables": {
-                                "westUsEventHub":{
-                                    "eventHubName": "[parameters('westUsEventHubName')]",
-                                    "eventHubRuleId": "[parameters('westUsEventHubRuleId')]"
+                                "eastUsEventHub":{
+                                    "eventHubName": "[parameters('eastUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastUsEventHubRuleId')]"
                                 },
-                                "centralUsEventHub": {
-                                    "eventHubName": "[parameters('centralUsEventHubName')]",
-                                    "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                                "eastUs2EventHub": {
+                                    "eventHubName": "[parameters('eastUs2EventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
                                 },
-                                "northCentralUsEventHub": {
-                                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
+                                "ukSouthEventHub": {
+                                    "eventHubName": "[parameters('ukSouthEventHubName')]",
+                                    "eventHubRuleId": "[parameters('ukSouthEventHubRuleId')]"
+                                },
+                                "japanEastEventHub": {
+                                    "eventHubName": "[parameters('japanEastEventHubName')]",
+                                    "eventHubRuleId": "[parameters('japanEastEventHubRuleId')]"
+                                },
+                                "eastAsiaEventHub": {
+                                    "eventHubName": "[parameters('eastAsiaEventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastAsiaEventHubRuleId')]"
                                 },
                                 "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
                             },
@@ -142,23 +162,35 @@
                             "profileName": {
                                 "value": "[parameters('profileName')]"
                             },
-                            "centralUsEventHubRuleId": {
-                                "value": "[parameters('centralUsEventHubRuleId')]"
+                            "eastUs2EventHubName": {
+                                "value": "[parameters('eastUs2EventHub')]"
                             },
-                            "centralUsEventHubName": {
-                                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
+                            "eastUs2EventHubRuleId": {
+                                "value": "[parameters('eastUs2EventHubRuleId')]"
                             },
-                            "northCentralUsEventHubRuleId": {
-                                "value": "[parameters('northCentralUsEventHubRuleId')]"
+                            "eastUsEventHubRuleId": {
+                                "value": "[parameters('eastUsEventHubRuleId')]"
                             },
-                            "northCentralUsEventHubName": {
-                                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
+                            "eastUsEventHubName": {
+                                "value": "[last(split(parameters('eastUsEventHub'),'/'))]"
                             },
-                            "westUsEventHubRuleId": {
-                                "value": "[parameters('westUsEventHubRuleId')]"
+                            "ukSouthEventHubRuleId": {
+                                "value": "[parameters('ukSouthEventHubRuleId')]"
                             },
-                            "westUsEventHubName": {
-                                "value": "[last(split(parameters('westUsEventHub'),'/'))]"
+                            "ukSouthEventHubName": {
+                                "value": "[last(split(parameters('ukSouthEventHub'),'/'))]"
+                            },
+                            "japanEastEventHubRuleId": {
+                                "value": "[parameters('japanEastEventHubRuleId')]"
+                            },
+                            "japanEastEventHubName": {
+                                "value": "[last(split(parameters('japanEastEventHub'),'/'))]"
+                            },
+                            "eastAsiaEventHubRuleId": {
+                                "value": "[parameters('eastAsiaEventHubRuleId')]"
+                            },
+                            "eastAsiaEventHubName": {
+                                "value": "[last(split(parameters('eastAsiaEventHub'),'/'))]"
                             }
                         }
                     }
@@ -175,50 +207,82 @@
             },
             "defaultValue": "setbypolicy"
         },
-        "westUsEventHub": {
+        "eastUsEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "West US Event hub where data will be sent to",
+                "displayName": "East US Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "westUsEventHubRuleId": {
+        "eastUsEventHubRuleId": {
             "type": "String",
             "metadata": {
-                "displayName": "West US Event Hub Authorization Rule Id",
-                "description": "The West Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "displayName": "East US Event Hub Authorization Rule Id",
+                "description": "The East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
                 "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
                 "assignPermissions": true
             }
         },
-        "centralUsEventHub": {
+        "eastUs2EventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "Central US Event hub where data will be sent to",
+                "displayName": "East US 2 Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "centralUsEventHubRuleId": {
+        "eastUs2EventHubRuleId": {
             "type": "String",
             "metadata": {
-                "displayName": "Central US Event Hub Authorization Rule Id",
-                "description": "The Central US Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "displayName": "East US 2 Event Hub Authorization Rule Id",
+                "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
                 "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
                 "assignPermissions": true
             }
         },
-        "northCentralUsEventHub": {
+        "ukSouthEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "North Central US Event hub where data will be sent to",
+                "displayName": "UK South Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northCentralUsEventHubRuleId": {
+        "ukSouthEventHubRuleId": {
             "type": "String",
             "metadata": {
-                "displayName": "North Central US Event Hub Authorization Rule Id",
-                "description": "The North Central US Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "displayName": "UK South Event Hub Authorization Rule Id",
+                "description": "The UK South Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "japanEastEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Japan East Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "japanEastEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Japan East Event Hub Authorization Rule Id",
+                "description": "The Japan East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastAsiaEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East Asia Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastAsiaEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East Asia Event Hub Authorization Rule Id",
+                "description": "The East Asia Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
                 "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
                 "assignPermissions": true
             }
