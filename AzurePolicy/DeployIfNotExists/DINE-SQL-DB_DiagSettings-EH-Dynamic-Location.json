@@ -1,0 +1,493 @@
+{
+    "mode": "Indexed",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.Sql/servers/databases"
+        },
+        "then": {
+            "effect": "DeployIfNotExists",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "[parameters('profileName')]",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "equals": "[parameters('QueryStoreRuntimeStatistics')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "equals": "[parameters('metricsEnabled')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                            "like": "*"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                            "like": "*"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/6d8ee4ec-f05a-4a1d-8b00-a9b17e38b437",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+                ],
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "dbName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "metricsEnabled": {
+                                    "type": "string"
+                                },
+                                "QueryStoreRuntimeStatistics": {
+                                    "type": "string"
+                                },
+                                "QueryStoreWaitStatistics": {
+                                    "type": "string"
+                                },
+                                "Errors": {
+                                    "type": "string"
+                                },
+                                "DatabaseWaitStatistics": {
+                                    "type": "string"
+                                },
+                                "Blocks": {
+                                    "type": "string"
+                                },
+                                "SQLInsights": {
+                                    "type": "string"
+                                },
+                                "Timeouts": {
+                                    "type": "string"
+                                },
+                                "AutomaticTuning": {
+                                    "type": "string"
+                                },
+                                "Deadlocks": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "eastUsEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eastUsEventHubName": {
+                                    "type": "string"
+                                },
+                                "eastUs2EventHubName": {
+                                    "type": "string"
+                                },
+                                "eastUs2EventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "ukSouthEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "ukSouthEventHubName": {
+                                    "type": "string"
+                                },
+                                "japanEastEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "japanEastEventHubName": {
+                                    "type": "string"
+                                },
+                                "eastAsiaEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eastAsiaEventHubName": {
+                                    "type": "string"
+                                }
+                            },
+                            "variables": {
+                                "eastUsEventHub": {
+                                    "eventHubName": "[parameters('eastUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastUsEventHubRuleId')]"
+                                },
+                                "eastUs2EventHub": {
+                                    "eventHubName": "[parameters('eastUs2EventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                                },
+                                "ukSouthEventHub": {
+                                    "eventHubName": "[parameters('ukSouthEventHubName')]",
+                                    "eventHubRuleId": "[parameters('ukSouthEventHubRuleId')]"
+                                },
+                                "japanEastEventHub": {
+                                    "eventHubName": "[parameters('japanEastEventHubName')]",
+                                    "eventHubRuleId": "[parameters('japanEastEventHubRuleId')]"
+                                },
+                                "eastAsiaEventHub": {
+                                    "eventHubName": "[parameters('eastAsiaEventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastAsiaEventHubRuleId')]"
+                                },
+                                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[concat(parameters('dbName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                    "location": "[parameters('location')]",
+                                    "dependsOn": [],
+                                    "properties": {
+                                        "eventHubName": "[variables('eventHub').eventHubName]",
+                                        "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('metricsEnabled')]",
+                                                "retentionPolicy": {
+                                                    "enabled": false,
+                                                    "days": 0
+                                                }
+                                            }
+                                        ],
+                                        "logs": [
+                                            {
+                                                "category": "QueryStoreRuntimeStatistics",
+                                                "enabled": "[parameters('QueryStoreRuntimeStatistics')]"
+                                            },
+                                            {
+                                                "category": "QueryStoreWaitStatistics",
+                                                "enabled": "[parameters('QueryStoreWaitStatistics')]"
+                                            },
+                                            {
+                                                "category": "Errors",
+                                                "enabled": "[parameters('Errors')]"
+                                            },
+                                            {
+                                                "category": "DatabaseWaitStatistics",
+                                                "enabled": "[parameters('DatabaseWaitStatistics')]"
+                                            },
+                                            {
+                                                "category": "Blocks",
+                                                "enabled": "[parameters('Blocks')]"
+                                            },
+                                            {
+                                                "category": "SQLInsights",
+                                                "enabled": "[parameters('SQLInsights')]"
+                                            },
+                                            {
+                                                "category": "Timeouts",
+                                                "enabled": "[parameters('Timeouts')]"
+                                            },
+                                            {
+                                                "category": "AutomaticTuning",
+                                                "enabled": "[parameters('AutomaticTuning')]"
+                                            },
+                                            {
+                                                "category": "Deadlocks",
+                                                "enabled": "[parameters('Deadlocks')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat(parameters('dbName'), ' - is now sending diagnostic logs to eventHub - ', variables('eventHub').eventHubName"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "dbName": {
+                                "value": "[field('fullName')]"
+                            },
+                            "metricsEnabled": {
+                                "value": "[parameters('metricsEnabled')]"
+                            },
+                            "QueryStoreRuntimeStatistics": {
+                                "value": "[parameters('QueryStoreRuntimeStatistics')]"
+                            },
+                            "QueryStoreWaitStatistics": {
+                                "value": "[parameters('QueryStoreWaitStatistics')]"
+                            },
+                            "Errors": {
+                                "value": "[parameters('Errors')]"
+                            },
+                            "DatabaseWaitStatistics": {
+                                "value": "[parameters('DatabaseWaitStatistics')]"
+                            },
+                            "Blocks": {
+                                "value": "[parameters('Blocks')]"
+                            },
+                            "Timeouts": {
+                                "value": "[parameters('Timeouts')]"
+                            },
+                            "AutomaticTuning": {
+                                "value": "[parameters('AutomaticTuning')]"
+                            },
+                            "Deadlocks": {
+                                "value": "[parameters('Deadlocks')]"
+                            },
+                            "SQLInsights": {
+                                "value": "[parameters('SQLInsights')]"
+                            },
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "eastUs2EventHubName": {
+                                "value": "[parameters('eastUs2EventHub')]"
+                            },
+                            "eastUs2EventHubRuleId": {
+                                "value": "[parameters('eastUs2EventHubRuleId')]"
+                            },
+                            "eastUsEventHubRuleId": {
+                                "value": "[parameters('eastUsEventHubRuleId')]"
+                            },
+                            "eastUsEventHubName": {
+                                "value": "[last(split(parameters('eastUsEventHub'),'/'))]"
+                            },
+                            "ukSouthEventHubRuleId": {
+                                "value": "[parameters('ukSouthEventHubRuleId')]"
+                            },
+                            "ukSouthEventHubName": {
+                                "value": "[last(split(parameters('ukSouthEventHub'),'/'))]"
+                            },
+                            "japanEastEventHubRuleId": {
+                                "value": "[parameters('japanEastEventHubRuleId')]"
+                            },
+                            "japanEastEventHubName": {
+                                "value": "[last(split(parameters('japanEastEventHub'),'/'))]"
+                            },
+                            "eastAsiaEventHubRuleId": {
+                                "value": "[parameters('eastAsiaEventHubRuleId')]"
+                            },
+                            "eastAsiaEventHubName": {
+                                "value": "[last(split(parameters('eastAsiaEventHub'),'/'))]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setbypolicy"
+        },
+        "metricsEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable metrics",
+                "description": "Whether to enable metrics stream to Log Analytics - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "QueryStoreRuntimeStatistics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Query Store Runtime Statistics logs",
+                "description": "Log data on query runtime statistics - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "QueryStoreWaitStatistics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Query Store Wait Statistics",
+                "description": "Logs data on query wait statistics - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "Errors": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Errors",
+                "description": "Logs data about SQL DB errors - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "DatabaseWaitStatistics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Database Wait Statistics",
+                "description": "Logs data about different wait types and times for the SQL DB - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "Blocks": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Blocks",
+                "description": "Logs information about blocking events - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "SQLInsights": {
+            "type": "String",
+            "metadata": {
+                "displayName": "SQL Insights",
+                "description": "Logs data to help with Intelligent Insights for DB performance- True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "Timeouts": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Timeouts",
+                "description": "Logs events about DB timeouts - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "AutomaticTuning": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Automatic Tuning",
+                "description": "Logs data for Automatic Tuning recommendations - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "Deadlocks": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Deadlocks",
+                "description": "Logs data about Deadlock events - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "eastUsEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East US Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastUsEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East US Event Hub Authorization Rule Id",
+                "description": "The East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastUs2EventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East US 2 Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastUs2EventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East US 2 Event Hub Authorization Rule Id",
+                "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "ukSouthEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "UK South Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "ukSouthEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "UK South Event Hub Authorization Rule Id",
+                "description": "The UK South Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "japanEastEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Japan East Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "japanEastEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Japan East Event Hub Authorization Rule Id",
+                "description": "The Japan East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastAsiaEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East Asia Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastAsiaEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East Asia Event Hub Authorization Rule Id",
+                "description": "The East Asia Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        }
+    }
+}

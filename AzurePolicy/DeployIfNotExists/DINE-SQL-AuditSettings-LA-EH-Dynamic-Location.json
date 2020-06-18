@@ -1,0 +1,310 @@
+{
+  "mode": "All",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Sql/servers"
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Sql/servers/auditingSettings",
+        "name": "default",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Sql/auditingSettings.state",
+              "equals": "[parameters('auditLoggingEnabled')]"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/056cd41c-7e88-42e1-933e-88ba6a50c9c3",
+          "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+          "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+          "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "location": {
+                  "type": "string"
+                },
+                "serverName": {
+                  "type": "string"
+                },
+                "profileName": {
+                  "type": "string"
+                },
+                "logAnalyticsWorkspace": {
+                  "type": "string"
+                },
+                "auditLoggingEnabled": {
+                  "type": "string"
+                },
+                "eastUsEventHubRuleId": {
+                  "type": "string"
+                },
+                "eastUsEventHubName": {
+                  "type": "string"
+                },
+                "eastUs2EventHubName": {
+                  "type": "string"
+                },
+                "eastUs2EventHubRuleId": {
+                  "type": "string"
+                },
+                "ukSouthEventHubRuleId": {
+                  "type": "string"
+                },
+                "ukSouthEventHubName": {
+                  "type": "string"
+                },
+                "japanEastEventHubRuleId": {
+                  "type": "string"
+                },
+                "japanEastEventHubName": {
+                  "type": "string"
+                },
+                "eastAsiaEventHubRuleId": {
+                  "type": "string"
+                },
+                "eastAsiaEventHubName": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "eastUsEventHub": {
+                  "eventHubName": "[parameters('eastUsEventHubName')]",
+                  "eventHubRuleId": "[parameters('eastUsEventHubRuleId')]"
+                },
+                "eastUs2EventHub": {
+                  "eventHubName": "[parameters('eastUs2EventHubName')]",
+                  "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                },
+                "ukSouthEventHub": {
+                  "eventHubName": "[parameters('ukSouthEventHubName')]",
+                  "eventHubRuleId": "[parameters('ukSouthEventHubRuleId')]"
+                },
+                "japanEastEventHub": {
+                  "eventHubName": "[parameters('japanEastEventHubName')]",
+                  "eventHubRuleId": "[parameters('japanEastEventHubRuleId')]"
+                },
+                "eastAsiaEventHub": {
+                  "eventHubName": "[parameters('eastAsiaEventHubName')]",
+                  "eventHubRuleId": "[parameters('eastAsiaEventHubRuleId')]"
+                },
+                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                  "name": "[concat(parameters('serverName'), '/master/microsoft.insights/', parameters('profileName'))]",
+                  "apiVersion": "2017-05-01-preview",
+                  "properties": {
+                    "name": "[parameters('profileName')]",
+                    "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "logs": [
+                      {
+                        "category": "SQLSecurityAuditEvents",
+                        "enabled": true,
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "apiVersion": "2017-03-01-preview",
+                  "type": "Microsoft.Sql/servers/auditingSettings",
+                  "name": "[concat(parameters('serverName'), '/DefaultAuditingSettings')]",
+                  "properties": {
+                    "State": "[parameters('auditLoggingEnabled')]",
+                    "auditActionsAndGroups": null,
+                    "isAzureMonitorTargetEnabled": true
+                  }
+                }
+              ],
+              "outputs": {
+                "logAnalyticsResource": {
+                  "type": "string",
+                  "value": "[concat('Configured diagnostic settings to be sent to Log Analytics workspace', parameters('logAnalyticsWorkspace'), parameters('logAnalyticsWorkspace'), 'for SQL server ', parameters('serverName'),'.')]"
+                },
+                "eventHubResource": {
+                  "type": "string",
+                  "value": "[concat('Configured diagnostic settings to be sent to EventHub ', variables('eventHub').eventHubName, 'for SQL server ', parameters('serverName'),'.')]"
+                }
+              }
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "serverName": {
+                "value": "[field('name')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "logAnalyticsWorkspace": {
+                "value": "[parameters('logAnalyticsWorkspace')]"
+              },
+              "auditLoggingEnabled": {
+                "value": "[parameters('auditLoggingEnabled')]"
+              },
+              "eastUs2EventHubName": {
+                "value": "[parameters('eastUs2EventHub')]"
+              },
+              "eastUs2EventHubRuleId": {
+                "value": "[parameters('eastUs2EventHubRuleId')]"
+              },
+              "eastUsEventHubRuleId": {
+                "value": "[parameters('eastUsEventHubRuleId')]"
+              },
+              "eastUsEventHubName": {
+                "value": "[last(split(parameters('eastUsEventHub'),'/'))]"
+              },
+              "ukSouthEventHubRuleId": {
+                "value": "[parameters('ukSouthEventHubRuleId')]"
+              },
+              "ukSouthEventHubName": {
+                "value": "[last(split(parameters('ukSouthEventHub'),'/'))]"
+              },
+              "japanEastEventHubRuleId": {
+                "value": "[parameters('japanEastEventHubRuleId')]"
+              },
+              "japanEastEventHubName": {
+                "value": "[last(split(parameters('japanEastEventHub'),'/'))]"
+              },
+              "eastAsiaEventHubRuleId": {
+                "value": "[parameters('eastAsiaEventHubRuleId')]"
+              },
+              "eastAsiaEventHubName": {
+                "value": "[last(split(parameters('eastAsiaEventHub'),'/'))]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "logAnalyticsWorkspace": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Log Analytics workspace",
+        "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+        "strongType": "omsWorkspace",
+        "assignPermissions": true
+      }
+    },
+    "auditLoggingEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Audit Logging ",
+        "description": "Whether to enable SQL logs to the Event Hub - True or False"
+      },
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ],
+      "defaultValue": "Enabled"
+    },
+    "eastUsEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "East US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US Event Hub Authorization Rule Id",
+            "description": "The East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "eastUs2EventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "East US 2 Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastUs2EventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US 2 Event Hub Authorization Rule Id",
+            "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "ukSouthEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "UK South Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "ukSouthEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "UK South Event Hub Authorization Rule Id",
+            "description": "The UK South Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "japanEastEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Japan East Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "japanEastEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Japan East Event Hub Authorization Rule Id",
+            "description": "The Japan East Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "eastAsiaEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "East Asia Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastAsiaEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East Asia Event Hub Authorization Rule Id",
+            "description": "The East Asia Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    }
+  }
+}
