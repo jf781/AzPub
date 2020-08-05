@@ -151,6 +151,14 @@
                                             {
                                                 "category": "AppServiceAuditLogs",
                                                 "enabled": "[parameters('appServiceAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceIPSecAuditLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServicePlatformLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
                                             }
                                         ],
                                         "metrics": [
