@@ -8,22 +8,34 @@
           "equals": "Microsoft.Sql/servers"
         },
         {
-          "field": "Microsoft.Sql/servers/firewallRules/",
-          "exists": "true"
+          "field": "Microsoft.Sql/servers/firewallRules/startIpAddress",
+          "like": "*"
+        },
+        {
+          "field": "Microsoft.Sql/servers/firewallRules/endIpAddress",
+          "like": "*"
         }
       ]
     },
     "then": {
       "effect": "[parameters('effect')]",
       "details":{
-        "type": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+        "type": "Microsoft.Sql/servers",
         "name": "current",
           "existenceCondition": {
-            "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
-            "equals": "false"
+            "allOf": [
+              {
+                "field": "Microsoft.Sql/servers/firewallRules/startIpAddress",
+                "like": "*"
+              },
+              {
+                "field": "Microsoft.Sql/servers/firewallRules/endIpAddress",
+                "like": "*"
+              }
+            ]
           },
           "roleDefinitionIds": [
-            "/providers/Microsoft.Authorization/roleDefinitions/17d1049b-9a84-46fb-8f53-869881c3d3ab"
+            "/providers/Microsoft.Authorization/roleDefinitions/6d8ee4ec-f05a-4a1d-8b00-a9b17e38b437"
           ],
           "deployment": {
             "properties": {
@@ -32,7 +44,7 @@
                 "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                 "contentVersion": "1.0.0.0",
                 "parameters": {
-                  "storageAccountName": {
+                  "serverName": {
                     "type": "string"
                   },
                   "location": {
@@ -55,14 +67,14 @@
                     "name": "[concat(parameters('serverName'),'/',parameters('ruleName'))]",
                     "location": "[parameters('location')]",
                     "properties": {
-                      "startIpAddress": "[parameters('StartIpAddress')]",
+                      "startIpAddress": "[parameters('startIpAddress')]",
                       "endIpAddress": "[parameters('endIpAddress')]"
                     }
                   }
                 ]
               },
               "parameters": {
-                "storageAccountName": {
+                "serverName": {
                   "value": "[field('name')]"
                 },
                 "location": {
@@ -72,10 +84,10 @@
                   "value": "[parameters('ruleName')]"
                 },
                 "startIpAddress": {
-                  "value": "[parameter('startIpAddress')]"
+                  "value": "[parameters('startIpAddress')]"
                 },
                 "endIpAddress": {
-                  "value": "[parameter('endIpAddress')]"
+                  "value": "[parameters('endIpAddress')]"
                 }
               }
             }
@@ -85,7 +97,7 @@
     },
   "parameters": {
     "effect": {
-      "type": "string",
+      "type": "String",
       "metadata": {
         "displayName": "Effect",
         "description": "The effect determines what happens when the policy rule is evaluated to match"
@@ -98,21 +110,21 @@
       "defaultValue": "Audit"
     },
     "ruleName": {
-      "type": "string",
+      "type": "String",
       "metadata": {
         "displayName": "Rule Name",
         "description": "The name of the SQL Server Firewall Rule"
       }
     },
     "startIpAddress": {
-      "type": "string",
+      "type": "String",
       "metadata": {
         "displayName": "Starting IP address",
         "description": "The beginning of the allowed IP address range."
       }
     },
     "endIpAddress": {
-      "type": "string",
+      "type": "String",
       "metadata": {
         "displayName": "End IP address",
         "description": "The end of the allowed IP address.  If single address, list same IP as 'Starting IP address'."
