@@ -1,0 +1,127 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachineScaleSets"
+        },
+        {
+          "field": "Microsoft.Compute/imagePublisher",
+          "equals": "MicrosoftWindowsServer"
+        },
+        {
+          "field": "Microsoft.Compute/imageOffer",
+          "equals": "WindowsServer"
+        }
+      ]
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Compute/virtualMachineScaleSets/extensions",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Compute/virtualMachineScaleSets/extensions/type",
+              "equals": "MicrosoftMonitoringAgent"
+            },
+            {
+              "field": "Microsoft.Compute/virtualMachineScaleSets/extensions/publisher",
+              "equals": "Microsoft.EnterpriseCloud.Monitoring"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+          "/providers/microsoft.authorization/roleDefinitions/39bc4728-0917-49c7-9d2c-d95423bc2eb4",
+          "/providers/microsoft.authorization/roleDefinitions/8d289c81-5878-46d4-8554-54e1e3d8b5cb"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "vmName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "logAnalyticsWorkspace": {
+                  "type": "string"
+                }
+              },
+              "resources": [
+                {
+                  "name": "[concat(parameters('vmssName'),'/OMSExtension')]",
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "location": "[parameters('location')]",
+                  "apiVersion": "2019-07-01",
+                  "properties": {
+                    "publisher": "Microsoft.EnterpriseCloud.Monitoring",
+                    "type": "MicrosoftMonitoringAgent",
+                    "typeHandlerVersion": "1.0",
+                    "autoUpgradeMinorVersion": true,
+                    "settings": {
+                      "workspaceId": "[reference(parameters('logAnalyticsWorkspace'), '2015-03-20').customerId]"
+                    },
+                    "protectedSettings": {
+                      "workspaceKey": "[listKeys(parameters('logAnalyticsWorkspace'), '2015-03-20').primarySharedKey]"
+                    }
+                  }
+                }
+              ],
+              "output": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat('Enabled Diagnostic extension for VM', ': ', parameters('vmName'),'. Sending diagnostic logs to Log Analytics workspace', parameters('logAnalyticsWorkspacer'))]"
+                }
+              }
+            },
+            "parameters": {
+              "vmName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "logAnalyticsWorkspace": {
+                "value": "[parameters('logAnalyticsWorkspace')]"
+              },
+              "effect":{
+                "value": "[parameters('effect')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "logAnalyticsWorkspace": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Log Analytics Consumer or Workspace ID",
+        "description": "This is the Log Analytics Workspace where the VM data will be sent",
+        "strongType": "omsWorkspace"
+      }
+    },
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}

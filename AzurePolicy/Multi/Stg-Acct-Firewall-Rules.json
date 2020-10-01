@@ -1,0 +1,122 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": { 
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/servers"
+        },
+        {
+          "field": "Microsoft.Sql/servers/firewallRules/",
+          "exists": "true"
+        }
+      ]
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details":{
+        "type": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+        "name": "current",
+          "existenceCondition": {
+            "field": "Microsoft.Storage/storageAccounts/supportsHttpsTrafficOnly",
+            "equals": "false"
+          },
+          "roleDefinitionIds": [
+            "/providers/Microsoft.Authorization/roleDefinitions/17d1049b-9a84-46fb-8f53-869881c3d3ab"
+          ],
+          "deployment": {
+            "properties": {
+              "mode": "incremental",
+              "template": {
+                "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                "contentVersion": "1.0.0.0",
+                "parameters": {
+                  "storageAccountName": {
+                    "type": "string"
+                  },
+                  "location": {
+                    "type": "string"
+                  },
+                  "ruleName": {
+                    "type": "string"
+                  },
+                  "startIpAddress": {
+                    "type": "string"
+                  },
+                  "endIpAddress": {
+                    "type": "string"
+                  }
+                },
+                "resources": [
+                  {
+                    "apiVersion": "2015-05-01-preview",
+                    "type": "Microsoft.Sql/servers/firewallRules",
+                    "name": "[concat(parameters('serverName'),'/',parameters('ruleName'))]",
+                    "location": "[parameters('location')]",
+                    "properties": {
+                      "startIpAddress": "[parameters('StartIpAddress')]",
+                      "endIpAddress": "[parameters('endIpAddress')]"
+                    }
+                  }
+                ]
+              },
+              "parameters": {
+                "storageAccountName": {
+                  "value": "[field('name')]"
+                },
+                "location": {
+                  "value": "[field('location')]"
+                },
+                "ruleName": {
+                  "value": "[parameters('ruleName')]"
+                },
+                "startIpAddress": {
+                  "value": "[parameter('startIpAddress')]"
+                },
+                "endIpAddress": {
+                  "value": "[parameter('endIpAddress')]"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+  "parameters": {
+    "effect": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    },
+    "ruleName": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Rule Name",
+        "description": "The name of the SQL Server Firewall Rule"
+      }
+    },
+    "startIpAddress": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Starting IP address",
+        "description": "The beginning of the allowed IP address range."
+      }
+    },
+    "endIpAddress": {
+      "type": "string",
+      "metadata": {
+        "displayName": "End IP address",
+        "description": "The end of the allowed IP address.  If single address, list same IP as 'Starting IP address'."
+      }
+    }
+  }
+}

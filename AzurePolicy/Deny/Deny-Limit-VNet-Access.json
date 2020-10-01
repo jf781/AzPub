@@ -1,0 +1,35 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Network/networkInterfaces"
+        },
+        {
+          "count": {
+            "field": "Microsoft.Network/networkInterfaces/IpConfigurations[*]",
+            "where": {
+              "field": "Microsoft.Network/networkInterfaces/IpConfigurations[*].subnet.id",
+              "notContains": "[parameters('resourceName')]"
+            }
+          },
+          "greaterOrEquals": 1
+        }
+      ]
+    },
+    "then": {
+      "effect": "Deny"
+    }
+  },
+  "parameters": {
+    "resourceName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Name of Vnet",
+        "description": "The name of the VNet to you wish to allow connections to."
+      }
+    }
+  }
+}

@@ -11,7 +11,7 @@ $Definitions = New-AzPolicyDefinition -Name "Audit Resource Tags" `
 -Parameter https://raw.githubusercontent.com/jf781/AzPub/master/AzurePolicy/Audit/AZPolicy-Audit-Tag-Name-Parameters.json
 
 # Defines the Required resource tags your auditing
-$PolicyParameters = @{tagname1=$Tag1;tagName2=$Tag2}
+$PolicyParameters = @{tagName1=$Tag1;tagName2=$Tag2}
 
 # Defines the current subscription as the scope for the policy
 $Sub = "/subscriptions/" + (Get-AzSubscription).SubscriptionId
@@ -27,4 +27,6 @@ New-AzPolicyAssignment -Name "Audit Resource Tags" `
 
 
 
+
+Shaan - Can't here you.  I'm scared 
 
