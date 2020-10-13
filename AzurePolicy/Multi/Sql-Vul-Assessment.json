@@ -1,0 +1,117 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Sql/servers"
+        },
+        {
+          "field": "kind",
+          "notContains": "analytics"
+        }
+      ]
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
+        "name": "default",
+        "existenceCondition": {
+          "field": "Microsoft.Sql/servers/vulnerabilityAssessments/recurringScans.isEnabled",
+          "equals": true
+        },
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "storageName": {
+                  "type": "string"
+                },
+                "serverName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "storageAccountName": {
+                  "type": "string",
+                  "value": "[last(split(parameters('storageName'), '/'))]"
+                }
+              },
+              "resources": [
+                {
+                  "name": "[concat(parameters('serverName'), '/Default')]",
+                  "type": "Microsoft.Sql/servers/vulnerabilityAssessments",
+                  "apiVersion": "2018-06-01-preview",
+                  "location": "[parameters('location')]",
+                  "properties": {
+                    "storageContainerPath": "[concat(reference(parameters('storageName'), '2019-06-01').primaryEndpoints.blob, 'vulnerability-assessment')]",
+                    "storageAccountAccessKey": "[listKeys(parameters('storageName'), '2018-02-01').keys[0].value]",
+                    "recurringScans": {
+                      "isEnabled": true,
+                      "emailSubscriptionAdmins": true
+                    }
+                  }
+                }
+              ],
+              "outputs": {
+                "StorageAccountName": {
+                  "type": "object",
+                  "value": "[variables('storageAccountName')]"
+                },
+                "storageName": {
+                  "type": "string",
+                  "value": "[parameters('storageName')]"
+                }
+              }
+            },
+            "parameters": {
+              "serverName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "storageName": {
+                "value": "[parameters('storageName')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "storageName": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Storage Account Name",
+        "description": "Select storage account from dropdown list to send reoccurring scans to",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}
