@@ -1,0 +1,368 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Sql/servers/databases"
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "name": "[parameters('profileName')]",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+              "equals": "[parameters('QueryStoreRuntimeStatistics')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metricsEnabled')]"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/6d8ee4ec-f05a-4a1d-8b00-a9b17e38b437",
+          "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "dbName": {
+                    "type": "string"
+                },
+                "location": {
+                    "type": "string"
+                },
+                "logAnalyticsWorkspace": {
+                    "type": "string"
+                },
+                "metricsEnabled": {
+                    "type": "string"
+                },
+                "QueryStoreRuntimeStatistics": {
+                    "type": "string"
+                },
+                "QueryStoreWaitStatistics": {
+                    "type": "string"
+                },
+                "Errors": {
+                    "type": "string"
+                },
+                "DatabaseWaitStatistics": {
+                    "type": "string"
+                },
+                "Blocks": {
+                    "type": "string"
+                },
+                "SQLInsights": {
+                    "type": "string"
+                },
+                "SQLSecurityAuditEvents": {
+                    "type": "string"
+                },
+                "Timeouts": {
+                    "type": "string"
+                },
+                "AutomaticTuning": {
+                    "type": "string"
+                },
+                "Deadlocks": {
+                    "type": "string"
+                },
+                "profileName": {
+                    "type": "string"
+                }
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('dbName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                  "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                  "metrics": [
+                    {
+                      "category": "AllMetrics",
+                      "enabled": "[parameters('metricsEnabled')]",
+                      "retentionPolicy": {
+                          "enabled": false,
+                          "days": 0
+                      }
+                    }
+                  ],
+                  "logs": [
+                      {
+                        "category": "QueryStoreRuntimeStatistics",
+                        "enabled": "[parameters('QueryStoreRuntimeStatistics')]"
+                      },
+                      {
+                        "category": "QueryStoreWaitStatistics",
+                        "enabled": "[parameters('QueryStoreWaitStatistics')]"
+                      },
+                      {
+                        "category": "Errors",
+                        "enabled": "[parameters('Errors')]"
+                      },
+                      {
+                        "category": "DatabaseWaitStatistics",
+                        "enabled": "[parameters('DatabaseWaitStatistics')]"
+                      },
+                      {
+                        "category": "Blocks",
+                        "enabled": "[parameters('Blocks')]"
+                      },
+                      {
+                        "category": "SQLInsights",
+                        "enabled": "[parameters('SQLInsights')]"
+                      },
+                      {
+                        "category": "SQLSecurityAuditEvents",
+                        "enabled": "[parameters('SQLSecurityAuditEvents')]"
+                      },
+                      {
+                        "category": "Timeouts",
+                        "enabled": "[parameters('Timeouts')]"
+                      },
+                      {
+                        "category": "AutomaticTuning",
+                        "enabled": "[parameters('AutomaticTuning')]"
+                      },
+                      {
+                        "category": "Deadlocks",
+                        "enabled": "[parameters('Deadlocks')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat(parameters('dbName'), ' - is now sending diagnostic logs to workspace - ', parameters('logAnalyticsWorkspace'))]"
+                }
+              }
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "dbName": {
+                "value": "[field('fullName')]"
+              },
+              "logAnalyticsWorkspace": {
+                "value": "[parameters('logAnalyticsWorkspace')]"
+              },
+              "metricsEnabled": {
+                "value": "[parameters('metricsEnabled')]"
+              },
+              "QueryStoreRuntimeStatistics": {
+                "value": "[parameters('QueryStoreRuntimeStatistics')]"
+              },
+              "QueryStoreWaitStatistics": {
+                "value": "[parameters('QueryStoreWaitStatistics')]"
+              },
+              "Errors": {
+                "value": "[parameters('Errors')]"
+              },
+              "DatabaseWaitStatistics": {
+                "value": "[parameters('DatabaseWaitStatistics')]"
+              },
+              "Blocks": {
+                "value": "[parameters('Blocks')]"
+              },
+              "SQLSecurityAuditEvents": {
+                "value": "[parameters('SQLSecurityAuditEvents')]"
+              },
+              "Timeouts": {
+                "value": "[parameters('Timeouts')]"
+              },
+              "AutomaticTuning": {
+                "value": "[parameters('AutomaticTuning')]"
+              },
+              "Deadlocks": {
+                "value": "[parameters('Deadlocks')]"
+              },
+              "SQLInsights": {
+                "value": "[parameters('SQLInsights')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setbypolicy"
+    },
+    "logAnalyticsWorkspace": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Log Analyitcs workspace",
+        "description": "Select the Log Analytics workspace from dropdown list",
+        "strongType": "omsWorkspace"
+      }
+    },
+    "metricsEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable metrics",
+        "description": "Whether to enable metrics stream to Log Analytics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "QueryStoreRuntimeStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Query Store Runtime Statistics logs",
+        "description": "Log data on query runtime statistics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "QueryStoreWaitStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Query Store Wait Statistics",
+        "description": "Logs data on query wait statistics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "Errors": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Errors",
+        "description": "Logs data about SQL DB errors - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "DatabaseWaitStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Database Wait Statistics",
+        "description": "Logs data about different wait types and times for the SQL DB - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "Blocks": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Blocks",
+        "description": "Logs information about blocking events - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "SQLInsights": {
+      "type": "String",
+      "metadata": {
+        "displayName": "SQL Insights",
+        "description": "Logs data to help with Intelligent Insights for DB performance- True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "SQLSecurityAuditEvents": {
+      "type": "String",
+      "metadata": {
+        "displayName": "SQL Security Audit Events",
+        "description": "Enables auditing of security events for the SQL DB- True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "Timeouts": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Timeouts",
+        "description": "Logs events about DB timeouts - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "AutomaticTuning": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Automatic Tuning",
+        "description": "Logs data for Automatic Tuning recommendations - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "Deadlocks": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Deadlocks",
+        "description": "Logs data about Deadlock events - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}

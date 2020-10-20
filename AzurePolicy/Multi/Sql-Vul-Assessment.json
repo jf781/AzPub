@@ -42,12 +42,7 @@
                   "type": "string"
                 }
               },
-              "variables": {
-                "storageAccountName": {
-                  "type": "string",
-                  "value": "[last(split(parameters('storageName'), '/'))]"
-                }
-              },
+              "variables": {},
               "resources": [
                 {
                   "name": "[concat(parameters('serverName'), '/Default')]",
@@ -65,13 +60,9 @@
                 }
               ],
               "outputs": {
-                "StorageAccountName": {
-                  "type": "object",
-                  "value": "[variables('storageAccountName')]"
-                },
-                "storageName": {
+                "outputNotes": {
                   "type": "string",
-                  "value": "[parameters('storageName')]"
+                  "value": "[concat('Vulnerability assessment has been enabled on: ', parameters('serverName'), '. The scans are being sent to storage account: ', parameters('storageName'), '.')]"
                 }
               }
             },

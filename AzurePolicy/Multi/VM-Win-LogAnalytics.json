@@ -14,8 +14,16 @@
         {
           "field": "Microsoft.Compute/imageOffer",
           "equals": "WindowsServer"
+        },
+        {
+          "field": "Microsoft.Compute/virtualMachineScaleSets/extensions/type",
+          "equals": "MicrosoftMonitoringAgent"
+        },
+        {
+          "field": "Microsoft.Compute/virtualMachineScaleSets/extensions/publisher",
+          "equals": "Microsoft.EnterpriseCloud.Monitoring"
         }
-      ]
+]
     },
     "then": {
       "effect": "[parameters('effect')]",

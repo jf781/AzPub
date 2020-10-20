@@ -1,0 +1,127 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Sql/servers"
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Sql/servers/firewallRules",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Sql/servers/firewallRules/startIpAddress",
+              "equals": "[parameters('firewallStartAddress')]"
+            },
+            {
+              "field": "Microsoft.Sql/servers/firewallRules/endIpAddress",
+              "equals": "[parameters('firewallEndAddress')]"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "serverName": {
+                  "type": "String"
+                },
+                "location": {
+                  "type": "String"
+                },
+                "firewallRuleName": {
+                  "type": "String"
+                },
+                "firewallStartAddress": {
+                  "type": "String"
+                },
+                "firewallEndAddress": {
+                  "type": "String"
+                }
+              },
+              "variables": {},
+              "resources": [
+                {
+                  "type": "Microsoft.Sql/servers/firewallRules",
+                  "name": "[concat(parameters('serverName'), '/', parameters('firewallRuleName'))]",
+                  "apiVersion": "2015-05-01-preview",
+                  "properties": {
+                    "startIpAddress": "[parameters('firewallStartAddress')]",
+                    "endIpAddress": "[parameters('firewallEndAddress')]"
+                  }
+                }
+              ],
+              "outputs":{
+                "outputNotes": {
+                  "type": "string",
+                  "value": "[concat(parameters('firewallRuleName'), 'has been configured with a the IP range ', parameters('firewallStartAddress'), ' - ', parameters('firewallEndAddress'), ' on server: ', parameters('serverName'), '.')]"
+                }
+              }
+            }
+          },
+          "parameters":{
+            "serverName": {
+              "value": "[field('name')]"
+            },
+            "location": {
+              "value": "[field('location')]"
+            },
+            "firewallRuleName": {
+              "value": "[parameters('firewallRuleName')]"
+            },
+            "firewallStartAddress": {
+              "value": "[parameters('firewallStartAddress')]"
+            },
+            "firewallEndAddress": {
+              "value": "[parameters('firewallEndAddress')]"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    },
+    "firewallRuleName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Firewall Rule Name",
+        "description": "The name of the firewall rule"
+      }
+    },
+    "firewallStartAddress": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Firewall Starting IP",
+        "description": "The beginning IP of the allowed address range"
+      }
+    },
+    "firewallEndAddress": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Firewall Ending IP",
+        "description": "The ending IP of the allowed address range"
+      }
+    }
+  }
+}

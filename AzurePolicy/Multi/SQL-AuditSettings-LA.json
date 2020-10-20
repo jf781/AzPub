@@ -1,0 +1,146 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Sql/servers"
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Sql/servers/auditingSettings",
+        "name": "default",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Sql/auditingSettings.state",
+              "equals": "[parameters('auditLoggingEnabled')]"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
+          "/providers/microsoft.authorization/roleDefinitions/056cd41c-7e88-42e1-933e-88ba6a50c9c3"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "serverName": {
+                  "type": "string"
+                },
+                "profileName": {
+                  "type": "string"
+                },
+                "logAnalyticsWorkspace": {
+                  "type": "string"
+                },
+                "auditLoggingEnabled": {
+                  "type": "string"
+                }
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                  "name": "[concat(parameters('serverName'), '/master/microsoft.insights/', parameters('profileName'))]",
+                  "apiVersion": "2017-05-01-preview",
+                  "properties": {
+                    "name": "[parameters('profileName')]",
+                    "workspaceId": "[parameters('logAnalyticsWorkspace')]",
+                    "logs": [
+                      {
+                        "category": "SQLSecurityAuditEvents",
+                        "enabled": true,
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        }
+                      }
+                    ]
+                  }
+                },
+                {
+                  "apiVersion": "2017-03-01-preview",
+                  "type": "Microsoft.Sql/servers/auditingSettings",
+                  "name": "[concat(parameters('serverName'), '/DefaultAuditingSettings')]",
+                  "properties": {
+                    "State": "[parameters('auditLoggingEnabled')]",
+                    "auditActionsAndGroups": null,
+                    "isAzureMonitorTargetEnabled": true
+                  }
+                }
+              ],
+              "outputs": {
+                "logAnalyticsResource": {
+                  "type": "string",
+                  "value": "[concat(parameters('serverName'),' - Is now sending diagnostic logs to Log Analytics Workspace:', parameters('logAnalyticsWorkspace'))]"
+                }
+              }
+            },
+            "parameters": {
+              "serverName": {
+                "value": "[field('name')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "logAnalyticsWorkspace": {
+                "value": "[parameters('logAnalyticsWorkspace')]"
+              },
+              "auditLoggingEnabled": {
+                "value": "[parameters('auditLoggingEnabled')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "logAnalyticsWorkspace": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Log Analytics workspace",
+        "description": "Select Log Analytics workspace from dropdown list. If this workspace is outside of the scope of the assignment you must manually grant 'Log Analytics Contributor' permissions (or similar) to the policy assignment's principal ID.",
+        "strongType": "omsWorkspace",
+        "assignPermissions": true
+      }
+    },
+    "auditLoggingEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Audit Logging ",
+        "description": "Whether to enable SQL logs to the Event Hub - True or False"
+      },
+      "allowedValues": [
+        "Enabled",
+        "Disabled"
+      ],
+      "defaultValue": "Enabled"
+    },
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}

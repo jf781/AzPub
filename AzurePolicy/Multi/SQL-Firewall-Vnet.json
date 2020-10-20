@@ -1,0 +1,110 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Sql/servers"
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Sql/servers/virtualNetworkRules",
+        "existenceCondition": {
+          "field": "Microsoft.Sql/servers/virtualNetworkRules/virtualNetworkSubnetId",
+          "equals": "[parameters('subnetId')]"
+        },
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "serverName": {
+                  "type": "String"
+                },
+                "location": {
+                  "type": "String"
+                },
+                "subnetId": {
+                  "type": "String"
+                },
+                "firewallRuleName": {
+                  "type": "String"
+                }
+              },
+              "variables": {},
+              "resources": [ 
+                {
+                  "type": "Microsoft.Sql/servers/virtualNetworkRules",
+                  "apiVersion": "2015-05-01-preview",
+                  "name": "[concat(parameters('serverName'), '/', parameters('firewallRuleName'))]",
+                  "dependsOn": [
+                    "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
+                  ],
+                  "properties": {
+                    "virtualNetworkSubnetId": "[parameters('subnetId')]",
+                    "ignoreMissingVnetServiceEndpoint": false
+                  }
+                }
+              ],
+              "outputs":{
+                "outputNotes": {
+                  "type": "string",
+                  "value": "[concat(parameters('serverName'), 'has been configured with to allow connections from: ', parameters('subnetId'),'.')]"
+                }
+              }
+            }
+          },
+          "parameters":{
+            "serverName": {
+              "value": "[field('name')]"
+            },
+            "location": {
+              "value": "[field('location')]"
+            },
+            "subnetId": {
+              "value": "[parameters('subnetId')]"
+            },
+            "firewallRuleName": {
+              "value": "[parameters('firewallRuleName')]"
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "subnetId": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Subnet ID",
+        "description": "The resource ID of the virtual network subnet that should have a rule enabled. Example: /subscriptions/00000000-1111-2222-3333-444444444444/resourceGroups/Default/providers/Microsoft.Network/virtualNetworks/testvnet/subnets/testsubnet",
+        "strongType": "Microsoft.Network/virtualNetworks/subnets"
+      }
+    },
+    "firewallRuleName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Firewall Rule Name",
+        "description": "The name of the firewall rule"
+      }
+    },
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "DeployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}
