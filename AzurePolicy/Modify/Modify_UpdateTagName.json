@@ -1,0 +1,40 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "[concat('tags[', parameters('existingTagName'), ']')]",
+      "equals": "true"
+    },
+    "then": {
+      "effect": "modify",
+      "details": {
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "operations": [
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('newTagName'), ']')]",
+            "value": "[parameters('managedTagValue')]"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "existingTagName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Existing Tag Name",
+        "description": "Name of a tag, such as 'Env'"
+      }
+    },
+    "newTagName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "New Tag Name",
+        "description": "Value of 'Tag Name 1', such as 'production'"
+      }
+    }
+  }
+}

@@ -1,0 +1,260 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "[concat('tags[', parameters('tagName1'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName1')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName1')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName2'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName2')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName2')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName3'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName3')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName3')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName4'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName4')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName4')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName5'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName5')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName5')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName6'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName6')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName6')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName7'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName7')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName7')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName8'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName8')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName8')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName9'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName9')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName9')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName10'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName10')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName10')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName11'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName11')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName11')]]",
+          "notEquals": ""
+        },
+        {
+          "field": "[concat('tags[', parameters('tagName12'), ']')]",
+          "notEquals": "[resourceGroup().tags[parameters('tagName12')]]"
+        },
+        {
+          "value": "[resourceGroup().tags[parameters('tagName12')]]",
+          "notEquals": ""
+        }
+      ]
+    },
+    "then": {
+      "effect": "modify",
+      "details": {
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "operations": [
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName1'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName1')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName2'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName2')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName3'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName3')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName4'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName4')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName5'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName5')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName6'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName6')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName7'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName7')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName8'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName8')]]"
+          },{
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName9'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName9')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName10'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName10')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName11'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName11')]]"
+          },
+          {
+            "operation": "addOrReplace",
+            "field": "[concat('tags[', parameters('tagName12'), ']')]",
+            "value": "[resourceGroup().tags[parameters('tagName12')]]"
+          }
+        ]
+      }
+    }
+  },
+  "parameters": {
+    "tagName1": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 1",
+        "description": "Name of the tag, such as 'Environment'"
+      }
+    },
+    "tagName2": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 2",
+        "description": "Name of the tag, such as 'Contract'"
+      }
+    },
+    "tagName3": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 3",
+        "description": "Name of the tag, such as 'Budget COde'"
+      }
+    },
+    "tagName4": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 4",
+        "description": "Name of the tag, such as 'DR Tier'"
+      }
+    },
+    "tagName5": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 5",
+        "description": "Name of the tag, such as 'Data Classification'"
+      }
+    },
+    "tagName6": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 6",
+        "description": "Name of the tag, such as 'EoL'"
+      }
+    },
+    "tagName7": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 7",
+        "description": "Name of the tag, such as 'Maint Window'"
+      }
+    },
+    "tagName8": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 8",
+        "description": "Name of the tag, such as 'Name'"
+      }
+    },
+    "tagName9": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 9",
+        "description": "Name of the tag, such as 'Notes'"
+      }
+    },
+    "tagName10": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 10",
+        "description": "Name of the tag, such as 'Owner'"
+      }
+    },
+    "tagName11": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 11",
+        "description": "Name of the tag, such as 'Project Name'"
+      }
+    },
+    "tagName12": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Tag Name - 12",
+        "description": "Name of the tag, such as 'System Tier'"
+      }
+    }
+  }
+}

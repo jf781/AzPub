@@ -37,40 +37,43 @@
                 }
               },
               "variables": {},
-              "resources": [ 
+              "resources": [
                 {
                   "type": "Microsoft.Sql/servers/virtualNetworkRules",
                   "apiVersion": "2015-05-01-preview",
+                  "location": "[parameters('location')]",
                   "name": "[concat(parameters('serverName'), '/', parameters('firewallRuleName'))]",
-                  "dependsOn": [
-                    "[resourceId('Microsoft.Sql/servers', parameters('serverName'))]"
-                  ],
                   "properties": {
                     "virtualNetworkSubnetId": "[parameters('subnetId')]",
                     "ignoreMissingVnetServiceEndpoint": false
                   }
+                },
+                {
+                  "type": "Microsoft.Network/VirtualNetworks",
+                  "apiVersion": "2020-05-01",
+                  "name": "[resourceName(parameters('subnetId'))]"
                 }
               ],
-              "outputs":{
+              "outputs": {
                 "outputNotes": {
                   "type": "string",
                   "value": "[concat(parameters('serverName'), 'has been configured with to allow connections from: ', parameters('subnetId'),'.')]"
                 }
               }
-            }
-          },
-          "parameters":{
-            "serverName": {
-              "value": "[field('name')]"
             },
-            "location": {
-              "value": "[field('location')]"
-            },
-            "subnetId": {
-              "value": "[parameters('subnetId')]"
-            },
-            "firewallRuleName": {
-              "value": "[parameters('firewallRuleName')]"
+            "parameters": {
+              "serverName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "subnetId": {
+                "value": "[parameters('subnetId')]"
+              },
+              "firewallRuleName": {
+                "value": "[parameters('firewallRuleName')]"
+              }
             }
           }
         }
@@ -91,7 +94,8 @@
       "metadata": {
         "displayName": "Firewall Rule Name",
         "description": "The name of the firewall rule"
-      }
+      },
+      "defaultValue": "setByPolicy"
     },
     "effect": {
       "type": "String",

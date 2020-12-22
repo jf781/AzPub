@@ -14,7 +14,7 @@
           "allOf": [
             {
               "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-              "equals": "[parameters('QueryStoreRuntimeStatistics')]"
+              "contains": "[parameters('QueryStoreRuntimeStatistics')]"
             },
             {
               "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",

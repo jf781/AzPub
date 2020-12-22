@@ -53,6 +53,7 @@
                   "type": "Microsoft.Sql/servers/firewallRules",
                   "name": "[concat(parameters('serverName'), '/', parameters('firewallRuleName'))]",
                   "apiVersion": "2015-05-01-preview",
+                  "location": "[parameters('location')]",
                   "properties": {
                     "startIpAddress": "[parameters('firewallStartAddress')]",
                     "endIpAddress": "[parameters('firewallEndAddress')]"
@@ -65,23 +66,23 @@
                   "value": "[concat(parameters('firewallRuleName'), 'has been configured with a the IP range ', parameters('firewallStartAddress'), ' - ', parameters('firewallEndAddress'), ' on server: ', parameters('serverName'), '.')]"
                 }
               }
-            }
-          },
-          "parameters":{
-            "serverName": {
-              "value": "[field('name')]"
             },
-            "location": {
-              "value": "[field('location')]"
-            },
-            "firewallRuleName": {
-              "value": "[parameters('firewallRuleName')]"
-            },
-            "firewallStartAddress": {
-              "value": "[parameters('firewallStartAddress')]"
-            },
-            "firewallEndAddress": {
-              "value": "[parameters('firewallEndAddress')]"
+            "parameters": {
+              "serverName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "firewallRuleName": {
+                "value": "[parameters('firewallRuleName')]"
+              },
+              "firewallStartAddress": {
+                "value": "[parameters('firewallStartAddress')]"
+              },
+              "firewallEndAddress": {
+                "value": "[parameters('firewallEndAddress')]"
+              }
             }
           }
         }
@@ -107,7 +108,8 @@
       "metadata": {
         "displayName": "Firewall Rule Name",
         "description": "The name of the firewall rule"
-      }
+      },
+      "defaultValue": "setByPolicy"
     },
     "firewallStartAddress": {
       "type": "String",

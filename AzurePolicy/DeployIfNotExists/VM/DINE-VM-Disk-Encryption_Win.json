@@ -1,0 +1,140 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "allOf": [
+        {
+          "field": "type",
+          "equals": "Microsoft.Compute/virtualMachines"
+        },
+        {
+          "field": "Microsoft.Compute/imagePublisher",
+          "equals": "MicrosoftWindowsServer"
+        },
+        {
+          "field": "Microsoft.Compute/imageOffer",
+          "equals": "WindowsServer"
+        }
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Compute/virtualMachines/extensions",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Compute/virtualMachines/extensions/type",
+              "contains": "diskEncryption"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/9980e02c-c2be-4d73-94e8-173b1dc7cf3c",
+          "/providers/microsoft.authorization/roleDefinitions/39bc4728-0917-49c7-9d2c-d95423bc2eb4",
+          "/providers/microsoft.authorization/roleDefinitions/8d289c81-5878-46d4-8554-54e1e3d8b5cb"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "vmName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "sequenceVersion": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "extensionName": "AzureDiskEncryption",
+                "extensionVersion": "2.2",
+                "encryptionOperation": "EnableEncryption",
+                "keyEncryptionAlgorithm": "RSA-OAEP",
+                "resizeOSDisk": false,
+                "keyArray": "[split(parameters('key'),'/')]",
+                "keyVaultURL": "[concat('https://', variables('keyArray')[8], '.vault.azure.net/')]",
+                "keyEncryptionKeyURL": "[concat('https://',variables('keyArray')[8],'.vault.azure.net/keys/',variables('keyArray')[10],'/',variables('keyArray')[12])]",
+                "volumeType": "All"
+              },
+              "resources": [
+                {
+                  "name": "[concat(parameters('vmName'),'/', variables('extensionName'))]",
+                  "type": "Microsoft.Compute/virtualMachines/extensions",
+                  "location": "[parameters('location')]",
+                  "apiVersion": "2019-03-01",
+                  "properties": {
+                    "publisher": "Microsoft.Azure.Security",
+                    "type": "[variables('extensionName')]",
+                    "typeHandlerVersion": "[variables('extensionVersion')]",
+                    "autoUpgradeMinorVersion": true,
+                    "forceUpdateTag": "[parameters('sequenceVersion')]",
+                    "settings": {
+                      "EncryptionOperation": "[variables('encryptionOperation')]",
+                      "KeyEncryptionAlgorithm": "[variables('keyEncryptionAlgorithm')]",
+                      "KeyVaultURL": "[variables('keyVaultURL')]",
+                      "KeyEncryptionKeyURL": "[variables('keyEncryptionKeyURL')]",
+                      "KeyVaultResourceId": "[resourceId('Microsoft.KeyVault/vaults', variables('keyArray')[8])]",
+                      "KekVaultResourceId": "[resourceId('Microsoft.KeyVault/vaults', variables('keyArray')[8])]",
+                      "VolumeType": "[variables('volumeType')]",
+                      "ResizeOSDisk": "[variables('resizeOSDisk')]"
+                    }
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat('Disk encryption has been successfully enabled for VM: ', parameters('vmName'),'. The encryption key is stored in ', variables('keyArray')[8])]"
+                },
+                "BitLockerKey": {
+                  "type": "string",
+                  "value": "[reference(resourceId('Microsoft.Compute/virtualMachines/extensions',  parameters('vmName'), variables('extensionName'))).instanceView.statuses[0].message]"
+                }
+              }
+            },
+            "parameters": {
+              "vmName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "key": {
+                "value": "[parameters('key')]"
+              },
+              "sequenceVersion": {
+                "value": "[parameters('sequenceVersion')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "key": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Encryption Key Vault Information",
+        "description": "Key Vault, Key, and Version that stores the disk encryption key.",
+        "strongType": "Microsoft.KeyVault/vaults/keys/versions"
+      }
+    },
+    "sequenceVersion": {
+      "type": "string",
+      "defaultValue": "1.0",
+      "metadata": {
+        "description": "Pass in an unique value like a GUID everytime the operation needs to be force run"
+      }
+    }
+  }
+}
