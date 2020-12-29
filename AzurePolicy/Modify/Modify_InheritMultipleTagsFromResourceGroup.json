@@ -177,84 +177,96 @@
       "metadata": {
         "displayName": "Tag Name - 1",
         "description": "Name of the tag, such as 'Environment'"
-      }
+      },
+      "defaultValue": "Environment"
     },
     "tagName2": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 2",
-        "description": "Name of the tag, such as 'Contract'"
-      }
+        "description": "Name of the tag, such as 'Contact'"
+      },
+      "defaultValue": "Contact"
     },
     "tagName3": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 3",
-        "description": "Name of the tag, such as 'Budget COde'"
-      }
+        "description": "Name of the tag, such as 'Budget Code'"
+      },
+      "defaultValue": "BudgetCode"
     },
     "tagName4": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 4",
         "description": "Name of the tag, such as 'DR Tier'"
-      }
+      },
+      "defaultValue": "DRTier"
     },
     "tagName5": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 5",
         "description": "Name of the tag, such as 'Data Classification'"
-      }
+      },
+      "defaultValue": "DataClassification"
     },
     "tagName6": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 6",
         "description": "Name of the tag, such as 'EoL'"
-      }
+      },
+      "defaultValue": "EOL"
     },
     "tagName7": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 7",
-        "description": "Name of the tag, such as 'Maint Window'"
-      }
+        "description": "Name of the tag, such as 'Maintenance Window'"
+      },
+      "defaultValue": "MaintenanceWindow"
     },
     "tagName8": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 8",
         "description": "Name of the tag, such as 'Name'"
-      }
+      },
+      "defaultValue": "Name"
     },
     "tagName9": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 9",
         "description": "Name of the tag, such as 'Notes'"
-      }
+      },
+      "defaultValue": "Notes"
     },
     "tagName10": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 10",
         "description": "Name of the tag, such as 'Owner'"
-      }
+      },
+      "defaultValue": "Owner"
     },
     "tagName11": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 11",
         "description": "Name of the tag, such as 'Project Name'"
-      }
+      },
+      "defaultValue": "ProjectName"
     },
     "tagName12": {
       "type": "String",
       "metadata": {
         "displayName": "Tag Name - 12",
         "description": "Name of the tag, such as 'System Tier'"
-      }
+      },
+      "defaultValue": "SystemTier"
     }
   }
 }
