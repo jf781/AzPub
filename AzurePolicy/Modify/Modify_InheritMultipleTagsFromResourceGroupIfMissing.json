@@ -7,7 +7,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName1'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName1')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName1')]]",
@@ -19,7 +19,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName2'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName2')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName2')]]",
@@ -31,7 +31,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName3'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName3')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName3')]]",
@@ -43,7 +43,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName4'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName4')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName4')]]",
@@ -55,7 +55,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName5'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName5')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName5')]]",
@@ -67,7 +67,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName6'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName6')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName6')]]",
@@ -79,7 +79,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName7'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName7')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName7')]]",
@@ -91,7 +91,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName8'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName8')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName8')]]",
@@ -103,7 +103,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName9'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName9')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName9')]]",
@@ -115,7 +115,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName10'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName10')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName10')]]",
@@ -127,7 +127,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName11'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName11')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName11')]]",
@@ -139,7 +139,7 @@
           "allOf": [
             {
               "field": "[concat('tags[', parameters('tagName12'), ']')]",
-              "notEquals": "[resourceGroup().tags[parameters('tagName12')]]"
+              "exists": "false"
             },
             {
               "value": "[resourceGroup().tags[parameters('tagName12')]]",
@@ -157,61 +157,61 @@
         ],
         "operations": [
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName1'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName1')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName2'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName2')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName3'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName3')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName4'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName4')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName5'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName5')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName6'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName6')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName7'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName7')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName8'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName8')]]"
           },{
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName9'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName9')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName10'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName10')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName11'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName11')]]"
           },
           {
-            "operation": "addOrReplace",
+            "operation": "add",
             "field": "[concat('tags[', parameters('tagName12'), ']')]",
             "value": "[resourceGroup().tags[parameters('tagName12')]]"
           }
@@ -226,7 +226,7 @@
         "displayName": "Tag Name - 1",
         "description": "Name of the tag, such as 'Environment'"
       },
-      "defaultValue": "Environment"
+      "defaultValue": ""
     },
     "tagName2": {
       "type": "String",
