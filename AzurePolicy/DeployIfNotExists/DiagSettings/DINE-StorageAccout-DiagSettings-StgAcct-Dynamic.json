@@ -1,0 +1,504 @@
+{
+  "mode": "all",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "in": [
+        "Microsoft.Storage/storageAccounts"
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metricTransaction')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+              "equals": "[parameters('storageRead')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
+              "like": "*"
+            }
+          ]
+        },
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "profileName": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "eastUsStorageAcct": {
+                  "type": "string"
+                },
+                "eastUs2StorageAcct": {
+                  "type": "string"
+                },
+                "centralUsStorageAcct": {
+                  "type": "string"
+                },
+                "northCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "southCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUs2StorageAcct": {
+                  "type": "string"
+                },
+                "metricTransaction": {
+                  "type": "string"
+                },
+                "metricCapacity": {
+                  "type": "string"
+                },
+                "storageRead": {
+                  "type": "string"
+                },
+                "storageWrite": {
+                  "type": "string"
+                },
+                "storageDelete": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "eastUsStorageAccount": {
+                  "storageAccountId": "[parameters('eastUsStorageAcct')]"
+                },
+                "eastUs2StorageAccount": {
+                  "storageAccountId": "[parameters('eastUs2StorageAcct')]"
+                },
+                "centralUsStorageAccount": {
+                  "storageAccountId": "[parameters('centralUsStorageAcct')]"
+                },
+                "northCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('northCentralUsStorageAcct')]"
+                },
+                "southCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('southCentralUsStorageAcct')]"
+                },
+                "westUsStorageAccount": {
+                  "storageAccountId": "[parameters('westUsStorageAcct')]"
+                },
+                "westUs2StorageAccount": {
+                  "storageAccountId": "[parameters('westUs2StorageAcct')]"
+                },
+                "storageAccount": "[variables(concat(parameters('location'), 'StorageAccount'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.storage/storageAccounts/blobServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/fileServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/tableServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/queueServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": []
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat(parameters('resourceName'),' - Is now sending diagnostic logs to Storage Acct:', variables('storageAccount').storageAccountId)]"
+                }
+              }
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "eastUsStorageAcct": {
+                "value": "[parameters('eastUsStorageAcct')]"
+              },
+              "eastUs2StorageAcct": {
+                "value": "[parameters('eastUs2StorageAcct')]"
+              },
+              "centralUsStorageAcct": {
+                "value": "[parameters('centralUsStorageAcct')]"
+              },
+              "northCentralUsStorageAcct": {
+                "value": "[parameters('northCentralUsStorageAcct')]"
+              },
+              "southCentralUsStorageAcct": {
+                "value": "[parameters('southCentralUsStorageAcct')]"
+              },
+              "westUsStorageAcct": {
+                "value": "[parameters('westUsStorageAcct')]"
+              },
+              "westUs2StorageAcct": {
+                "value": "[parameters('westUs2StorageAcct')]"
+              },
+              "metricTransaction": {
+                "value": "[parameters('metricTransaction')]"
+              },
+              "metricCapacity": {
+                "value": "[parameters('metricCapacity')]"
+              },
+              "storageRead": {
+                "value": "[parameters('storageRead')]"
+              },
+              "storageWrite": {
+                "value": "[parameters('storageWrite')]"
+              },
+              "storageDelete": {
+                "value": "[parameters('storageDelete')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "eastUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "eastUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "centralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "northCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "North Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in North Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "southCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "South Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in South Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "metricTransaction": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Transaction Metrics",
+        "description": "Log transaction metrics for the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "metricCapacity": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Capacity Metrics",
+        "description": "Log capacity metrics for the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "storageRead": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Storage Read",
+        "description": "Log the reads from the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "storageWrite": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Storage Write",
+        "description": "Log the writes to the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "storageDelete": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Storage Delete",
+        "description": "Log the deletes from the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    }
+  }
+}

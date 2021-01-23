@@ -1,0 +1,419 @@
+{
+  "mode": "all",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.DocumentDB/databaseAccounts"
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+              "equals": "[parameters('dataPlaneRequests')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metrics')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
+              "like": "*"
+            }
+          ]
+        },
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "profileName": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "eastUs2StorageAcct": {
+                  "type": "string"
+                },
+                "centralUsStorageAcct": {
+                  "type": "string"
+                },
+                "northCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "southCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUs2StorageAcct": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "metrics": {
+                  "type": "string"
+                },
+                "dataPlaneRequests": {
+                  "type": "string"
+                },
+                "mongoRequests": {
+                  "type": "string"
+                },
+                "queryRuntimeStatistics": {
+                  "type": "string"
+                },
+                "partitionKeyStatistics": {
+                  "type": "string"
+                },
+                "partitionKeyRUConsumption": {
+                  "type": "string"
+                },
+                "controlPlaneRequests": {
+                  "type": "string"
+                },
+                "cassandraRequests": {
+                  "type": "string"
+                },
+                "gremlinRequests": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "eastUsStorageAccount": {
+                  "storageAccountId": "[parameters('eastUsStorageAcct')]"
+                },
+                "eastUs2StorageAccount": {
+                  "storageAccountId": "[parameters('eastUs2StorageAcct')]"
+                },
+                "centralUsStorageAccount": {
+                  "storageAccountId": "[parameters('centralUsStorageAcct')]"
+                },
+                "northCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('northCentralUsStorageAcct')]"
+                },
+                "southCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('southCentralUsStorageAcct')]"
+                },
+                "westUsStorageAccount": {
+                  "storageAccountId": "[parameters('westUsStorageAcct')]"
+                },
+                "westUs2StorageAccount": {
+                  "storageAccountId": "[parameters('westUs2StorageAcct')]"
+                },
+                "storageAccount": "[variables(concat(parameters('location'), 'StorageAccount'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.DocumentDB/databaseAccounts/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "Requests",
+                        "enabled": "[parameters('metrics')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "DataPlaneRequests",
+                        "enabled": "[parameters('dataPlaneRequests')]"
+                      },
+                      {
+                        "category": "MongoRequests",
+                        "enabled": "[parameters('mongoRequests')]"
+                      },
+                      {
+                        "category": "QueryRuntimeStatistics",
+                        "enabled": "[parameters('queryRuntimeStatistics')]"
+                      },
+                      {
+                        "category": "PartitionKeyStatistics",
+                        "enabled": "[parameters('partitionKeyStatistics')]"
+                      },
+                      {
+                        "category": "PartitionKeyRUConsumption",
+                        "enabled": "[parameters('partitionKeyRUConsumption')]"
+                      },
+                      {
+                        "category": "ControlPlaneRequests",
+                        "enabled": "[parameters('controlPlaneRequests')]"
+                      },
+                      {
+                        "category": "CassandraRequests",
+                        "enabled": "[parameters('cassandraRequests')]"
+                      },
+                      {
+                        "category": "GremlinRequests",
+                        "enabled": "[parameters('gremlinRequests')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat(parameters('resourceName'),' - Is now sending diagnostic logs to Storage Acct:', variables('storageAccount').storageAccountId)]"
+                }
+              }
+            },
+            "parameters": {
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "eastUsStorageAcct": {
+                "value": "[parameters('eastUsStorageAcct')]"
+              },
+              "eastUs2StorageAcct": {
+                "value": "[parameters('eastUs2StorageAcct')]"
+              },
+              "centralUsStorageAcct": {
+                "value": "[parameters('centralUsStorageAcct')]"
+              },
+              "northCentralUsStorageAcct": {
+                "value": "[parameters('northCentralUsStorageAcct')]"
+              },
+              "southCentralUsStorageAcct": {
+                "value": "[parameters('southCentralUsStorageAcct')]"
+              },
+              "westUsStorageAcct": {
+                "value": "[parameters('westUsStorageAcct')]"
+              },
+              "westUs2StorageAcct": {
+                "value": "[parameters('westUs2StorageAcct')]"
+              },
+              "metrics": {
+                "value": "[parameters('metrics')]"
+              },
+              "dataPlaneRequests": {
+                "value": "[parameters('dataPlaneRequests')]"
+              },
+              "mongoRequests": {
+                "value": "[parameters('mongoRequests')]"
+              },
+              "queryRuntimeStatistics": {
+                "value": "[parameters('queryRuntimeStatistics')]"
+              },
+              "partitionKeyStatistics": {
+                "value": "[parameters('partitionKeyStatistics')]"
+              },
+              "partitionKeyRUConsumption": {
+                "value": "[parameters('partitionKeyRUConsumption')]"
+              },
+              "controlPlaneRequests": {
+                "value": "[parameters('controlPlaneRequests')]"
+              },
+              "cassandraRequests": {
+                "value": "[parameters('cassandraRequests')]"
+              },
+              "gremlinRequests": {
+                "value": "[parameters('gremlinRequests')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Setting name",
+        "description": "Name of the policy for the diagnostics settings."
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "eastUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "eastUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "centralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "northCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "North Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in North Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "southCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "South Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in South Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "metrics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Gateway Metrics",
+        "description": "Whether to log Cosmos DB metrics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "dataPlaneRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB data plan requests",
+        "description": "Whether to log Cosmos DB Data Plane requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "mongoRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Mongo Requests",
+        "description": "Whether to log Cosmos DB Mongo requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "queryRuntimeStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Query Runtime Statistics",
+        "description": "Whether to log Cosmos DB query runtime statistics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "partitionKeyStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Partition Key Statistics",
+        "description": "Whether to log Cosmos DB partition key statistics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "partitionKeyRUConsumption": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Partition RU Consumption",
+        "description": "Whether to log Cosmos DB partition RU consumption - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "controlPlaneRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Control Plane Requests",
+        "description": "Whether to log Cosmos DB control plane requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "cassandraRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Cassandra Requests",
+        "description": "Whether to log Cosmos DB cassandra requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "gremlinRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Gremlin Requests",
+        "description": "Whether to log Cosmos DB gremlin requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    }
+  }
+}

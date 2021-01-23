@@ -1,0 +1,358 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+          "allOf": [
+            {
+              "field": "type",
+              "equals": "Microsoft.Web/sites"
+            },
+            {
+              "field": "kind",
+              "equals": "app"
+            }
+          ]
+        },
+        "then": {
+            "effect": "deployIfNotExists",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "[parameters('profileName')]",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "matchInsensitively": "[parameters('appServiceHTTPLogs')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "matchInsensitively": "[parameters('allMetrics')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
+                            "notContains": "sscompliancestorageacct"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+                ],
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "serverName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "eastUsStorageAcct": {
+                                  "type": "string"
+                                },
+                                "eastUs2StorageAcct": {
+                                  "type": "string"
+                                },
+                                "centralUsStorageAcct": {
+                                  "type": "string"
+                                },
+                                "northCentralUsStorageAcct": {
+                                  "type": "string"
+                                },
+                                "southCentralUsStorageAcct": {
+                                  "type": "string"
+                                },
+                                "westUsStorageAcct": {
+                                  "type": "string"
+                                },
+                                "westUs2StorageAcct": {
+                                  "type": "string"
+                                },
+                                "appServiceAppLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceHTTPLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceConsoleLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceFileAuditLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceAuditLogs": {
+                                    "type": "string"
+                                },
+                                "allMetrics":{
+                                    "type": "string"
+                                }
+                            },
+                            "variables": {
+                              "eastUsStorageAccount": {
+                                "storageAccountId": "[parameters('eastUsStorageAcct')]"
+                              },
+                              "eastUs2StorageAccount": {
+                                "storageAccountId": "[parameters('eastUs2StorageAcct')]"
+                              },
+                              "centralUsStorageAccount": {
+                                "storageAccountId": "[parameters('centralUsStorageAcct')]"
+                              },
+                              "northCentralUsStorageAccount": {
+                                "storageAccountId": "[parameters('northCentralUsStorageAcct')]"
+                              },
+                              "southCentralUsStorageAccount": {
+                                "storageAccountId": "[parameters('southCentralUsStorageAcct')]"
+                              },
+                              "westUsStorageAccount": {
+                                "storageAccountId": "[parameters('westUsStorageAcct')]"
+                              },
+                              "westUs2StorageAccount": {
+                                "storageAccountId": "[parameters('westUs2StorageAcct')]"
+                              },
+                              "storageAccount": "[variables(concat(parameters('location'), 'StorageAccount'))]"
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                                    "name": "[concat(parameters('serverName'), '/Microsoft.Insights/', parameters('profileName'))]",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "properties": {
+                                        "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                                        "logs": [
+                                            {
+                                                "category": "AppServiceHTTPLogs",
+                                                "enabled": "[parameters('appServiceHTTPLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceConsoleLogs",
+                                                "enabled": "[parameters('appServiceConsoleLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceAppLogs",
+                                                "enabled": "[parameters('appServiceAppLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceFileAuditLogs",
+                                                "enabled": "[parameters('AppServiceFileAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceAuditLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
+                                            }
+                                        ],
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('allMetrics')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat(parameters('serverName'),' - Is now sending diagnostic logs to Storage Acct:', variables('storageAccount').storageAccountId)]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "serverName": {
+                                "value": "[field('name')]"
+                            },
+                            "location": {
+                              "value": "[field('location')]"
+                            },
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "eastUsStorageAcct": {
+                              "value": "[parameters('eastUsStorageAcct')]"
+                            },
+                            "eastUs2StorageAcct": {
+                              "value": "[parameters('eastUs2StorageAcct')]"
+                            },
+                            "centralUsStorageAcct": {
+                              "value": "[parameters('centralUsStorageAcct')]"
+                            },
+                            "northCentralUsStorageAcct": {
+                              "value": "[parameters('northCentralUsStorageAcct')]"
+                            },
+                            "southCentralUsStorageAcct": {
+                              "value": "[parameters('southCentralUsStorageAcct')]"
+                            },
+                            "westUsStorageAcct": {
+                              "value": "[parameters('westUsStorageAcct')]"
+                            },
+                            "westUs2StorageAcct": {
+                              "value": "[parameters('westUs2StorageAcct')]"
+                            },
+                            "appServiceHTTPLogs": {
+                                "value":"[parameters('appServiceHTTPLogs')]"
+                            },
+                            "appServiceConsoleLogs":{
+                                "value":"[parameters('appServiceConsoleLogs')]"
+                            },
+                            "appServiceAppLogs": {
+                                "value":"[parameters('appServiceAppLogs')]"
+                            },
+                            "appServiceFileAuditLogs": {
+                                "value":"[parameters('appServiceFileAuditLogs')]"
+                            },
+                            "appServiceAuditLogs": {
+                                "value":"[parameters('appServiceAuditLogs')]"
+                            },
+                            "allMetrics": {
+                                "value":"[parameters('allMetrics')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setByPolicy"
+        },
+        "eastUsStorageAcct": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East US Storage Account",
+                "description": "The storage account where the diagnostic logs will be sent to for resources in East US",
+                "strongType": "Microsoft.Storage/storageAccounts"
+            }
+        },
+        "eastUs2StorageAcct": {
+          "type": "String",
+          "metadata": {
+            "displayName": "East US 2 Storage Account",
+            "description": "The storage account where the diagnostic logs will be sent to for resources in East US 2",
+            "strongType": "Microsoft.Storage/storageAccounts"
+          }
+        },
+        "centralUsStorageAcct": {
+          "type": "String",
+          "metadata": {
+            "displayName": "Central US Storage Account",
+            "description": "The storage account where the diagnostic logs will be sent to for resources in Central US",
+            "strongType": "Microsoft.Storage/storageAccounts"
+          }
+        },
+        "northCentralUsStorageAcct": {
+            "type": "String",
+            "metadata": {
+                "displayName": "North Central US Storage Account",
+                "description": "The storage account where the diagnostic logs will be sent to for resources in North Central US",
+                "strongType": "Microsoft.Storage/storageAccounts"
+            }
+        },
+        "southCentralUsStorageAcct": {
+          "type": "String",
+          "metadata": {
+            "displayName": "South Central US Storage Account",
+            "description": "The storage account where the diagnostic logs will be sent to for resources in South Central US",
+            "strongType": "Microsoft.Storage/storageAccounts"
+          }
+        },
+        "westUsStorageAcct": {
+            "type": "String",
+            "metadata": {
+                "displayName": "West US Storage Account",
+                "description": "The storage account where the diagnostic logs will be sent to for resources in West US",
+                "strongType": "Microsoft.Storage/storageAccounts"
+            }
+        },
+        "westUs2StorageAcct": {
+          "type": "String",
+          "metadata": {
+            "displayName": "West US 2 Storage Account",
+            "description": "The storage account where the diagnostic logs will be sent to for resources in West US 2",
+            "strongType": "Microsoft.Storage/storageAccounts"
+          }
+        },
+        "appServiceHTTPLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service HTTP Logging ",
+                "description": "Whether to enable Web server logs - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceConsoleLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service Console Logging ",
+                "description": "Whether to log 'Standard output and standard errors' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceAppLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service Application Logging ",
+                "description": "Whether to log Application activity - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceFileAuditLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service File Audit Logging ",
+                "description": "Whether to log 'File changes via FTP and Kudu' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceAuditLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service Audit Logging ",
+                "description": "Whether to log 'Login activity via FTP and Kudu' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "allMetrics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable metric monitoring ",
+                "description": "Logs all metrics available to Microsoft.Web/Sites provider - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        }
+    }
+}

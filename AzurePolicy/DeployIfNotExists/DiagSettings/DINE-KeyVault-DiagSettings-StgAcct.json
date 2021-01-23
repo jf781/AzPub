@@ -1,0 +1,268 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.KeyVault/vaults"
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "name": "[parameters('profileName')]",
+        "existenceCondition": {
+          "allOf": [
+            {
+                "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                "equals": "[parameters('logsEnabled')]"
+            },
+            {
+                "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                "equals": "[parameters('metricsEnabled')]"
+            },
+            {
+                "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
+                "notContains": "sscompliancestorageacct"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "kvName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "eastUsStorageAcct": {
+                  "type": "string"
+                },
+                "eastUs2StorageAcct": {
+                  "type": "string"
+                },
+                "centralUsStorageAcct": {
+                  "type": "string"
+                },
+                "northCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "southCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUs2StorageAcct": {
+                  "type": "string"
+                },
+                "metricsEnabled": {
+                  "type": "string"
+                },
+                "logsEnabled": {
+                  "type": "string"
+                },
+                "profileName": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "eastUsStorageAccount": {
+                  "storageAccountId": "[parameters('eastUsStorageAcct')]"
+                },
+                "eastUs2StorageAccount": {
+                  "storageAccountId": "[parameters('eastUs2StorageAcct')]"
+                },
+                "centralUsStorageAccount": {
+                  "storageAccountId": "[parameters('centralUsStorageAcct')]"
+                },
+                "northCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('northCentralUsStorageAcct')]"
+                },
+                "southCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('southCentralUsStorageAcct')]"
+                },
+                "westUsStorageAccount": {
+                  "storageAccountId": "[parameters('westUsStorageAcct')]"
+                },
+                "westUs2StorageAccount": {
+                  "storageAccountId": "[parameters('westUs2StorageAcct')]"
+                },
+                "storageAccount": "[variables(concat(parameters('location'), 'StorageAccount'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.KeyVault/vaults/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('kvName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "AllMetrics",
+                        "enabled": "[parameters('metricsEnabled')]",
+                        "retentionPolicy": {
+                          "enabled": false,
+                          "days": 0
+                        }
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "AuditEvent",
+                        "enabled": "[parameters('logsEnabled')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                    "type": "string",
+                    "value": "[concat('Configured diagnostic settings to be sent to storage account: ', variables('storageAccount').storageAccountId, 'for KeyVault ', parameters('kvName'),'.')]"
+                }
+              }
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "kvName": {
+                "value": "[field('name')]"
+              },
+              "eastUsStorageAcct": {
+                "value": "[parameters('eastUsStorageAcct')]"
+              },
+              "eastUs2StorageAcct": {
+                "value": "[parameters('eastUs2StorageAcct')]"
+              },
+              "centralUsStorageAcct": {
+                "value": "[parameters('centralUsStorageAcct')]"
+              },
+              "northCentralUsStorageAcct": {
+                "value": "[parameters('northCentralUsStorageAcct')]"
+              },
+              "southCentralUsStorageAcct": {
+                "value": "[parameters('southCentralUsStorageAcct')]"
+              },
+              "westUsStorageAcct": {
+                "value": "[parameters('westUsStorageAcct')]"
+              },
+              "westUs2StorageAcct": {
+                "value": "[parameters('westUs2StorageAcct')]"
+              },
+              "metricsEnabled": {
+                "value": "[parameters('metricsEnabled')]"
+              },
+              "logsEnabled": {
+                "value": "[parameters('logsEnabled')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setbypolicy"
+    },
+    "eastUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "eastUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "centralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "northCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "North Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in North Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "southCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "South Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in South Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "metricsEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable metrics",
+        "description": "Whether to enable metrics stream to the Event Hub - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "logsEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable logs",
+        "description": "Whether to enable logs stream to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    }
+  }
+}

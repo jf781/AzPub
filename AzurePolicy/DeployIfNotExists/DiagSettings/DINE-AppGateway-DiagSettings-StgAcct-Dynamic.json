@@ -1,0 +1,312 @@
+{
+  "mode": "all",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Network/applicationGateways"
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+              "equals": "[parameters('applicationGatewayAccessLog')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metrics')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",
+              "like": "*"
+            }
+          ]
+        },
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "profileName": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "eastUsStorageAcct": {
+                  "type": "string"
+                },
+                "eastUs2StorageAcct": {
+                  "type": "string"
+                },
+                "centralUsStorageAcct": {
+                  "type": "string"
+                },
+                "northCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "southCentralUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUsStorageAcct": {
+                  "type": "string"
+                },
+                "westUs2StorageAcct": {
+                  "type": "string"
+                },
+                "metrics": {
+                  "type": "string"
+                },
+                "applicationGatewayAccessLog": {
+                  "type": "string"
+                },
+                "applicationGatewayPerformanceLog": {
+                  "type": "string"
+                },
+                "applicationGatewayFirewallLog": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "eastUsStorageAccount": {
+                  "storageAccountId": "[parameters('eastUsStorageAcct')]"
+                },
+                "eastUs2StorageAccount": {
+                  "storageAccountId": "[parameters('eastUs2StorageAcct')]"
+                },
+                "centralUsStorageAccount": {
+                  "storageAccountId": "[parameters('centralUsStorageAcct')]"
+                },
+                "northCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('northCentralUsStorageAcct')]"
+                },
+                "southCentralUsStorageAccount": {
+                  "storageAccountId": "[parameters('southCentralUsStorageAcct')]"
+                },
+                "westUsStorageAccount": {
+                  "storageAccountId": "[parameters('westUsStorageAcct')]"
+                },
+                "westUs2StorageAccount": {
+                  "storageAccountId": "[parameters('westUs2StorageAcct')]"
+                },
+                "storageAccount": "[variables(concat(parameters('location'), 'StorageAccount'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Network/applicationGateways/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "storageAccountId": "[variables('storageAccount').storageAccountId]",
+                    "metrics": [
+                      {
+                        "category": "AllMetrics",
+                        "enabled": "[parameters('metrics')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "ApplicationGatewayAccessLog",
+                        "enabled": "[parameters('applicationGatewayAccessLog')]"
+                      },
+                      {
+                        "category": "ApplicationGatewayPerformanceLog",
+                        "enabled": "[parameters('applicationGatewayPerformanceLog')]"
+                      },
+                      {
+                        "category": "ApplicationGatewayFirewallLog",
+                        "enabled": "[parameters('applicationGatewayFirewallLog')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat('Configured diagnostic settings to be sent to storage account: ', variables('storageAccount').storageAccountId, 'for Application Gateway Instance ', parameters('resourceName'),'.')]"
+                }
+              }
+            },
+            "parameters": {
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "eastUsStorageAcct": {
+                "value": "[parameters('eastUsStorageAcct')]"
+              },
+              "eastUs2StorageAcct": {
+                "value": "[parameters('eastUs2StorageAcct')]"
+              },
+              "centralUsStorageAcct": {
+                "value": "[parameters('centralUsStorageAcct')]"
+              },
+              "northCentralUsStorageAcct": {
+                "value": "[parameters('northCentralUsStorageAcct')]"
+              },
+              "southCentralUsStorageAcct": {
+                "value": "[parameters('southCentralUsStorageAcct')]"
+              },
+              "westUsStorageAcct": {
+                "value": "[parameters('westUsStorageAcct')]"
+              },
+              "westUs2StorageAcct": {
+                "value": "[parameters('westUs2StorageAcct')]"
+              },
+              "metrics": {
+                "value": "[parameters('metrics')]"
+              },
+              "applicationGatewayAccessLog": {
+                "value": "[parameters('applicationGatewayAccessLog')]"
+              },
+              "applicationGatewayPerformanceLog": {
+                "value": "[parameters('applicationGatewayPerformanceLog')]"
+              },
+              "applicationGatewayFirewallLog": {
+                "value": "[parameters('applicationGatewayFirewallLog')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "eastUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "eastUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "East US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in East US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "centralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "northCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "North Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in North Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "southCentralUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "South Central US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in South Central US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUsStorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "westUs2StorageAcct": {
+      "type": "String",
+      "metadata": {
+        "displayName": "West US 2 Storage Account",
+        "description": "The storage account where the diagnostic logs will be sent to for resources in West US 2",
+        "strongType": "Microsoft.Storage/storageAccounts"
+      }
+    },
+    "metrics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Metrics",
+        "description": "Whether to log Application Gateway Access metrics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "applicationGatewayAccessLog": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Access Logs",
+        "description": "Whether to log Application Gateway Access traffic - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "applicationGatewayPerformanceLog": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Performance Logs",
+        "description": "Whether to log tApplication Gateway Performance data - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "applicationGatewayFirewallLog": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Firewall Logs",
+        "description": "Whether to log Application Gateway Firewall activity - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    }
+  }
+}
