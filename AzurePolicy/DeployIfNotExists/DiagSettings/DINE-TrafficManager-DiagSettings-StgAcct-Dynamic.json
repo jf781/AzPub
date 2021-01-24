@@ -50,6 +50,9 @@
                 "probeHealthStatus": {
                   "type": "string"
                 },
+                "eastUsStorageAcct": {
+                  "type": "string"
+                },
                 "eastUs2StorageAcct": {
                   "type": "string"
                 },
