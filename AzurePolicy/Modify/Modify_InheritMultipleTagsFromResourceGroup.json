@@ -12,6 +12,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName1')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -24,6 +28,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName2')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -36,6 +44,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName3')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -48,6 +60,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName4')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -60,6 +76,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName5')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -72,6 +92,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName6')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -84,6 +108,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName7')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -96,6 +124,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName8')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -108,6 +140,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName9')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -120,6 +156,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName10')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -132,6 +172,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName11')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         },
@@ -144,6 +188,10 @@
             {
               "value": "[resourceGroup().tags[parameters('tagName12')]]",
               "notEquals": ""
+            },
+            {
+              "field": "type",
+              "notEquals": "Microsoft.Compute/virtualMachines/extensions"
             }
           ]
         }

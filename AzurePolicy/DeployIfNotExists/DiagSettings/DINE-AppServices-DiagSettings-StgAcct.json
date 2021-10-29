@@ -21,8 +21,14 @@
                 "existenceCondition": {
                     "allOf": [
                         {
-                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                            "matchInsensitively": "[parameters('appServiceHTTPLogs')]"
+                            "count": {
+                                "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                                "where": {
+                                    "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                                    "equals": true
+                                }
+                            },
+                            "greaterOrEquals": 1
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",

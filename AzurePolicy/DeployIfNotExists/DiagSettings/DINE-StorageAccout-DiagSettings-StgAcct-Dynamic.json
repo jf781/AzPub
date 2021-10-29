@@ -21,8 +21,14 @@
               "equals": "[parameters('metricTransaction')]"
             },
             {
-              "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-              "equals": "[parameters('storageRead')]"
+              "count": {
+                "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                "where": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                  "equals": true
+                }
+              },
+              "greaterOrEquals": 1
             },
             {
               "field": "Microsoft.Insights/diagnosticSettings/storageAccountId",

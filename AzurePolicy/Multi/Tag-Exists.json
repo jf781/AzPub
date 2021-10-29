@@ -2,8 +2,16 @@
     "mode": "Indexed",
     "policyRule": {
         "if": {
-            "field": "[concat('tags[', parameters('tagName'), ']')]",
-            "exists": "false"
+            "allOf":[
+                {
+                    "field": "[concat('tags[', parameters('tagName'), ']')]",
+                    "exists": "false"
+                },
+                {
+                    "field": "type",
+                    "notEquals": "Microsoft.Compute/virtualMachines/extensions"
+                }
+            ]
         },
         "then": {
             "effect": "[parameters('effect')]"
@@ -13,9 +21,9 @@
         "tagName": {
             "type": "string",
             "metadata":{
-                "displayName": "First required tag"
+                "displayName": "Required tag name"
             }
-        },    
+        },  
         "effect": {
             "type": "String",
             "metadata": {
