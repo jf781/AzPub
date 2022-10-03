@@ -1,0 +1,82 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+      "if": {
+          "allOf":[
+            {
+                "field": "type",
+                "equals": "[parameters('resourceType')]"
+            },
+            {
+              "not": {
+                "allOf": [
+                  {
+                    "value": "[equals(toLower(last(split(parameters('resourceAbbreviation'), '-'))), toLower(last(split(field('name'), '-'))))]",
+                    "equals": true
+                  }
+                ]
+              }
+            }
+              
+          ]
+      },
+      "then": {
+          "effect": "[parameters('effect')]"
+      }  
+  },
+  "parameters": {
+    "resourceType": {
+      "type": "String",
+      "metadata": {
+        "displayName" : "Resource type",
+        "description" : "Resource type to enforce naming pattern.",
+        "strongType" : "resourceTypes"
+      }
+    },
+    "resourceAbbreviation":{
+      "type": "String",
+      "metadata": {
+        "displayName": "Resource type abbreviation",
+        "description": "Abbreviation of resource type based upon naming policy"
+      }
+    },
+    "regionPrefixAcronyms":{
+      "type": "Array",
+      "metadata": {
+        "displayName": "Acronyms from the naming policy to signify which region the resource resides within",
+        "description": "The region the resource resides within"
+      },
+      "defaultValue": [
+        "use",
+        "use2",
+        "usc",
+        "usnc"
+      ]
+    },
+    "environmentAcronyms": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "Acronyms from the naming policy to signify which environment the resource resides within",
+        "description": "The environment the resource belongs too"
+      },
+      "defaultValue": [
+        "prd",
+        "dev",
+        "qa",
+        "sbx"
+      ]
+    },
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny"
+      ],
+      "defaultValue": "Audit"
+    }
+  }
+}
