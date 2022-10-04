@@ -1,36 +1,47 @@
 {
   "mode": "Indexed",
   "policyRule": {
-      "if": {
-          "allOf":[
-            {
-                "field": "type",
-                "matchInsensitively": "[parameters('resourceType')]"
-            },
-            {
-              "not": {
-                "allOf": [
-                  {
-                    "value": "[contains(parameters('resourceAbbreviation'), field('name'))]",
-                    "equals": true
+    "if": {
+        "allOf":[
+          {
+              "field": "type",
+              "equals": "[parameters('resourceType')]"
+          },
+          {
+            "not": {
+              "allOf": [
+                {
+                  "field": "name",
+                  "like": "[concat(parameters('resourceAbbreviation'), '*')]"
+                },
+                {
+                  "count": {
+                    "value": "[parameters('regionPrefixAcronyms')]",
+                    "where": {
+                      "value": "[first(skip(split(field('name'), '-'), 1))]",
+                      "like": "[current()]"
+                    }
                   },
-                  {
-                    "value": "[contains(parameters('regionPrefixAcronyms'), field('name'))]",
-                    "equals": true
+                  "greater": 0
+                },
+                {
+                  "count": {
+                    "value": "[parameters('environmentAcronyms')]",
+                    "where": {
+                      "value": "[first(skip(split(field('name'), '-'), 2))]",
+                      "like": "[current()]"
+                    }
                   },
-                  {
-                    "value": "[contains(parameters('environmentAcronyms'), field('name'))]",
-                    "equals": true
-                  }
-                ]
-              }
+                  "greater": 0
+                }
+              ]
             }
-              
-          ]
-      },
-      "then": {
-          "effect": "[parameters('effect')]"
-      }  
+          } 
+        ]
+    },
+    "then": {
+        "effect": "[parameters('effect')]"
+    }  
   },
   "parameters": {
     "resourceType": {
