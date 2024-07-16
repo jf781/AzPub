@@ -2,16 +2,16 @@
   "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vaultName": {
+    "name": {
       "type": "string",
-      "defaultValue": "kv-use-sbx-test-001"
+      "defaultValue": "pip-vmw1nsyndbv2-001"
     }
   },
   "resources": [],
   "outputs": {
     "TestOutput": {
       "type": "string",
-      "value": "[string(first(skip(split(parameters('vaultName'), '-'), 2)))]"
+      "value": "[string(skip(string(first(skip(split(parameters('name'), '-'), 2))), 1))]"
     }
   }
 }

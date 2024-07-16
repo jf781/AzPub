@@ -3,26 +3,26 @@
     "policyRule": {
         "if": {
             "field": "type",
-            "equals": "Microsoft.Sql/servers/databases"
+            "equals": "Microsoft.RecoveryServices/vaults"
         },
         "then": {
-            "effect": "DeployIfNotExists",
+            "effect": "[parameters('effect')]",
             "details": {
                 "type": "Microsoft.Insights/diagnosticSettings",
-                "name": "[parameters('profileName')]",
+                "roleDefinitionIds": [
+                    "/providers/Microsoft.Authorization/roleDefinitions/5e467623-bb1f-42f4-a55d-6e525e11384b",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+                ],
                 "existenceCondition": {
                     "allOf": [
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                            "equals": "[parameters('QueryStoreRuntimeStatistics')]"
+                            "matchInsensitively": "[parameters('vmProtectionAlerts')]"
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
-                            "equals": "[parameters('metricsEnabled')]"
-                        },
-                        {
-                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
-                            "like": "*"
+                            "matchInsensitively": "[parameters('metricsEnabled')]"
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
@@ -30,12 +30,6 @@
                         }
                     ]
                 },
-                "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/6d8ee4ec-f05a-4a1d-8b00-a9b17e38b437",
-                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
-                ],
                 "deployment": {
                     "properties": {
                         "mode": "incremental",
@@ -43,43 +37,19 @@
                             "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                             "contentVersion": "1.0.0.0",
                             "parameters": {
-                                "dbName": {
+                                "vaultName": {
                                     "type": "string"
                                 },
                                 "location": {
                                     "type": "string"
                                 },
-                                "metricsEnabled": {
+                                "metricsEnabled":{
                                     "type": "string"
                                 },
-                                "QueryStoreRuntimeStatistics": {
+                                "vmProtectionAlerts": {
                                     "type": "string"
                                 },
-                                "QueryStoreWaitStatistics": {
-                                    "type": "string"
-                                },
-                                "Errors": {
-                                    "type": "string"
-                                },
-                                "DatabaseWaitStatistics": {
-                                    "type": "string"
-                                },
-                                "Blocks": {
-                                    "type": "string"
-                                },
-                                "SQLInsights": {
-                                    "type": "string"
-                                },
-                                "Timeouts": {
-                                    "type": "string"
-                                },
-                                "AutomaticTuning": {
-                                    "type": "string"
-                                },
-                                "Deadlocks": {
-                                    "type": "string"
-                                },
-                                "profileName": {
+                                "profileName":{
                                     "type": "string"
                                 },
                                 "centralUsEventHubName": {
@@ -97,7 +67,7 @@
                                 "northCentralUsEventHubName": {
                                     "type": "string"
                                 },
-                                "northCentralUSEventHubName": {
+                                "northCentralUsEventHubRuleId": {
                                     "type": "string"
                                 },
                                 "germanyWestCentralEventHubRuleId": {
@@ -106,10 +76,10 @@
                                 "germanyWestCentralEventHubName": {
                                     "type": "string"
                                 },
-                                "northEuropeEventHubRuleId": {
+                                "germanyNorthEventHubRuleId": {
                                     "type": "string"
                                 },
-                                "northEuropeEventHubName": {
+                                "germanyNorthEventHubName": {
                                     "type": "string"
                                 }
                             },
@@ -123,24 +93,24 @@
                                     "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
                                 },
                                 "northCentralUSEventHub": {
-                                    "eventHubName": "[parameters('northCentralUSEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northCentralUSEventHubRuleId')]"
+                                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
                                 },
                                 "germanyWestCentralEventHub": {
                                     "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
                                     "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
                                 },
-                                "northEuropeEventHub": {
-                                    "eventHubName": "[parameters('northEuropeEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northEuropeEventHubRuleId')]"
+                                "germanyNorthEventHub": {
+                                    "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                                    "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
                                 },
                                 "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
                             },
                             "resources": [
                                 {
-                                    "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                                    "type": "Microsoft.RecoveryServices/vaults/providers/diagnosticSettings",
                                     "apiVersion": "2017-05-01-preview",
-                                    "name": "[concat(parameters('dbName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                    "name": "[concat(parameters('vaultName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
                                     "location": "[parameters('location')]",
                                     "dependsOn": [],
                                     "properties": {
@@ -158,40 +128,8 @@
                                         ],
                                         "logs": [
                                             {
-                                                "category": "QueryStoreRuntimeStatistics",
-                                                "enabled": "[parameters('QueryStoreRuntimeStatistics')]"
-                                            },
-                                            {
-                                                "category": "QueryStoreWaitStatistics",
-                                                "enabled": "[parameters('QueryStoreWaitStatistics')]"
-                                            },
-                                            {
-                                                "category": "Errors",
-                                                "enabled": "[parameters('Errors')]"
-                                            },
-                                            {
-                                                "category": "DatabaseWaitStatistics",
-                                                "enabled": "[parameters('DatabaseWaitStatistics')]"
-                                            },
-                                            {
-                                                "category": "Blocks",
-                                                "enabled": "[parameters('Blocks')]"
-                                            },
-                                            {
-                                                "category": "SQLInsights",
-                                                "enabled": "[parameters('SQLInsights')]"
-                                            },
-                                            {
-                                                "category": "Timeouts",
-                                                "enabled": "[parameters('Timeouts')]"
-                                            },
-                                            {
-                                                "category": "AutomaticTuning",
-                                                "enabled": "[parameters('AutomaticTuning')]"
-                                            },
-                                            {
-                                                "category": "Deadlocks",
-                                                "enabled": "[parameters('Deadlocks')]"
+                                                "category": "VMProtectionAlerts",
+                                                "enabled": "[parameters('vmProtectionAlerts')]"
                                             }
                                         ]
                                     }
@@ -200,7 +138,7 @@
                             "outputs": {
                                 "policy": {
                                     "type": "string",
-                                    "value": "[concat(parameters('dbName'), ' - is now sending diagnostic logs to eventHub - ', variables('eventHub').eventHubName"
+                                    "value": "[concat(parameters('vaultName'),' - Is now sending diagnostic logs to EventHub ', variables('eventHub').eventHubName, '.')]"
                                 }
                             }
                         },
@@ -208,71 +146,47 @@
                             "location": {
                                 "value": "[field('location')]"
                             },
-                            "dbName": {
-                                "value": "[field('fullName')]"
+                            "vaultName": {
+                                "value": "[field('name')]"
                             },
-                            "metricsEnabled": {
+                            "metricsEnabled":{
                                 "value": "[parameters('metricsEnabled')]"
                             },
-                            "QueryStoreRuntimeStatistics": {
-                                "value": "[parameters('QueryStoreRuntimeStatistics')]"
-                            },
-                            "QueryStoreWaitStatistics": {
-                                "value": "[parameters('QueryStoreWaitStatistics')]"
-                            },
-                            "Errors": {
-                                "value": "[parameters('Errors')]"
-                            },
-                            "DatabaseWaitStatistics": {
-                                "value": "[parameters('DatabaseWaitStatistics')]"
-                            },
-                            "Blocks": {
-                                "value": "[parameters('Blocks')]"
-                            },
-                            "Timeouts": {
-                                "value": "[parameters('Timeouts')]"
-                            },
-                            "AutomaticTuning": {
-                                "value": "[parameters('AutomaticTuning')]"
-                            },
-                            "Deadlocks": {
-                                "value": "[parameters('Deadlocks')]"
-                            },
-                            "SQLInsights": {
-                                "value": "[parameters('SQLInsights')]"
+                            "vmProtectionAlerts": {
+                                "value": "[parameters('vmProtectionAlerts')]"
                             },
                             "profileName": {
                                 "value": "[parameters('profileName')]"
                             },
                             "centralUsEventHubName": {
-                                "value": "[parameters('centralUsEventHub')]"
+                                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
                             },
                             "centralUsEventHubRuleId": {
                                 "value": "[parameters('centraUsEventHubRuleId')]"
                             },
                             "eastUs2EventHubName": {
-                                "value": "[parameters('eastUs2EventHub')]"
+                                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
                             },
                             "eastUs2EventHubRuleId": {
                                 "value": "[parameters('eastUs2EventHubRuleId')]"
                             },
                             "northCentralUsEventHubName": {
-                                "value": "[parameters('northCentralUsEventHub')]"
-                            },
-                            "northCentralUsEventHubRuleId": {
-                                "value": "[parameters('northCentraUsEventHubRuleId')]"
+                                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
                             },
                             "germanyWestCentralEventHubRuleId": {
                                 "value": "[parameters('germanyWestCentralEventHubRuleId')]"
                             },
+                            "northCentralUsEventHubRuleId": {
+                                "value": "[parameters('northCentralUsEventHubRuleId')]"
+                            },
                             "germanyWestCentralEventHubName": {
                                 "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
                             },
-                            "northEuropeEventHubRuleId": {
-                                "value": "[parameters('northEuropeEventHubRuleId')]"
+                            "germanyNorthEventHubRuleId": {
+                                "value": "[parameters('germanyNorthEventHubRuleId')]"
                             },
-                            "northEuropeEventHubName": {
-                                "value": "[last(split(parameters('northEuropeEventHub'),'/'))]"
+                            "germanyNorthEventHubName": {
+                                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
                             }
                         }
                     }
@@ -281,19 +195,32 @@
         }
     },
     "parameters": {
+        "effect": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Effect",
+              "description": "The effect determines what happens when the policy rule is evaluated to match"
+            },
+            "allowedValues": [
+              "Audit",
+              "Deny",
+              "deployIfNotExists"
+            ],
+            "defaultValue": "Audit"
+          },
         "profileName": {
             "type": "String",
             "metadata": {
                 "displayName": "Profile name",
                 "description": "The diagnostic settings profile name"
             },
-            "defaultValue": "setbypolicy"
+            "defaultValue": "setByPolicy"
         },
         "metricsEnabled": {
             "type": "String",
             "metadata": {
                 "displayName": "Enable metrics",
-                "description": "Whether to enable metrics stream to Log Analytics - True or False"
+                "description": "Whether to enable metrics stream to the Event Hub - True or False"
             },
             "allowedValues": [
                 "True",
@@ -301,107 +228,11 @@
             ],
             "defaultValue": "True"
         },
-        "QueryStoreRuntimeStatistics": {
+        "AzureSiteRecoveryProtectedDiskDataChurn": {
             "type": "String",
             "metadata": {
-                "displayName": "Query Store Runtime Statistics logs",
-                "description": "Log data on query runtime statistics - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "QueryStoreWaitStatistics": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Query Store Wait Statistics",
-                "description": "Logs data on query wait statistics - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Errors": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Errors",
-                "description": "Logs data about SQL DB errors - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "DatabaseWaitStatistics": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Database Wait Statistics",
-                "description": "Logs data about different wait types and times for the SQL DB - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Blocks": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Blocks",
-                "description": "Logs information about blocking events - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "SQLInsights": {
-            "type": "String",
-            "metadata": {
-                "displayName": "SQL Insights",
-                "description": "Logs data to help with Intelligent Insights for DB performance- True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Timeouts": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Timeouts",
-                "description": "Logs events about DB timeouts - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "AutomaticTuning": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Automatic Tuning",
-                "description": "Logs data for Automatic Tuning recommendations - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Deadlocks": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Deadlocks",
-                "description": "Logs data about Deadlock events - True or False"
+                "displayName": "Enable VM Protection Alerts ",
+                "description": "Whether to send VM Protection Alerts to Log Analytics"
             },
             "allowedValues": [
                 "True",
@@ -448,7 +279,7 @@
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northCentraUsEventHubRuleId": {
+        "northCentralUsEventHubRuleId": {
             "type": "String",
             "metadata": {
                 "displayName": "North Central US Event Hub Authorization Rule Id",
@@ -460,7 +291,7 @@
         "germanyWestCentralEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "Japan East Event hub where data will be sent to",
+                "displayName": "Germany West Central Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
@@ -473,18 +304,18 @@
                 "assignPermissions": true
             }
         },
-        "northEuropeEventHub": {
+        "germanyNorthEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "North Europe Event hub where data will be sent to",
+                "displayName": "Germany North Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northEuropeEventHubRuleId": {
+        "germanyNorthEventHubRuleId": {
             "type": "String",
             "metadata": {
-                "displayName": "North Europe Event Hub Authorization Rule Id",
-                "description": "The North Europe Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "displayName": "Germany North Event Hub Authorization Rule Id",
+                "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
                 "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
                 "assignPermissions": true
             }

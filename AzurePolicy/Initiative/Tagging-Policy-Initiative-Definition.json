@@ -1,0 +1,135 @@
+[
+  {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-and-Value-Exists",
+      "parameters": {
+          "tagName": {
+              "value": "[parameters('mandatoryTagKey1')]"
+          },
+          "tagValues": {
+              "value": "[parameters('mandatoryTagValue1')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey2')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-and-Value-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey3')]"
+        },
+        "tagValues": {
+            "value": "[parameters('mandatoryTagValue3')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey4')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey5')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-and-Value-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey6')]"
+        },
+        "tagValues": {
+            "value": "[parameters('mandatoryTagValue6')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey7')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey8')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-and-Value-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey9')]"
+        },
+        "tagValues": {
+            "value": "[parameters('mandatoryTagValue9')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey10')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  },
+  {
+    "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/Validate-Tag-Exists",
+    "parameters": {
+        "tagName": {
+            "value": "[parameters('mandatoryTagKey11')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+    }
+  }
+]

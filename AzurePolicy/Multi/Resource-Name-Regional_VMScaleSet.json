@@ -16,23 +16,48 @@
                 },
                 {
                   "count": {
-                    "value": "[parameters('regionPrefixAcronyms')]",
+                    "value": "[parameters('osType')]",
                     "where": {
-                      "value": "[string(first(skip(split(field('name'), '-'), 1)))]",
-                      "like": "[current()]"
+                      "value": "[skip(field('name'), 5)]",
+                      "like": "[concat(current(), '*')]"
                     }
                   },
                   "greater": 0
                 },
                 {
                   "count": {
-                    "value": "[parameters('environmentAcronyms')]",
+                    "value": "[parameters('regionPrefixAcronyms')]",
                     "where": {
-                      "value": "[string(first(skip(split(field('name'), '-'), 2)))]",
-                      "like": "[current()]"
+                      "value": "[skip(field('name'), 6)]",
+                      "like": "[concat(current(), '*')]"
                     }
                   },
                   "greater": 0
+                },
+                {                
+                  "anyOf" : [
+                    {
+                      "count": {
+                        "value": "[parameters('environmentAcronyms')]",
+                        "where": {
+                          "value": "[skip(field('name'), 9)]",
+                          "like": "[concat(current(), '*')]"
+                        }
+                      },
+                      "greater": 0
+                    },
+                    {
+                      "count": {
+                        "value": "[parameters('environmentAcronyms')]",
+                        "where": {
+                          "value": "[skip(field('name'), 10)]",
+                          "like": "[concat(current(), '*')]"
+                        }
+                      },
+                      "greater": 0
+                    }
+
+                  ]
                 }
               ]
             }
@@ -50,14 +75,28 @@
         "displayName" : "Resource type",
         "description" : "Resource type to enforce naming pattern.",
         "strongType" : "resourceTypes"
-      }
+      },
+      "defaultValue": "microsoft.compute/virtualmachinescalesets"
     },
     "resourceAbbreviation":{
       "type": "String",
       "metadata": {
         "displayName": "Resource type abbreviation",
         "description": "Abbreviation of resource type based upon naming policy"
-      }
+      },
+      "defaultValue": "vmss"
+    },
+    "osType": {
+      "type": "Array",
+      "metadata": {
+        "displayName": "Guest OS Type",
+        "description": "The type of guest OS running on the virtual machine(s)"
+      },
+      "defaultValue": [
+        "w",
+        "l",
+        "u"
+      ]
     },
     "regionPrefixAcronyms":{
       "type": "Array",
@@ -66,10 +105,10 @@
         "description": "The region the resource resides within"
       },
       "defaultValue": [
-        "use",
-        "use2",
-        "usc",
-        "usnc"
+        "eus",
+        "eus2",
+        "cus",
+        "ncus"
       ]
     },
     "environmentAcronyms": {
@@ -79,10 +118,10 @@
         "description": "The environment the resource belongs too"
       },
       "defaultValue": [
-        "prd",
-        "dev",
-        "qa",
-        "sbx"
+        "p",
+        "d",
+        "u",
+        "x"
       ]
     },
     "effect": {

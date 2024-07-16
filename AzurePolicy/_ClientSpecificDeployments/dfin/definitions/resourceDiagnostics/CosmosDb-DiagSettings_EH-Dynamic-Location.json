@@ -1,0 +1,465 @@
+{
+  "mode": "all",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.DocumentDB/databaseAccounts"
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "existenceCondition": {
+          "allOf": [
+            {
+              "count": {
+                "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                "where": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                  "equals": true
+                }
+              },
+              "greaterOrEquals": 1
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metrics')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+              "like": "*"
+            }
+          ]
+        },
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "profileName": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "centralUsEventHubName": {
+                    "type": "string"
+                },
+                "centralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "eastUs2EventHubName": {
+                    "type": "string"
+                },
+                "eastUs2EventHubRuleId": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubName": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubName": {
+                    "type": "string"
+                },
+                "germanyNorthEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyNorthEventHubName": {
+                    "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "metrics": {
+                  "type": "string"
+                },
+                "dataPlaneRequests": {
+                  "type": "string"
+                },
+                "mongoRequests": {
+                  "type": "string"
+                },
+                "queryRuntimeStatistics": {
+                  "type": "string"
+                },
+                "partitionKeyStatistics": {
+                  "type": "string"
+                },
+                "controlPlaneRequests": {
+                  "type": "string"
+                },
+                "cassandraRequests": {
+                  "type": "string"
+                },
+                "gremlinRequests": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "centralUsEventHub": {
+                    "eventHubName": "[parameters('centralUsEventHubName')]",
+                    "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                },
+                "eastUs2EventHub": {
+                    "eventHubName": "[parameters('eastUs2EventHubName')]",
+                    "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                },
+                "northCentralUSEventHub": {
+                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
+                },
+                "germanyWestCentralEventHub": {
+                    "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
+                    "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
+                },
+                "germanyNorthEventHub": {
+                    "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                    "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
+                },
+                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.DocumentDB/databaseAccounts/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "Requests",
+                        "enabled": "[parameters('metrics')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        },
+                        "timeGrain": null
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "DataPlaneRequests",
+                        "enabled": "[parameters('dataPlaneRequests')]"
+                      },
+                      {
+                        "category": "MongoRequests",
+                        "enabled": "[parameters('mongoRequests')]"
+                      },
+                      {
+                        "category": "QueryRuntimeStatistics",
+                        "enabled": "[parameters('queryRuntimeStatistics')]"
+                      },
+                      {
+                        "category": "PartitionKeyStatistics",
+                        "enabled": "[parameters('partitionKeyStatistics')]"
+                      },
+                      {
+                        "category": "PartitionKeyRUConsumption",
+                        "enabled": "[parameters('partitionKeyStatistics')]"
+                      },
+                      {
+                        "category": "ControlPlaneRequests",
+                        "enabled": "[parameters('controlPlaneRequests')]"
+                      },
+                      {
+                        "category": "CassandraRequests",
+                        "enabled": "[parameters('cassandraRequests')]"
+                      },
+                      {
+                        "category": "GremlinRequests",
+                        "enabled": "[parameters('gremlinRequests')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat(parameters('resourceName'),' - Is now sending diagnostic logs to EventHub ', variables('eventHub').eventHubName)]"
+                }
+              }
+            },
+            "parameters": {
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "centralUsEventHubName": {
+                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
+              },
+              "centralUsEventHubRuleId": {
+                "value": "[parameters('centraUsEventHubRuleId')]"
+              },
+              "eastUs2EventHubName": {
+                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
+              },
+              "eastUs2EventHubRuleId": {
+                "value": "[parameters('eastUs2EventHubRuleId')]"
+              },
+              "northCentralUsEventHubName": {
+                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
+              },
+              "germanyWestCentralEventHubRuleId": {
+                "value": "[parameters('germanyWestCentralEventHubRuleId')]"
+              },
+              "northCentralUsEventHubRuleId": {
+                "value": "[parameters('northCentralUsEventHubRuleId')]"
+              },
+              "germanyWestCentralEventHubName": {
+                "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
+              },
+              "germanyNorthEventHubRuleId": {
+                "value": "[parameters('germanyNorthEventHubRuleId')]"
+              },
+              "germanyNorthEventHubName": {
+                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
+              },
+              "metrics": {
+                "value": "[parameters('metrics')]"
+              },
+              "dataPlaneRequests": {
+                "value": "[parameters('dataPlaneRequests')]"
+              },
+              "mongoRequests": {
+                "value": "[parameters('mongoRequests')]"
+              },
+              "queryRuntimeStatistics": {
+                "value": "[parameters('queryRuntimeStatistics')]"
+              },
+              "partitionKeyStatistics": {
+                "value": "[parameters('partitionKeyStatistics')]"
+              },
+              "controlPlaneRequests": {
+                "value": "[parameters('controlPlaneRequests')]"
+              },
+              "cassandraRequests": {
+                "value": "[parameters('cassandraRequests')]"
+              },
+              "gremlinRequests": {
+                "value": "[parameters('gremlinRequests')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "deployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    },
+    "profileName": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Setting name",
+        "description": "Name of the policy for the diagnostics settings."
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "metrics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Gateway Metrics",
+        "description": "Whether to log Cosmos DB metrics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "dataPlaneRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB data plan requests",
+        "description": "Whether to log Cosmos DB Data Plane requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "mongoRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Mongo Requests",
+        "description": "Whether to log Cosmos DB Mongo requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "queryRuntimeStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Query Runtime Statistics",
+        "description": "Whether to log Cosmos DB query runtime statistics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "partitionKeyStatistics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Partition Key Statistics",
+        "description": "Whether to log Cosmos DB partition key and RU consumption - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "controlPlaneRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Control Plane Requests",
+        "description": "Whether to log Cosmos DB control plane requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "cassandraRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Cassandra Requests",
+        "description": "Whether to log Cosmos DB cassandra requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "gremlinRequests": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Cosmos DB Gremlin Requests",
+        "description": "Whether to log Cosmos DB gremlin requests - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "centralUsEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Central US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "centraUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Central US Event Hub Authorization Rule Id",
+            "description": "The Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "eastUs2EventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "East US 2 Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastUs2EventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US 2 Event Hub Authorization Rule Id",
+            "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "northCentralUsEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Central US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "northCentralUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "North Central US Event Hub Authorization Rule Id",
+            "description": "The North Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyWestCentralEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Germany West Central Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyWestCentralEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany West Central Event Hub Authorization Rule Id",
+            "description": "The Germany West Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyNorthEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Germany North Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyNorthEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany North Event Hub Authorization Rule Id",
+            "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    }
+  }
+}

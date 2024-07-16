@@ -1,0 +1,68 @@
+{
+  "if": {
+    "allOf":[
+      {
+          "field": "type",
+          "equals": "[parameters('resourceType')]"
+      },
+      {
+        "not": {
+          "allOf": [
+            {
+              "field": "name",
+              "like": "[concat(parameters('resourceAbbreviation'), '*')]"
+            },
+            {
+              "count": {
+                "value": "[parameters('osType')]",
+                "where": {
+                  "value": "[skip(field('name'), 5)]",
+                  "like": "[concat(current(), '*')]"
+                }
+              },
+              "greater": 0
+            },
+            {
+              "count": {
+                "value": "[parameters('regionPrefixAcronyms')]",
+                "where": {
+                  "value": "[skip(field('name'), 6)]",
+                  "like": "[concat(current(), '*')]"
+                }
+              },
+              "greater": 0
+            },
+            {                
+              "anyOf" : [
+                {
+                  "count": {
+                    "value": "[parameters('environmentAcronyms')]",
+                    "where": {
+                      "value": "[skip(field('name'), 9)]",
+                      "like": "[concat(current(), '*')]"
+                    }
+                  },
+                  "greater": 0
+                },
+                {
+                  "count": {
+                    "value": "[parameters('environmentAcronyms')]",
+                    "where": {
+                      "value": "[skip(field('name'), 10)]",
+                      "like": "[concat(current(), '*')]"
+                    }
+                  },
+                  "greater": 0
+                }
+
+              ]
+            }
+          ]
+        }
+      } 
+    ]
+  },
+  "then": {
+      "effect": "[parameters('effect')]"
+  }
+}

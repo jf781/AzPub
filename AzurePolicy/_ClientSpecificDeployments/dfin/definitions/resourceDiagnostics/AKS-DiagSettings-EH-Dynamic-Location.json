@@ -1,0 +1,482 @@
+{
+  "mode": "Indexed",
+  "policyRule": {
+    "if": {
+      "equals": "Microsoft.ContainerService/managedClusters",
+      "field": "type"
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "name": "[parameters('profileName')]",
+        "existenceCondition": {
+          "allOf": [
+            {
+              "count": {
+                "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                "where": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                  "equals": true
+                }
+              },
+              "greaterOrEquals": 1
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metricsEnabled')]"
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+              "like": "*"
+            }
+          ]
+        },
+        "roleDefinitionIds": [
+          "/providers/microsoft.authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "centralUsEventHubName": {
+                  "type": "string"
+                },
+                "centralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "eastUs2EventHubName": {
+                    "type": "string"
+                },
+                "eastUs2EventHubRuleId": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubName": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubName": {
+                    "type": "string"
+                },
+                "germanyNorthEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyNorthEventHubName": {
+                    "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "kubeApiServer": {
+                  "type": "string"
+                },
+                "kubeAuditLogs": {
+                  "type": "string"
+                },
+                "kubeAuditAdminLogs": {
+                  "type": "string"
+                },
+                "kubeControllerManager": {
+                  "type": "string"
+                },
+                "kubeScheduler": {
+                  "type": "string"
+                },
+                "kubeAutoScale": {
+                  "type": "string"
+                },
+                "kubeCloudControlManager": {
+                  "type": "string"
+                },
+                "kubeGuard": {
+                  "type": "string"
+                },
+                "metricsEnabled": {
+                  "type": "string"
+                },
+                "profileName": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]",
+                "centralUsEventHub": {
+                  "eventHubName": "[parameters('centralUsEventHubName')]",
+                  "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                },
+                "eastUs2EventHub": {
+                  "eventHubName": "[parameters('eastUs2EventHubName')]",
+                  "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                },
+                "germanyNorthEventHub": {
+                  "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                  "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
+                },
+                "germanyWestCentralEventHub": {
+                  "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
+                  "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
+                },
+                "northCentralUSEventHub": {
+                  "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                  "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
+                }
+              },
+              "resources": [
+                {
+                  "apiVersion": "2017-05-01-preview",
+                  "dependsOn": [],
+                  "location": "[parameters('location')]",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "properties": {
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "logs": [
+                      {
+                        "category": "kube-apiserver",
+                        "enabled": "[parameters('kubeApiServer')]"
+                      },
+                      {
+                        "category": "kube-audit",
+                        "enabled": "[parameters('kubeAuditLogs')]"
+                      },
+                      {
+                        "category": "kube-audit-admin",
+                        "enabled": "[parameters('kubeAuditAdminLogs')]"
+                      },
+                      {
+                        "category": "kube-controller-manager",
+                        "enabled": "[parameters('kubeControllerManager')]"
+                      },
+                      {
+                        "category": "kube-scheduler",
+                        "enabled": "[parameters('kubeScheduler')]"
+                      },
+                      {
+                        "category": "cluster-autoscaler",
+                        "enabled": "[parameters('kubeAutoScale')]"
+                      },
+                      {
+                        "category": "guard",
+                        "enabled": "[parameters('kubeGuard')]"
+                      },
+                      {
+                        "category": "cloud-controller-manager",
+                        "enabled": "[parameters('kubeCloudControlManager')]"
+                      },
+                      {
+                        "category": "csi-azuredisk-controller",
+                        "enabled": "[parameters('kubeCloudControlManager')]"
+                      },
+                      {
+                        "category": "csi-azurefile-controller",
+                        "enabled": "[parameters('kubeCloudControlManager')]"
+                      },
+                      {
+                        "category": "csi-snapshot-controller",
+                        "enabled": "[parameters('kubeCloudControlManager')]"
+                      }
+                    ],
+                    "metrics": [
+                      {
+                        "category": "AllMetrics",
+                        "enabled": "[parameters('metricsEnabled')]",
+                        "retentionPolicy": {
+                          "days": 0,
+                          "enabled": false
+                        }
+                      }
+                    ]
+                  },
+                  "type": "Microsoft.ContainerService/managedClusters/providers/diagnosticSettings"
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat('Enabled diagnostic settings for ', parameters('resourceName'))]"
+                }
+              }
+            },
+            "parameters": {
+              "centralUsEventHubName": {
+                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
+              },
+              "centralUsEventHubRuleId": {
+                "value": "[parameters('centraUsEventHubRuleId')]"
+              },
+              "eastUs2EventHubName": {
+                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
+              },
+              "eastUs2EventHubRuleId": {
+                "value": "[parameters('eastUs2EventHubRuleId')]"
+              },
+              "northCentralUsEventHubName": {
+                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
+              },
+              "northCentralUsEventHubRuleId": {
+                "value": "[parameters('northCentralUsEventHubRuleId')]"
+              },
+              "germanyWestCentralEventHubName": {
+                "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
+              },
+              "germanyWestCentralEventHubRuleId": {
+                "value": "[parameters('germanyWestCentralEventHubRuleId')]"
+              },
+              "germanyNorthEventHubName": {
+                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
+              },
+              "germanyNorthEventHubRuleId": {
+                "value": "[parameters('germanyNorthEventHubRuleId')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "kubeApiServer": {
+                "value": "[parameters('kubeApiServer')]"
+              },
+              "kubeAuditLogs": {
+                "value": "[parameters('kubeAuditLogs')]"
+              },
+              "kubeAuditAdminLogs": {
+                "value": "[parameters('kubeAuditAdminLogs')]"
+              },
+              "kubeControllerManager": {
+                "value": "[parameters('kubeControllerManager')]"
+              },
+              "kubeScheduler": {
+                "value": "[parameters('kubeScheduler')]"
+              },
+              "kubeAutoScale": {
+                "value": "[parameters('kubeAutoScale')]"
+              },
+              "kubeCloudControlManager": {
+                "value": "[parameters('kubeCloudControlManager')]"
+              },
+              "kubeGuard": {
+                "value": "[parameters('kubeGuard')]"
+              },
+              "metricsEnabled": {
+                "value": "[parameters('metricsEnabled')]"
+              },
+                            "profileName": {
+                "value": "[parameters('profileName')]"
+              }
+            }
+          }
+        } 
+      }
+    }
+  },
+  "parameters": {
+    "centralUsEventHub": {
+      "type": "String",
+      "metadata": {
+          "displayName": "Central US Event hub where data will be sent to",
+          "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+      }
+    },
+    "centraUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Central US Event Hub Authorization Rule Id",
+            "description": "The Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "eastUs2EventHub": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US 2 Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastUs2EventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US 2 Event Hub Authorization Rule Id",
+            "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "northCentralUsEventHub": {
+        "type": "String",
+        "metadata": {
+            "displayName": "North Central US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "northCentralUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "North Central US Event Hub Authorization Rule Id",
+            "description": "The North Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyWestCentralEventHub": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany West Central Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyWestCentralEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany West Central Event Hub Authorization Rule Id",
+            "description": "The Germany West Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyNorthEventHub": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany North Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyNorthEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany North Event Hub Authorization Rule Id",
+            "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "kubeApiServer": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes API Server logs",
+        "description": "Whether stream Kubernetes API Server logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeAuditLogs": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Audit logs",
+        "description": "Whether stream Kubernetes Audit logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeAuditAdminLogs": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Admin Audit logs",
+        "description": "Whether stream Kubernetes Admin Audit logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeControllerManager": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Controller Manager logs",
+        "description": "Whether stream Kubernetes Controller Manager logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeScheduler": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Scheduler logs",
+        "description": "Whether stream Kubernetes Scheduler logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeAutoScale": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Auto Scale logs",
+        "description": "Whether stream Kubernetes Auto Scale logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeCloudControlManager": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Cloud Control Manager logs",
+        "description": "Whether stream Kubernetes Cloud Control Manager logs to the Event Hub  - True or False.  Will also enable the CSI Storage Driver Logs"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "kubeGuard": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable Kubernetes Guard logs",
+        "description": "Whether stream Kubernetes Guard logs to the Event Hub  - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "metricsEnabled": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Enable metrics",
+        "description": "Whether to enable metrics stream to the Event Hub - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "False"
+    },
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setbypolicy"
+    }
+  }
+}

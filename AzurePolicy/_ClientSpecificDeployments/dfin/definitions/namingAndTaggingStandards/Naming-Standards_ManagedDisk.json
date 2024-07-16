@@ -1,0 +1,68 @@
+{
+  "if": {
+    "allOf":[
+      {
+          "field": "type",
+          "equals": "[parameters('resourceType')]"
+      },
+      {
+        "not": {
+          "allOf": [
+            {
+              "field": "name",
+              "like": "[concat(parameters('resourceAbbreviation'), '-vm', '*')]"
+            },
+            {
+              "count": {
+                "value": "[parameters('osType')]",
+                "where": {
+                  "value": "[skip(field('name'), 7)]",
+                  "like": "[concat(current(), '*')]"
+                }
+              },
+              "greater": 0
+            },
+            {
+              "count": {
+                "value": "[parameters('regionPrefixAcronyms')]",
+                "where": {
+                  "value": "[skip(field('name'), 8)]",
+                  "like": "[concat(current(), '*')]"
+                }
+              },
+              "greater": 0
+            },
+            {                
+              "anyOf" : [
+                {
+                  "count": {
+                    "value": "[parameters('environmentAcronyms')]",
+                    "where": {
+                      "value": "[skip(field('name'), 11)]",
+                      "like": "[concat(current(), '*')]"
+                    }
+                  },
+                  "greater": 0
+                },
+                {
+                  "count": {
+                    "value": "[parameters('environmentAcronyms')]",
+                    "where": {
+                      "value": "[skip(field('name'), 12)]",
+                      "like": "[concat(current(), '*')]"
+                    }
+                  },
+                  "greater": 0
+                }
+
+              ]
+            }
+          ]
+        }
+      } 
+    ]
+  },
+  "then": {
+      "effect": "[parameters('effect')]"
+  } 
+}

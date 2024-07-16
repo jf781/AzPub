@@ -1,0 +1,151 @@
+# ----------------------------------------------------------------
+#  Define Parameters
+# ----------------------------------------------------------------
+metadata='Category="Governance"'
+mgmtGroup='mg-dfin-root'
+namingMode='All'
+taggingMode='Indexed'
+
+
+
+
+
+# ----------------------------------------------------------------
+#  Naming Standards Policy Definitions
+# ----------------------------------------------------------------
+
+# Global Policy policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_Global" \
+--description "Validate naming standards for Global resources (not associated with a specific region)." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_Global.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_Global.params.json
+
+# Managed Disk policy definitions
+az policy definition create \
+--name "Validate-Naming-Standards_Managed-Disks" \
+--description "Validate naming standards for Managed Disks." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_ManagedDisk.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_ManagedDisk.params.json
+
+# No Deliminter with three characters prefix policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_NoDelimiter-Three-Character-Prefix" \
+--description "Validate naming standards for resources without a delimiter in the name and has a 3 character prefix." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_NoDelimiter_Three.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_NoDelimiter_Three.params.json
+
+# No Deliminter with two characters prefix policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_NoDelimiter-Two-Character-Prefix" \
+--description "Validate naming standards for resources without a delimiter in the name and has a 2 character prefix." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_NoDelimiter_Two.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_NoDelimiter_Two.params.json
+
+# Regional Resources with Company Identifier policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_Regional-Company-Identifier" \
+--description "Validate naming standards regional resources that include the company identifier in their name." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_Regional_CompanyIdentifier.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_Regional_CompanyIdentifier.params.json
+
+# Regional Resources without Company Identifier policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_Regional" \
+--description "Validate naming standards regional resources that does not include the company identifier in their name." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_Regional.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_Regional.params.json
+
+# Virtual Machines policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_VirtualMachines" \
+--description "Validate naming standards for virtual machines." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_VM.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_VM.params.json
+
+# Virtual Machines Scale Sets policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_VirtualMachines-ScaleSets" \
+--description "Validate naming standards for virtual machines scale sets." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_VMScaleSet.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_VMScaleSet.params.json
+
+# Web Application policy definition
+az policy definition create \
+--name "Validate-Naming-Standards_Web-Apps" \
+--description "Validate naming standards for Web Sites and Function Apps." \
+--mode $namingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Naming-Standards_WebApp.json \
+--params @definitions/namingAndTaggingStandards/Naming-Standards_WebApp.params.json
+
+# ----------------------------------------------------------------
+#  Tagging Standards Policy Definition
+# ----------------------------------------------------------------
+
+# Tag Key policy definition
+az policy definition create \
+--name "Validate-Tag-Exists" \
+--description "Validate that a mandatory tag is present on the resource.  Includes exclusions for pre-determines resource types" \
+--mode $taggingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Tagging-Name.json \
+--params @definitions/namingAndTaggingStandards/Tagging-Name.params.json
+
+# Tag Key and Value policy definition
+az policy definition create \
+--name "Validate-Tag-and-Value-Exists" \
+--description "Validate that a mandatory tag and a predefined value are present on the resource.  Includes exclusions for pre-determines resource types" \
+--mode $taggingMode \
+--management-group $mgmtGroup \
+--metadata $metadata \
+--rules @definitions/namingAndTaggingStandards/Tagging-Name-and-Value.json \
+--params @definitions/namingAndTaggingStandards/Tagging-Name-and-Value.params.json
+
+
+
+# ----------------------------------------------------------------
+#  Define Initiative Definitions
+# ----------------------------------------------------------------
+
+# Naming Standard Policy Definition
+az policy set-definition create \
+--name 'Naming-Standards-Iniative' \
+--description 'Initiative to incorporate all naming standard policy definitions and apply the appropriate one to each resource type defined in the naming standard.  v1 - October 2022' \
+--management-group $mgmtGroup \
+--definitions @initiative/namingAndTaggingStandards/Naming-Policy-Initiative-Definition.json \
+--params @initiative/namingAndTaggingStandards/Naming-Policy-Initiative-Definition.params.json
+
+# Tagging Standars Definition
+az policy set-definition create \
+--name 'Tagging-Standards-Iniative' \
+--description 'Initiative to incorporate all tagging standard policy definitions and apply the appropriate one to each of the mandatory tags type defined in the tagging standard.  v1 - October 2022' \
+--management-group $mgmtGroup \
+--definitions @initiative/namingAndTaggingStandards/Tagging-Policy-Initiative-Definition.json \
+--params @initiative/namingAndTaggingStandards/Tagging-Policy-Initiative-Definition.params.json

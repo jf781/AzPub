@@ -1,12 +1,12 @@
 {
-    "mode": "Indexed",
+    "mode": "All",
     "policyRule": {
         "if": {
             "field": "type",
-            "equals": "Microsoft.Sql/servers/databases"
+            "equals": "Microsoft.Web/sites"
         },
         "then": {
-            "effect": "DeployIfNotExists",
+            "effect": "[parameters('effect')]",
             "details": {
                 "type": "Microsoft.Insights/diagnosticSettings",
                 "name": "[parameters('profileName')]",
@@ -14,11 +14,11 @@
                     "allOf": [
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
-                            "equals": "[parameters('QueryStoreRuntimeStatistics')]"
+                            "equals": "true"
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
-                            "equals": "[parameters('metricsEnabled')]"
+                            "equals": "true"
                         },
                         {
                             "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
@@ -31,10 +31,9 @@
                     ]
                 },
                 "roleDefinitionIds": [
-                    "/providers/microsoft.authorization/roleDefinitions/6d8ee4ec-f05a-4a1d-8b00-a9b17e38b437",
-                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293",
-                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
-                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+                    "/providers/microsoft.authorization/roleDefinitions/2cc479cb-7b4d-49a8-b449-8c00fd0f0a4b",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa"
                 ],
                 "deployment": {
                     "properties": {
@@ -43,43 +42,31 @@
                             "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
                             "contentVersion": "1.0.0.0",
                             "parameters": {
-                                "dbName": {
-                                    "type": "string"
-                                },
                                 "location": {
                                     "type": "string"
                                 },
-                                "metricsEnabled": {
-                                    "type": "string"
-                                },
-                                "QueryStoreRuntimeStatistics": {
-                                    "type": "string"
-                                },
-                                "QueryStoreWaitStatistics": {
-                                    "type": "string"
-                                },
-                                "Errors": {
-                                    "type": "string"
-                                },
-                                "DatabaseWaitStatistics": {
-                                    "type": "string"
-                                },
-                                "Blocks": {
-                                    "type": "string"
-                                },
-                                "SQLInsights": {
-                                    "type": "string"
-                                },
-                                "Timeouts": {
-                                    "type": "string"
-                                },
-                                "AutomaticTuning": {
-                                    "type": "string"
-                                },
-                                "Deadlocks": {
+                                "serverName": {
                                     "type": "string"
                                 },
                                 "profileName": {
+                                    "type": "string"
+                                },
+                                "appServiceAppLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceHTTPLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceConsoleLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceFileAuditLogs": {
+                                    "type": "string"
+                                },
+                                "appServiceAuditLogs": {
+                                    "type": "string"
+                                },
+                                "allMetrics":{
                                     "type": "string"
                                 },
                                 "centralUsEventHubName": {
@@ -97,7 +84,7 @@
                                 "northCentralUsEventHubName": {
                                     "type": "string"
                                 },
-                                "northCentralUSEventHubName": {
+                                "northCentralUsEventHubRuleId": {
                                     "type": "string"
                                 },
                                 "germanyWestCentralEventHubRuleId": {
@@ -106,10 +93,10 @@
                                 "germanyWestCentralEventHubName": {
                                     "type": "string"
                                 },
-                                "northEuropeEventHubRuleId": {
+                                "germanyNorthEventHubRuleId": {
                                     "type": "string"
                                 },
-                                "northEuropeEventHubName": {
+                                "germanyNorthEventHubName": {
                                     "type": "string"
                                 }
                             },
@@ -123,75 +110,61 @@
                                     "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
                                 },
                                 "northCentralUSEventHub": {
-                                    "eventHubName": "[parameters('northCentralUSEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northCentralUSEventHubRuleId')]"
+                                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
                                 },
                                 "germanyWestCentralEventHub": {
                                     "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
                                     "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
                                 },
-                                "northEuropeEventHub": {
-                                    "eventHubName": "[parameters('northEuropeEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northEuropeEventHubRuleId')]"
+                                "germanyNorthEventHub": {
+                                    "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                                    "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
                                 },
                                 "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
                             },
                             "resources": [
                                 {
-                                    "type": "Microsoft.Sql/servers/databases/providers/diagnosticSettings",
+                                    "type": "Microsoft.Web/sites/providers/diagnosticSettings",
+                                    "name": "[concat(parameters('serverName'), '/Microsoft.Insights/', parameters('profileName'))]",
                                     "apiVersion": "2017-05-01-preview",
-                                    "name": "[concat(parameters('dbName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
-                                    "location": "[parameters('location')]",
-                                    "dependsOn": [],
                                     "properties": {
                                         "eventHubName": "[variables('eventHub').eventHubName]",
                                         "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                                        "logs": [
+                                            {
+                                                "category": "AppServiceHTTPLogs",
+                                                "enabled": "[parameters('appServiceHTTPLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceConsoleLogs",
+                                                "enabled": "[parameters('appServiceConsoleLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceAppLogs",
+                                                "enabled": "[parameters('appServiceAppLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceFileAuditLogs",
+                                                "enabled": "[parameters('AppServiceFileAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceAuditLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServiceIPSecAuditLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
+                                            },
+                                            {
+                                                "category": "AppServicePlatformLogs",
+                                                "enabled": "[parameters('appServiceAuditLogs')]"
+                                            }
+                                        ],
                                         "metrics": [
                                             {
                                                 "category": "AllMetrics",
-                                                "enabled": "[parameters('metricsEnabled')]",
-                                                "retentionPolicy": {
-                                                    "enabled": false,
-                                                    "days": 0
-                                                }
-                                            }
-                                        ],
-                                        "logs": [
-                                            {
-                                                "category": "QueryStoreRuntimeStatistics",
-                                                "enabled": "[parameters('QueryStoreRuntimeStatistics')]"
-                                            },
-                                            {
-                                                "category": "QueryStoreWaitStatistics",
-                                                "enabled": "[parameters('QueryStoreWaitStatistics')]"
-                                            },
-                                            {
-                                                "category": "Errors",
-                                                "enabled": "[parameters('Errors')]"
-                                            },
-                                            {
-                                                "category": "DatabaseWaitStatistics",
-                                                "enabled": "[parameters('DatabaseWaitStatistics')]"
-                                            },
-                                            {
-                                                "category": "Blocks",
-                                                "enabled": "[parameters('Blocks')]"
-                                            },
-                                            {
-                                                "category": "SQLInsights",
-                                                "enabled": "[parameters('SQLInsights')]"
-                                            },
-                                            {
-                                                "category": "Timeouts",
-                                                "enabled": "[parameters('Timeouts')]"
-                                            },
-                                            {
-                                                "category": "AutomaticTuning",
-                                                "enabled": "[parameters('AutomaticTuning')]"
-                                            },
-                                            {
-                                                "category": "Deadlocks",
-                                                "enabled": "[parameters('Deadlocks')]"
+                                                "enabled": "[parameters('allMetrics')]"
                                             }
                                         ]
                                     }
@@ -200,7 +173,7 @@
                             "outputs": {
                                 "policy": {
                                     "type": "string",
-                                    "value": "[concat(parameters('dbName'), ' - is now sending diagnostic logs to eventHub - ', variables('eventHub').eventHubName"
+                                    "value": "[concat('Configured diagnostic settings to be sent to EventHub ', variables('eventHub').eventHubName, 'for AppService ', parameters('serverName'),'.')]"
                                 }
                             }
                         },
@@ -208,71 +181,59 @@
                             "location": {
                                 "value": "[field('location')]"
                             },
-                            "dbName": {
-                                "value": "[field('fullName')]"
-                            },
-                            "metricsEnabled": {
-                                "value": "[parameters('metricsEnabled')]"
-                            },
-                            "QueryStoreRuntimeStatistics": {
-                                "value": "[parameters('QueryStoreRuntimeStatistics')]"
-                            },
-                            "QueryStoreWaitStatistics": {
-                                "value": "[parameters('QueryStoreWaitStatistics')]"
-                            },
-                            "Errors": {
-                                "value": "[parameters('Errors')]"
-                            },
-                            "DatabaseWaitStatistics": {
-                                "value": "[parameters('DatabaseWaitStatistics')]"
-                            },
-                            "Blocks": {
-                                "value": "[parameters('Blocks')]"
-                            },
-                            "Timeouts": {
-                                "value": "[parameters('Timeouts')]"
-                            },
-                            "AutomaticTuning": {
-                                "value": "[parameters('AutomaticTuning')]"
-                            },
-                            "Deadlocks": {
-                                "value": "[parameters('Deadlocks')]"
-                            },
-                            "SQLInsights": {
-                                "value": "[parameters('SQLInsights')]"
+                            "serverName": {
+                                "value": "[field('name')]"
                             },
                             "profileName": {
                                 "value": "[parameters('profileName')]"
                             },
+                            "appServiceHTTPLogs": {
+                                "value":"[parameters('appServiceHTTPLogs')]"
+                            },
+                            "appServiceConsoleLogs":{
+                                "value":"[parameters('appServiceConsoleLogs')]"
+                            },
+                            "appServiceAppLogs": {
+                                "value":"[parameters('appServiceAppLogs')]"
+                            },
+                            "appServiceFileAuditLogs": {
+                                "value":"[parameters('appServiceFileAuditLogs')]"
+                            },
+                            "appServiceAuditLogs": {
+                                "value":"[parameters('appServiceAuditLogs')]"
+                            },
+                            "allMetrics": {
+                                "value":"[parameters('allMetrics')]"
+                            },
                             "centralUsEventHubName": {
-                                "value": "[parameters('centralUsEventHub')]"
+                                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
                             },
                             "centralUsEventHubRuleId": {
                                 "value": "[parameters('centraUsEventHubRuleId')]"
                             },
                             "eastUs2EventHubName": {
-                                "value": "[parameters('eastUs2EventHub')]"
+                                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
                             },
                             "eastUs2EventHubRuleId": {
                                 "value": "[parameters('eastUs2EventHubRuleId')]"
                             },
                             "northCentralUsEventHubName": {
-                                "value": "[parameters('northCentralUsEventHub')]"
-                            },
-                            "northCentralUsEventHubRuleId": {
-                                "value": "[parameters('northCentraUsEventHubRuleId')]"
+                                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
                             },
                             "germanyWestCentralEventHubRuleId": {
                                 "value": "[parameters('germanyWestCentralEventHubRuleId')]"
                             },
+                            "northCentralUsEventHubRuleId": {
+                                "value": "[parameters('northCentralUsEventHubRuleId')]"
+                            },
                             "germanyWestCentralEventHubName": {
                                 "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
                             },
-                            "northEuropeEventHubRuleId": {
-                                "value": "[parameters('northEuropeEventHubRuleId')]"
+                            "germanyNorthEventHubRuleId": {
+                                "value": "[parameters('germanyNorthEventHubRuleId')]"
                             },
-                            "northEuropeEventHubName": {
-                                "value": "[last(split(parameters('northEuropeEventHub'),'/'))]"
+                            "germanyNorthEventHubName": {
+                                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
                             }
                         }
                     }
@@ -281,133 +242,26 @@
         }
     },
     "parameters": {
+        "effect": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Effect",
+              "description": "The effect determines what happens when the policy rule is evaluated to match"
+            },
+            "allowedValues": [
+              "Audit",
+              "Deny",
+              "deployIfNotExists"
+            ],
+            "defaultValue": "Audit"
+        },
         "profileName": {
             "type": "String",
             "metadata": {
                 "displayName": "Profile name",
                 "description": "The diagnostic settings profile name"
             },
-            "defaultValue": "setbypolicy"
-        },
-        "metricsEnabled": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Enable metrics",
-                "description": "Whether to enable metrics stream to Log Analytics - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "QueryStoreRuntimeStatistics": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Query Store Runtime Statistics logs",
-                "description": "Log data on query runtime statistics - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "QueryStoreWaitStatistics": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Query Store Wait Statistics",
-                "description": "Logs data on query wait statistics - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Errors": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Errors",
-                "description": "Logs data about SQL DB errors - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "DatabaseWaitStatistics": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Database Wait Statistics",
-                "description": "Logs data about different wait types and times for the SQL DB - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Blocks": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Blocks",
-                "description": "Logs information about blocking events - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "SQLInsights": {
-            "type": "String",
-            "metadata": {
-                "displayName": "SQL Insights",
-                "description": "Logs data to help with Intelligent Insights for DB performance- True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Timeouts": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Timeouts",
-                "description": "Logs events about DB timeouts - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "AutomaticTuning": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Automatic Tuning",
-                "description": "Logs data for Automatic Tuning recommendations - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
-        },
-        "Deadlocks": {
-            "type": "String",
-            "metadata": {
-                "displayName": "Deadlocks",
-                "description": "Logs data about Deadlock events - True or False"
-            },
-            "allowedValues": [
-                "True",
-                "False"
-            ],
-            "defaultValue": "True"
+            "defaultValue": "setByPolicy"
         },
         "centralUsEventHub": {
             "type": "string",
@@ -448,7 +302,7 @@
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northCentraUsEventHubRuleId": {
+        "northCentralUsEventHubRuleId": {
             "type": "String",
             "metadata": {
                 "displayName": "North Central US Event Hub Authorization Rule Id",
@@ -460,7 +314,7 @@
         "germanyWestCentralEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "Japan East Event hub where data will be sent to",
+                "displayName": "Germany West Central Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
@@ -473,21 +327,93 @@
                 "assignPermissions": true
             }
         },
-        "northEuropeEventHub": {
+        "germanyNorthEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "North Europe Event hub where data will be sent to",
+                "displayName": "Germany North Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northEuropeEventHubRuleId": {
+        "germanyNorthEventHubRuleId": {
             "type": "String",
             "metadata": {
-                "displayName": "North Europe Event Hub Authorization Rule Id",
-                "description": "The North Europe Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "displayName": "Germany North Event Hub Authorization Rule Id",
+                "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
                 "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
                 "assignPermissions": true
             }
+        },
+        "appServiceHTTPLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service HTTP Logging ",
+                "description": "Whether to enable Web server logs - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceConsoleLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service Console Logging ",
+                "description": "Whether to log 'Standard output and standard errors' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceAppLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service Application Logging ",
+                "description": "Whether to log Application activity - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceFileAuditLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service File Audit Logging ",
+                "description": "Whether to log 'File changes via FTP and Kudu' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "appServiceAuditLogs": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable App Service Audit Logging ",
+                "description": "Whether to log 'Login activity via FTP and Kudu' - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "allMetrics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable metric monitoring ",
+                "description": "Logs all metrics available to Microsoft.Web/Sites provider - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
         }
     }
 }

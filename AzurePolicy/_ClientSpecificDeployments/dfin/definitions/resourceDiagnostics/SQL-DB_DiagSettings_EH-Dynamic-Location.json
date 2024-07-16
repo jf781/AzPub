@@ -97,7 +97,7 @@
                                 "northCentralUsEventHubName": {
                                     "type": "string"
                                 },
-                                "northCentralUSEventHubName": {
+                                "northCentralUsEventHubRuleId": {
                                     "type": "string"
                                 },
                                 "germanyWestCentralEventHubRuleId": {
@@ -106,10 +106,10 @@
                                 "germanyWestCentralEventHubName": {
                                     "type": "string"
                                 },
-                                "northEuropeEventHubRuleId": {
+                                "germanyNorthEventHubRuleId": {
                                     "type": "string"
                                 },
-                                "northEuropeEventHubName": {
+                                "germanyNorthEventHubName": {
                                     "type": "string"
                                 }
                             },
@@ -123,16 +123,16 @@
                                     "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
                                 },
                                 "northCentralUSEventHub": {
-                                    "eventHubName": "[parameters('northCentralUSEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northCentralUSEventHubRuleId')]"
+                                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
                                 },
                                 "germanyWestCentralEventHub": {
                                     "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
                                     "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
                                 },
-                                "northEuropeEventHub": {
-                                    "eventHubName": "[parameters('northEuropeEventHubName')]",
-                                    "eventHubRuleId": "[parameters('northEuropeEventHubRuleId')]"
+                                "germanyNorthEventHub": {
+                                    "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                                    "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
                                 },
                                 "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
                             },
@@ -245,34 +245,34 @@
                                 "value": "[parameters('profileName')]"
                             },
                             "centralUsEventHubName": {
-                                "value": "[parameters('centralUsEventHub')]"
+                                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
                             },
                             "centralUsEventHubRuleId": {
                                 "value": "[parameters('centraUsEventHubRuleId')]"
                             },
                             "eastUs2EventHubName": {
-                                "value": "[parameters('eastUs2EventHub')]"
+                                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
                             },
                             "eastUs2EventHubRuleId": {
                                 "value": "[parameters('eastUs2EventHubRuleId')]"
                             },
                             "northCentralUsEventHubName": {
-                                "value": "[parameters('northCentralUsEventHub')]"
-                            },
-                            "northCentralUsEventHubRuleId": {
-                                "value": "[parameters('northCentraUsEventHubRuleId')]"
+                                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
                             },
                             "germanyWestCentralEventHubRuleId": {
                                 "value": "[parameters('germanyWestCentralEventHubRuleId')]"
                             },
+                            "northCentralUsEventHubRuleId": {
+                                "value": "[parameters('northCentralUsEventHubRuleId')]"
+                            },
                             "germanyWestCentralEventHubName": {
                                 "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
                             },
-                            "northEuropeEventHubRuleId": {
-                                "value": "[parameters('northEuropeEventHubRuleId')]"
+                            "germanyNorthEventHubRuleId": {
+                                "value": "[parameters('germanyNorthEventHubRuleId')]"
                             },
-                            "northEuropeEventHubName": {
-                                "value": "[last(split(parameters('northEuropeEventHub'),'/'))]"
+                            "germanyNorthEventHubName": {
+                                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
                             }
                         }
                     }
@@ -281,6 +281,19 @@
         }
     },
     "parameters": {
+        "effect": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Effect",
+                "description": "The effect determines what happens when the policy rule is evaluated to match"
+            },
+            "allowedValues": [
+                "Audit",
+                "Deny",
+                "deployIfNotExists"
+            ],
+            "defaultValue": "Audit"
+        },
         "profileName": {
             "type": "String",
             "metadata": {
@@ -448,7 +461,7 @@
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northCentraUsEventHubRuleId": {
+        "northCentralUsEventHubRuleId": {
             "type": "String",
             "metadata": {
                 "displayName": "North Central US Event Hub Authorization Rule Id",
@@ -460,7 +473,7 @@
         "germanyWestCentralEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "Japan East Event hub where data will be sent to",
+                "displayName": "Germany West Central Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
@@ -473,18 +486,18 @@
                 "assignPermissions": true
             }
         },
-        "northEuropeEventHub": {
+        "germanyNorthEventHub": {
             "type": "string",
             "metadata": {
-                "displayName": "North Europe Event hub where data will be sent to",
+                "displayName": "Germany North Event hub where data will be sent to",
                 "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
             }
         },
-        "northEuropeEventHubRuleId": {
+        "germanyNorthEventHubRuleId": {
             "type": "String",
             "metadata": {
-                "displayName": "North Europe Event Hub Authorization Rule Id",
-                "description": "The North Europe Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "displayName": "Germany North Event Hub Authorization Rule Id",
+                "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
                 "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
                 "assignPermissions": true
             }

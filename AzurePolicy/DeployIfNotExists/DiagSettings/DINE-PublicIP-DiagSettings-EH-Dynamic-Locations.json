@@ -1,0 +1,335 @@
+{
+    "mode": "Indexed",
+    "policyRule": {
+      "if": {
+          "field": "type",
+          "equals": "Microsoft.Network/publicIPAddresses"
+      },
+      "then": {
+          "effect": "deployIfNotExists",
+          "details": {
+              "type": "Microsoft.Insights/diagnosticSettings",
+              "existenceCondition": {
+                  "allOf": [
+                      {
+                          "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                          "equals": "[parameters('LogsEnabled')]"
+                      },
+                      {
+                          "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                          "equals": "[parameters('MetricsEnabled')]"
+                      },
+                      {
+                          "field": "Microsoft.Insights/diagnosticSettings/workspaceId",
+                          "equals": "[parameters('logAnalytics')]"
+                      }
+                  ]
+              },
+              "roleDefinitionIds": [
+                  "/providers/Microsoft.Authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+              ],
+              "deployment": {
+                  "properties": {
+                      "mode": "incremental",
+                      "template": {
+                          "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                          "contentVersion": "1.0.0.0",
+                          "parameters": {
+                              "name": {
+                                  "type": "string"
+                              },
+                              "location": {
+                                  "type": "string"
+                              },
+                              "logAnalytics": {
+                                  "type": "string"
+                              },
+                              "ddoSProtectionNotificationsEnabled": {
+                                  "type": "string"
+                              },
+                              "ddoSMitigationFlowLogsEnabled": {
+                                  "type": "string"
+                              },
+                              "ddoSMitigationReportsEnabled": {
+                                  "type": "string"
+                              },
+                              "profileName": {
+                                  "type": "string"
+                              },
+                              "centralUsEventHubName": {
+                                  "type": "string"
+                              },
+                              "centralUsEventHubRuleId": {
+                                  "type": "string"
+                              },
+                              "eastUs2EventHubName": {
+                                  "type": "string"
+                              },
+                              "eastUs2EventHubRuleId": {
+                                  "type": "string"
+                              },
+                              "northCentralUsEventHubName": {
+                                  "type": "string"
+                              },
+                              "northCentralUSEventHubName": {
+                                  "type": "string"
+                              },
+                              "germanyWestCentralEventHubRuleId": {
+                                  "type": "string"
+                              },
+                              "germanyWestCentralEventHubName": {
+                                  "type": "string"
+                              },
+                              "eastAsiaEventHubRuleId": {
+                                  "type": "string"
+                              },
+                              "eastAsiaEventHubName": {
+                                  "type": "string"
+                              }
+                          },
+                          "variables": {
+                              "centralUsEventHub": {
+                                  "eventHubName": "[parameters('centralUsEventHubName')]",
+                                  "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                              },
+                              "eastUs2EventHub": {
+                                  "eventHubName": "[parameters('eastUs2EventHubName')]",
+                                  "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                              },
+                              "northCentralUSEventHub": {
+                                  "eventHubName": "[parameters('northCentralUSEventHubName')]",
+                                  "eventHubRuleId": "[parameters('northCentralUSEventHubRuleId')]"
+                              },
+                              "germanyWestCentralEventHub": {
+                                  "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
+                                  "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
+                              },
+                              "eastAsiaEventHub": {
+                                  "eventHubName": "[parameters('eastAsiaEventHubName')]",
+                                  "eventHubRuleId": "[parameters('eastAsiaEventHubRuleId')]"
+                              },
+                              "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+                          },
+                          "resources": [
+                              {
+                                  "type": "Microsoft.Network/publicIPAddresses/providers/diagnosticSettings",
+                                  "apiVersion": "2017-05-01-preview",
+                                  "name": "[concat(parameters('name'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                                  "dependsOn": [],
+                                  "properties": {
+                                      "eventHubName": "[variables('eventHub').eventHubName]",
+                                      "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                                      "logs": [
+                                          {
+                                              "category": "DDoSProtectionNotifications",
+                                              "enabled": "[parameters('ddoSProtectionNotificationsEnabled')]"
+                                          },
+                                          {
+                                              "category": "DDoSMitigationFlowLogs",
+                                              "enabled": "[parameters('ddoSMitigationFlowLogsEnabled')]"
+                                          },
+                                          {
+                                              "category": "DDoSMitigationReports",
+                                              "enabled": "[parameters('ddoSMitigationReportsEnabled')]"
+                                          }
+                                      ]
+                                  }
+                              }
+                          ],
+                          "outputs": {
+                              "policy": {
+                                  "type": "string",
+                                  "value": "[concat('Configured diagnostic settings to be sent to EventHub ', variables('eventHub').eventHubName, 'for Public IP ', parameters('name'),'.')]"
+                              }
+                          }
+                      },
+                      "parameters": {
+                          "name": {
+                              "value": "[field('name')]"
+                          },
+                          "location": {
+                            "value": "[field('location')]"
+                          },
+                          "ddoSProtectionNotificationsEnabled": {
+                              "value": "[parameters('ddoSProtectionNotificationsEnabled')]"
+                          },
+                          "ddoSMitigationFlowLogsEnabled": {
+                              "value": "[parameters('ddoSMitigationFlowLogsEnabled')]"
+                          },
+                          "ddoSMitigationReportsEnabled": {
+                            "value": "[parameters('ddoSMitigationReportsEnabled')]"
+                          },
+                          "profileName": {
+                              "value": "[parameters('profileName')]"
+                          },
+                          "centralUsEventHubName": {
+                            "value": "[parameters('centralUsEventHub')]"
+                          },
+                          "centralUsEventHubRuleId": {
+                              "value": "[parameters('centraUsEventHubRuleId')]"
+                          },
+                          "eastUs2EventHubName": {
+                              "value": "[parameters('eastUs2EventHub')]"
+                          },
+                          "eastUs2EventHubRuleId": {
+                              "value": "[parameters('eastUs2EventHubRuleId')]"
+                          },
+                          "northCentralUsEventHubName": {
+                              "value": "[parameters('northCentralUsEventHub')]"
+                          },
+                          "northCentralUsEventHubRuleId": {
+                              "value": "[parameters('northCentraUsEventHubRuleId')]"
+                          },
+                          "germanyWestCentralEventHubRuleId": {
+                              "value": "[parameters('germanyWestCentralEventHubRuleId')]"
+                          },
+                          "germanyWestCentralEventHubName": {
+                              "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
+                          },
+                          "eastAsiaEventHubRuleId": {
+                              "value": "[parameters('eastAsiaEventHubRuleId')]"
+                          },
+                          "eastAsiaEventHubName": {
+                              "value": "[last(split(parameters('eastAsiaEventHub'),'/'))]"
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  },
+    "parameters": {
+        "centralUsEventHub": {
+          "type": "string",
+          "metadata": {
+              "displayName": "Central US Event hub where data will be sent to",
+              "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+          }
+        },
+        "centraUsEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Central US Event Hub Authorization Rule Id",
+                "description": "The Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastUs2EventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East US 2 Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastUs2EventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East US 2 Event Hub Authorization Rule Id",
+                "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "northCentralUsEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Central US Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "northCentraUsEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "North Central US Event Hub Authorization Rule Id",
+                "description": "The North Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "germanyWestCentralEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Japan East Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "germanyWestCentralEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Germany West Central Event Hub Authorization Rule Id",
+                "description": "The Germany West Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastAsiaEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East Asia Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastAsiaEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East Asia Event Hub Authorization Rule Id",
+                "description": "The East Asia Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Diagnostic setting name",
+                "description": "Profile name for the Azure diagnostic settings resource"
+            }
+        },
+        "logAnalytics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Analytics workspace",
+                "description": "The target Log Analytics workspace for the diagnostic settings",
+                "strongType": "omsWorkspace",
+                "assignPermissions": true
+            }
+        },
+        "ddoSProtectionNotificationsEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable DDoS Protection Notification Logs",
+                "description": "Enable Logs - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "ddoSMitigationFlowLogsEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable DDoS Mitigation Flow logs",
+                "description": "Enable Logs - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "False"
+          },
+          "ddoSMitigationReportsEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable DDoS Mitigation Report logs",
+                "description": "Enable Logs - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "False"
+        }
+    }
+}

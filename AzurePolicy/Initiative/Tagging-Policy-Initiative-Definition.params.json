@@ -1,0 +1,153 @@
+{
+  "effect": {
+      "type": "String",
+      "metadata": {
+          "displayName": "Effect",
+          "description": "Require "
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny"
+      ],
+      "defaultValue": "Audit"
+  },
+  "mandatoryTagKey1": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 1",
+        "description": "Mandatory Tag Key 1"
+    },
+    "defaultValue": "environment"
+  },
+  "mandatoryTagValue1":{
+    "type": "Array",
+    "metadata": {
+      "displayName": "Mandatory Tag Key 1 - Tag Values",
+      "description": "Required values for Mandatory Tag Key 1"
+    },
+    "defaultValue": [
+      "production",
+      "stage",
+      "development",
+      "test",
+      "dr"
+    ]
+  },
+  "mandatoryTagKey2": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 2",
+        "description": "Mandatory Tag Key 2"
+    },
+    "defaultValue": "cost-center"
+  },
+  "mandatoryTagKey3": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 3",
+        "description": "Mandatory Tag Key 3"
+    },
+    "defaultValue": "product-owner"
+  },
+  "mandatoryTagValue3":{
+    "type": "Array",
+    "metadata": {
+      "displayName": "Mandatory Tag Key 3 - Tag Values",
+      "description": "Required values for Mandatory Tag Key 3"
+    },
+    "defaultValue": [
+      "biz unit 1",
+      "biz unit 2",
+      "biz unit 3"
+    ]
+  },
+  "mandatoryTagKey4": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 4",
+        "description": "Mandatory Tag Key 4"
+    },
+    "defaultValue": "workload-owner"
+  },
+  "mandatoryTagKey5": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 5",
+        "description": "Mandatory Tag Key 5"
+    },
+    "defaultValue": "workload-infra-owner"
+  },
+  "mandatoryTagKey6": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 6",
+        "description": "Mandatory Tag Key 6"
+    },
+    "defaultValue": "data-classification"
+  },
+  "mandatoryTagValue6":{
+    "type": "Array",
+    "metadata": {
+      "displayName": "Mandatory Tag Key 6 - Tag Values",
+      "description": "Required values for Mandatory Tag Key 6"
+    },
+    "defaultValue": [
+      "confidential",
+      "restricted",
+      "internal",
+      "public"
+    ]
+  },
+  "mandatoryTagKey7": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 7",
+        "description": "Mandatory Tag Key 7"
+    },
+    "defaultValue": "app-name"
+  },
+  "mandatoryTagKey8": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 8",
+        "description": "Mandatory Tag Key 8"
+    },
+    "defaultValue": "product-name"
+  },
+  "mandatoryTagKey9": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 9",
+        "description": "Mandatory Tag Key 9"
+    },
+    "defaultValue": "region"
+  },
+  "mandatoryTagValue9":{
+    "type": "Array",
+    "metadata": {
+      "displayName": "Mandatory Tag Key 9 - Tag Values",
+      "description": "Required values for Mandatory Tag Key 9"
+    },
+    "defaultValue": [
+      "East US 2",
+      "East US",
+      "Central US",
+      "North Central US"
+    ]
+  },
+  "mandatoryTagKey10": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 10",
+        "description": "Mandatory Tag Key 10"
+    },
+    "defaultValue": "deployment-date"
+  },"mandatoryTagKey11": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Mandatory Tag Key 11",
+        "description": "Mandatory Tag Key 11"
+    },
+    "defaultValue": "end-of-life"
+  }
+}

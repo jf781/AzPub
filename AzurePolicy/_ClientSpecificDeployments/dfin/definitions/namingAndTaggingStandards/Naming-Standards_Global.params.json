@@ -1,0 +1,53 @@
+{
+  "resourceType": {
+    "type": "String",
+    "metadata": {
+      "displayName": "Resource type",
+      "description": "Resource type to enforce naming pattern.",
+      "strongType": "resourceTypes"
+    }
+  },
+  "resourceAbbreviation": {
+    "type": "String",
+    "metadata": {
+      "displayName": "Resource type abbreviation",
+      "description": "Abbreviation of resource type based upon naming policy"
+    }
+  },
+  "companyIdentifierAcronyms": {
+    "type": "Array",
+    "metadata": {
+      "displayName": "Company Name Identifier Acronym",
+      "description": "An identifier to help ensure resource names are globally unique."
+    },
+    "defaultValue": [
+      "dfin",
+      "df"
+    ]
+  },
+  "environmentAcronyms": {
+    "type": "Array",
+    "metadata": {
+      "displayName": "Acronyms from the naming policy to signify which environment the resource resides within",
+      "description": "The environment the resource belongs too"
+    },
+    "defaultValue": [
+      "prd",
+      "dev",
+      "qa",
+      "sbx"
+    ]
+  },
+  "effect": {
+    "type": "String",
+    "metadata": {
+      "displayName": "Effect",
+      "description": "The effect determines what happens when the policy rule is evaluated to match"
+    },
+    "allowedValues": [
+      "Audit",
+      "Deny"
+    ],
+    "defaultValue": "Audit"
+  }
+}

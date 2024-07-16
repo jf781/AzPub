@@ -1,0 +1,396 @@
+{
+  "effect": {
+      "type": "String",
+      "metadata": {
+          "displayName": "Effect",
+          "description": "required value for Cost Center tag"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny"
+      ],
+      "defaultValue": "Audit"
+  },
+  "companyIdentifierAcronyms": {
+    "type": "Array",
+    "metadata": {
+        "displayName": "Company Identifier Prefix Acronym",
+        "description": "Acronym to be used to help ensure global resources are unique to the org"
+    },
+    "defaultValue": [
+      "dfin",
+      "df"
+    ]
+  },
+  "regionPrefixAcronyms":{
+    "type": "Array",
+    "metadata": {
+      "displayName": "Acronyms from the naming policy to signify which region the resource resides within",
+      "description": "The region the resource resides within"
+    },
+    "defaultValue": [
+      "use",
+      "use2",
+      "usc",
+      "usnc"
+    ]
+  },
+  "environmentAcronyms": {
+    "type": "Array",
+    "metadata": {
+      "displayName": "Acronyms from the naming policy to signify which environment the resource resides within",
+      "description": "The environment the resource belongs too"
+    },
+    "defaultValue": [
+      "prd",
+      "dev",
+      "qa",
+      "sbx"
+    ]
+  },
+  "singleCharacterEnvironmentAcronyms": {
+    "type": "Array",
+    "metadata": {
+      "displayName": "Single character acronyms from the naming policy to signify which environment the resource resides within",
+      "description": "The environment the resource belongs too"
+    },
+    "defaultValue": [
+      "p",
+      "d",
+      "q",
+      "x"
+    ]
+  },
+  "rgPrefixAcronym": {
+      "type": "String",
+      "metadata": {
+          "displayName": "Resource Group Prefix Acronym",
+          "description": "Acronym to be used for resource group prefixes"
+      },
+      "defaultValue": "rg"
+  },
+  "lawsPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Log Analytic Workspace Prefix Acronym",
+        "description": "Acronym to be used for log analytic workspace prefixes"
+    },
+    "defaultValue": "log"
+  },
+  "kvPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Key Vault Prefix Acronym",
+        "description": "Acronym to be used for key vault prefixes"
+    },
+    "defaultValue": "kv"
+  },
+  "aaPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Automation Account Prefix Acronym",
+        "description": "Acronym to be used for automation accounts prefixes"
+    },
+    "defaultValue": "aa"
+  },
+  "asrPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Recovery Services Vault Prefix Acronym",
+        "description": "Acronym to be used for Azure recovery services vault prefixes"
+    },
+    "defaultValue": "rsv"
+  },
+  "sbPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Service Bus Prefix Acronym",
+        "description": "Acronym to be used for service bus prefixes"
+    },
+    "defaultValue": "sb"
+  },
+  "idPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "User Managed Identity Prefix Acronym",
+        "description": "Acronym to be used for user managed identity prefixes"
+    },
+    "defaultValue": "id"
+  },
+  "appPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Web App Prefix Acronym",
+        "description": "Acronym to be used for web app prefixes"
+    },
+    "defaultValue": "app"
+  },
+  "webAppType": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Web App Type Prefix",
+        "description": "Acronym to be used for web app prefixes"
+    },
+    "defaultValue": "app"
+  },
+  "funcPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Function App Prefix Acronym",
+        "description": "Acronym to be used for function app prefixes"
+    },
+    "defaultValue": "func"
+  },
+  "functionAppType": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Function App",
+        "description": "Acronym to be used for web app prefixes"
+    },
+    "defaultValue": "functionapp"
+  },
+  "aspPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "App Service Plan Prefix Acronym",
+        "description": "Acronym to be used for app service plan prefixes"
+    },
+    "defaultValue": "asp"
+  },
+  "vmPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Virtual Machine Prefix Acronym",
+        "description": "Acronym to be used for virtual machine prefixes"
+    },
+    "defaultValue": "vm"
+  },
+  "vmGuestOsType": {
+    "type": "array",
+    "metadata": {
+        "displayName": "Virtual Machine Prefix Acronym",
+        "description": "Acronym to be used for virtual machine prefixes"
+    },
+    "defaultValue": [
+      "w",
+      "l",
+      "u"
+    ]
+  },
+  "vmssPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Virtual Machine scale set Prefix Acronym",
+        "description": "Acronym to be used for virtual machine scale sets prefixes"
+    },
+    "defaultValue": "vmss"
+  },
+  "aksPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Kubernetes Service Prefix Acronym",
+        "description": "Acronym to be used for azure kubernetes service prefixes"
+    },
+    "defaultValue": "aks"
+  },
+  "kafkaPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "HD Insight Cluster Prefix Acronym",
+        "description": "Acronym to be used for HD insight cluster (Kafka) prefixes"
+    },
+    "defaultValue": "kafka"
+  },
+  "availPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Availability Set Prefix Acronym",
+        "description": "Acronym to be used for availability set prefixes"
+    },
+    "defaultValue": "avail"
+  },
+  "stPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Storage Account Prefix Acronym",
+        "description": "Acronym to be used for storage account prefixes"
+    },
+    "defaultValue": "st"
+  },
+  "diskPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Managed Disk Prefix Acronym",
+        "description": "Acronym to be used for managed disk prefixes"
+    },
+    "defaultValue": "disk"
+  },
+  "sqlPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure SQL Database Server Prefix Acronym",
+        "description": "Acronym to be used for Azure SQL database server prefixes"
+    },
+    "defaultValue": "sql"
+  },
+  "psqlPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Postgres SQL DB Prefix Acronym",
+        "description": "Acronym to be used for Azure Postgres SQL database server prefixes"
+    },
+    "defaultValue": "psql"
+  },
+  "acrPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Container Registry Prefix Acronym",
+        "description": "Acronym to be used for Azure container registry prefixes"
+    },
+    "defaultValue": "acr"
+  },
+  "evhPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Event Hub Prefix Acronym",
+        "description": "Acronym to be used for event hub prefixes"
+    },
+    "defaultValue": "evh"
+  },
+  "logicPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Logic App Prefix Acronym",
+        "description": "Acronym to be used for  prefixes"
+    },
+    "defaultValue": "logic"
+  },
+  "cosmosPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Cosmos Database Prefix Acronym",
+        "description": "Acronym to be used for cosmos database prefixes"
+    },
+    "defaultValue": "cosmos"
+  },
+  "vnetPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Virtual network Prefix Acronym",
+        "description": "Acronym to be used for virtual networks prefixes"
+    },
+    "defaultValue": "vnet"
+  },
+  "vngPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Virtual Network Gateway Prefix Acronym",
+        "description": "Acronym to be used for virtual network gateway prefixes"
+    },
+    "defaultValue": "vng"
+  },
+  "lgwPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Local Network Gateway Prefix Acronym",
+        "description": "Acronym to be used for local network gateway prefixes"
+    },
+    "defaultValue": "lgw"
+  },
+  "cnPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Connection Prefix Acronym",
+        "description": "Acronym to be used for Azure connection prefixes"
+    },
+    "defaultValue": "cn"
+  },
+  "nicPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Network Interface Prefix Acronym",
+        "description": "Acronym to be used for  prefixes"
+    },
+    "defaultValue": "nic"
+  },
+  "pipPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Public IP Address Prefix Acronym",
+        "description": "Acronym to be used for public IP address prefixes"
+    },
+    "defaultValue": "pip"
+  },
+  "nsgPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Network Security Group Prefix Acronym",
+        "description": "Acronym to be used for network security group prefixes"
+    },
+    "defaultValue": "nsg"
+  },
+  "rtPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "User Defined Route Table Prefix Acronym",
+        "description": "Acronym to be used for user defined route table  prefixes"
+    },
+    "defaultValue": "rt"
+  },
+  "bastPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Bastion Host Prefix Acronym",
+        "description": "Acronym to be used for bastion host prefixes"
+    },
+    "defaultValue": "bast"
+  },
+  "lbPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Load Balancer Prefix Acronym",
+        "description": "Acronym to be used for lb prefixes"
+    },
+    "defaultValue": "lb"
+  },
+  "agwPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Application Gateway Prefix Acronym",
+        "description": "Acronym to be used for application gateway prefixes"
+    },
+    "defaultValue": "agw"
+  },
+  "afwPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Firewall Prefix Acronym",
+        "description": "Acronym to be used for Azure firewall prefixes"
+    },
+    "defaultValue": "afw"
+  },
+  "ddosPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure DDoS Protection Plan Prefix Acronym",
+        "description": "Acronym to be used for Azure DDos protection plan prefixes"
+    },
+    "defaultValue": "ddos"
+  },
+  "fdPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Front Door Prefix Acronym",
+        "description": "Acronym to be used for Azure front door  prefixes"
+    },
+    "defaultValue": "fd"
+  },
+  "trafPrefixAcronym": {
+    "type": "String",
+    "metadata": {
+        "displayName": "Azure Traffic Manager Prefix Acronym",
+        "description": "Acronym to be used for Azure traffic manager prefixes"
+    },
+    "defaultValue": "traf"
+  }
+}

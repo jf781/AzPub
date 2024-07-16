@@ -1,0 +1,506 @@
+{
+  "mode": "all",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "in": [
+        "Microsoft.Storage/storageAccounts"
+      ]
+    },
+    "then": {
+      "effect": "deployIfNotExists",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "existenceCondition": {
+          "allOf": [
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+              "equals": "[parameters('metricTransaction')]"
+            },
+            {
+              "count": {
+                "field": "Microsoft.Insights/diagnosticSettings/logs[*]",
+                "where": {
+                  "field": "Microsoft.Insights/diagnosticSettings/logs[*].enabled",
+                  "equals": true
+                }
+              },
+              "greaterOrEquals": 1
+            },
+            {
+              "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+              "like": "*"
+            }
+          ]
+        },
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "profileName": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "metricTransaction": {
+                  "type": "string"
+                },
+                "metricCapacity": {
+                  "type": "string"
+                },
+                "storageRead": {
+                  "type": "string"
+                },
+                "storageWrite": {
+                  "type": "string"
+                },
+                "storageDelete": {
+                  "type": "string"
+                },
+                "centralUsEventHubName": {
+                  "type": "string"
+                },
+                "centralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "eastUs2EventHubName": {
+                    "type": "string"
+                },
+                "eastUs2EventHubRuleId": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubName": {
+                    "type": "string"
+                },
+                "northCentralUSEventHubName": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubName": {
+                    "type": "string"
+                },
+                "northEuropeEventHubRuleId": {
+                    "type": "string"
+                },
+                "northEuropeEventHubName": {
+                    "type": "string"
+                }
+              },
+              "variables": {
+                "centralUsEventHub": {
+                    "eventHubName": "[parameters('centralUsEventHubName')]",
+                    "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                },
+                "eastUs2EventHub": {
+                    "eventHubName": "[parameters('eastUs2EventHubName')]",
+                    "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                },
+                "northCentralUSEventHub": {
+                    "eventHubName": "[parameters('northCentralUSEventHubName')]",
+                    "eventHubRuleId": "[parameters('northCentralUSEventHubRuleId')]"
+                },
+                "germanyWestCentralEventHub": {
+                    "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
+                    "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
+                },
+                "northEuropeEventHub": {
+                    "eventHubName": "[parameters('northEuropeEventHubName')]",
+                    "eventHubRuleId": "[parameters('northEuropeEventHubRuleId')]"
+                },
+                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.storage/storageAccounts/blobServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]"
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]"
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/fileServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]"
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]"
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/tableServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]"
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]"
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/queueServices/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/default/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]"
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]"
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "StorageRead",
+                        "enabled": "[parameters('storageRead')]"
+                      },
+                      {
+                        "category": "StorageWrite",
+                        "enabled": "[parameters('storageWrite')]"
+                      },
+                      {
+                        "category": "StorageDelete",
+                        "enabled": "[parameters('storageDelete')]"
+                      }
+                    ]
+                  }
+                },
+                {
+                  "type": "Microsoft.storage/storageAccounts/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "Transaction",
+                        "enabled": "[parameters('metricTransaction')]"
+                      },
+                      {
+                        "category": "Capacity",
+                        "enabled": "[parameters('metricCapacity')]"
+                      }
+                    ],
+                    "logs": []
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat(parameters('resourceName'),' - Is now sending diagnostic logs to EventHub ', variables('eventHub').eventHubName]"
+                }
+              }
+            },
+            "parameters": {
+              "location": {
+                "value": "[field('location')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "centralUsEventHubName": {
+                "value": "[parameters('centralUsEventHub')]"
+              },
+              "centralUsEventHubRuleId": {
+                  "value": "[parameters('centraUsEventHubRuleId')]"
+              },
+              "eastUs2EventHubName": {
+                  "value": "[parameters('eastUs2EventHub')]"
+              },
+              "eastUs2EventHubRuleId": {
+                  "value": "[parameters('eastUs2EventHubRuleId')]"
+              },
+              "northCentralUsEventHubName": {
+                  "value": "[parameters('northCentralUsEventHub')]"
+              },
+              "northCentralUsEventHubRuleId": {
+                  "value": "[parameters('northCentraUsEventHubRuleId')]"
+              },
+              "germanyWestCentralEventHubRuleId": {
+                  "value": "[parameters('germanyWestCentralEventHubRuleId')]"
+              },
+              "germanyWestCentralEventHubName": {
+                  "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
+              },
+              "northEuropeEventHubRuleId": {
+                  "value": "[parameters('northEuropeEventHubRuleId')]"
+              },
+              "northEuropeEventHubName": {
+                  "value": "[last(split(parameters('northEuropeEventHub'),'/'))]"
+              },
+              "metricTransaction": {
+                "value": "[parameters('metricTransaction')]"
+              },
+              "metricCapacity": {
+                "value": "[parameters('metricCapacity')]"
+              },
+              "storageRead": {
+                "value": "[parameters('storageRead')]"
+              },
+              "storageWrite": {
+                "value": "[parameters('storageWrite')]"
+              },
+              "storageDelete": {
+                "value": "[parameters('storageDelete')]"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "profileName": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "centralUsEventHub": {
+      "type": "string",
+      "metadata": {
+          "displayName": "Central US Event hub where data will be sent to",
+          "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+      }
+    },
+    "centraUsEventHubRuleId": {
+      "type": "String",
+      "metadata": {
+          "displayName": "Central US Event Hub Authorization Rule Id",
+          "description": "The Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+          "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+          "assignPermissions": true
+      }
+    },
+    "eastUs2EventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "East US 2 Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastUs2EventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US 2 Event Hub Authorization Rule Id",
+            "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "northCentralUsEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Central US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "northCentraUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "North Central US Event Hub Authorization Rule Id",
+            "description": "The North Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyWestCentralEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Japan East Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyWestCentralEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany West Central Event Hub Authorization Rule Id",
+            "description": "The Germany West Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "northEuropeEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "North Europe Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "northEuropeEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "North Europe Event Hub Authorization Rule Id",
+            "description": "The North Europe Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "metricTransaction": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Transaction Metrics",
+        "description": "Log transaction metrics for the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "metricCapacity": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Capacity Metrics",
+        "description": "Log capacity metrics for the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "storageRead": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Storage Read",
+        "description": "Log the reads from the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "storageWrite": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Storage Write",
+        "description": "Log the writes to the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    },
+    "storageDelete": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Storage Delete",
+        "description": "Log the deletes from the storage account"
+      },
+      "allowedValues": [
+        "true",
+        "false"
+      ],
+      "defaultValue": "true"
+    }
+  }
+}

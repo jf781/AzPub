@@ -1,0 +1,315 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.Network/networkSecurityGroups"
+        },
+        "then": {
+            "effect": "[parameters('effect')]",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "[parameters('profileName')]",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "equals": "true"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                            "like": "*"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/4d97b98b-1d4f-4787-a291-c67834d212e7",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+                ],
+                "deployment": {
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "nsgName": {
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "type": "string"
+                                },
+                                "eventEnabled": {
+                                    "type": "string"
+                                },
+                                "ruleCounterEnabled": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "centralUsEventHubName": {
+                                    "type": "string"
+                                },
+                                "centralUsEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eastUs2EventHubName": {
+                                    "type": "string"
+                                },
+                                "eastUs2EventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "northCentralUsEventHubName": {
+                                    "type": "string"
+                                },
+                                "northCentralUsEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "germanyWestCentralEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "germanyWestCentralEventHubName": {
+                                    "type": "string"
+                                },
+                                "germanyNorthEventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "germanyNorthEventHubName": {
+                                    "type": "string"
+                                }
+                            },
+                            "variables": {
+                                "centralUsEventHub": {
+                                    "eventHubName": "[parameters('centralUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                                },
+                                "eastUs2EventHub": {
+                                    "eventHubName": "[parameters('eastUs2EventHubName')]",
+                                    "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                                },
+                                "northCentralUSEventHub": {
+                                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
+                                },
+                                "germanyWestCentralEventHub": {
+                                    "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
+                                    "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
+                                },
+                                "germanyNorthEventHub": {
+                                    "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                                    "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
+                                },
+                                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Network/networksecuritygroups/providers/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[concat(parameters('nsgName'),'/','Microsoft.Insights/',parameters('profileName'))]",
+                                    "location": "[parameters('location')]",
+                                    "dependsOn": [],
+                                    "properties": {
+                                        "eventHubName": "[variables('eventHub').eventHubName]",
+                                        "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                                        "logs": [
+                                            {
+                                                "category": "NetworkSecurityGroupRuleCounter",
+                                                "enabled": "[parameters('ruleCounterEnabled')]"
+                                            },
+                                            {
+                                                "category": "NetworkSecurityGroupEvent",
+                                                "enabled": "[parameters('eventEnabled')]"
+                                            }   
+                                        ]
+                                    }
+                                }
+                            ],
+                            "output": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('NSG:',parameters('nsgName'),' - Is now sending diagnostic logs to EventHub: ', variables('eventHub').eventHubName, )'.')]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "location": {
+                                "value": "[field('location')]"
+                            },
+                            "nsgName": {
+                                "value": "[field('name')]"
+                            },
+                            "eventEnabled": {
+                                "value": "[parameters('eventEnabled')]"
+                            },
+                            "ruleCounterEnabled": {
+                                "value": "[parameters('ruleCounterEnabled')]"
+                            },
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "centralUsEventHubName": {
+                                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
+                            },
+                            "centralUsEventHubRuleId": {
+                                "value": "[parameters('centraUsEventHubRuleId')]"
+                            },
+                            "eastUs2EventHubName": {
+                                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
+                            },
+                            "eastUs2EventHubRuleId": {
+                                "value": "[parameters('eastUs2EventHubRuleId')]"
+                            },
+                            "northCentralUsEventHubName": {
+                                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
+                            },
+                            "germanyWestCentralEventHubRuleId": {
+                                "value": "[parameters('germanyWestCentralEventHubRuleId')]"
+                            },
+                            "northCentralUsEventHubRuleId": {
+                                "value": "[parameters('northCentralUsEventHubRuleId')]"
+                            },
+                            "germanyWestCentralEventHubName": {
+                                "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
+                            },
+                            "germanyNorthEventHubRuleId": {
+                                "value": "[parameters('germanyNorthEventHubRuleId')]"
+                            },
+                            "germanyNorthEventHubName": {
+                                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "effect": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Effect",
+              "description": "The effect determines what happens when the policy rule is evaluated to match"
+            },
+            "allowedValues": [
+              "Audit",
+              "Deny",
+              "deployIfNotExists"
+            ],
+            "defaultValue": "Audit"
+        },
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setbypolicy"
+        },
+        "eventEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable NSG Event",
+                "description": "Whether to enable NSG Event stream to the Event Hub - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "ruleCounterEnabled": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable NSG Rule Counter",
+                "description": "Whether to enable NSG Rule Count stream to the Event Hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "centralUsEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Central US Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "centraUsEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Central US Event Hub Authorization Rule Id",
+                "description": "The Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "eastUs2EventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "East US 2 Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eastUs2EventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "East US 2 Event Hub Authorization Rule Id",
+                "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "northCentralUsEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Central US Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "northCentralUsEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "North Central US Event Hub Authorization Rule Id",
+                "description": "The North Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "germanyWestCentralEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Germany West Central Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "germanyWestCentralEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Germany West Central Event Hub Authorization Rule Id",
+                "description": "The Germany West Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "germanyNorthEventHub": {
+            "type": "string",
+            "metadata": {
+                "displayName": "Germany North Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "germanyNorthEventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Germany North Event Hub Authorization Rule Id",
+                "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        }
+    }
+}

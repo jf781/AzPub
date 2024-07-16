@@ -1,0 +1,57 @@
+{
+  "if": {
+    "allOf":[
+      {
+          "field": "type",
+          "equals": "[parameters('resourceType')]"
+      },
+      {
+        "field": "kind",
+        "like": "[concat(parameters('webAppType'), '*')]"
+      },
+      {
+        "not": {
+          "allOf": [
+            {
+              "field": "name",
+              "like": "[concat(parameters('resourceAbbreviation'), '*')]"
+            },
+            {
+              "count": {
+                "value": "[parameters('companyIdentifierAcronyms')]",
+                "where": {
+                  "value": "[string(first(skip(split(field('name'), '-'), 1)))]",
+                  "like": "[current()]"
+                }
+              },
+              "greater": 0
+            },
+            {
+              "count": {
+                "value": "[parameters('regionPrefixAcronyms')]",
+                "where": {
+                  "value": "[string(first(skip(split(field('name'), '-'), 2)))]",
+                  "like": "[current()]"
+                }
+              },
+              "greater": 0
+            },
+            {
+              "count": {
+                "value": "[parameters('environmentAcronyms')]",
+                "where": {
+                  "value": "[string(first(skip(split(field('name'), '-'), 3)))]",
+                  "like": "[current()]"
+                }
+              },
+              "greater": 0
+            }
+          ]
+        }
+      } 
+    ]
+  },
+  "then": {
+      "effect": "[parameters('effect')]"
+  }  
+}

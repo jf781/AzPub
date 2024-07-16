@@ -1,0 +1,813 @@
+[
+    {
+        "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+        "parameters": {
+            "resourceType": {
+                "value": "microsoft.resources/subscriptions/resourcegroups"
+            },
+            "resourceAbbreviation": {
+                "value": "[parameters('rgPrefixAcronym')]"
+            },
+            "regionPrefixAcronyms": {
+              "value": "[parameters('regionPrefixAcronyms')]"
+            },
+            "environmentAcronyms": {
+                "value": "[parameters('environmentAcronyms')]"
+            },
+            "effect": {
+                "value": "[parameters('effect')]"
+            }
+        }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.operationalinsights/workspaces"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('lawsPrefixAcronym')]"
+          },
+          "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.keyvault/vaults"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('kvPrefixAcronym')]"
+          }, 
+          "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+        "resourceType": {
+          "value": "microsoft.automation/automationaccounts"
+        },
+        "resourceAbbreviation": {
+          "value": "[parameters('aaPrefixAcronym')"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+          "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.recoveryservices/vaults"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('asrPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+        "resourceType": {
+            "value": "Microsoft.ServiceBus/Namespaces"
+        },
+        "resourceAbbreviation": {
+          "value": "[parameters('sbPrefixAcronym')]"
+        }, 
+        "companyIdentifierAcronyms": {
+          "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.managedidentity/userassignedidentities/federatedidentitycredenti"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('idPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/a4a88880-123c-49b0-b7ec-53607d303782",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.web/sites"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('appPrefixAcronym')]"
+          },
+          "webAppType": {
+            "value": "[parameters('webAppType')]"
+          }, 
+          "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/a4a88880-123c-49b0-b7ec-53607d303782",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.web/sites"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('funcPrefixAcronym')]"
+        },
+        "webAppType": {
+          "value": "[parameters('functionAppType')]"
+        },
+        "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.web/serverfarms"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('aspPrefixAcronym')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/68a74506-58bf-4213-bab3-d928c6e7a565",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.compute/virtualmachines"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('vmPrefixAcronym')]"
+          },
+          "osType": {
+            "value": "[parameters('vmGuestOsType')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('singleCharacterEnvironmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/3d11068b-561f-4dad-8d36-66877d0bd8d3",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.compute/virtualmachinescalesets"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('vmssPrefixAcronym')]"
+        },
+        "osType": {
+          "value": "[parameters('vmGuestOsType')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('singleCharacterEnvironmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.containerservice/managedclusters"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('aksPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+        "resourceType": {
+            "value": "Microsoft.HDInsight/clusters"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('kafkaPrefixAcronym')]"
+        },
+        "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.compute/availabilitysets"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('availPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/30f3632b-8d7f-44be-8b2d-484039fb7571",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.storage/storageaccounts"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('stPrefixAcronym')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/6f4bf5f6-f579-47fa-b8f4-1b0dc268358a",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.compute/disks"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('diskPrefixAcronym')]"
+          },
+          "osType": {
+            "value": "[parameters('vmGuestOsType')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('singleCharacterEnvironmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.sql/servers"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('sqlPrefixAcronym')]"
+        },
+        "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.dbforpostgresql/servers"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('psqlPrefixAcronym')]"
+          },
+          "companyIdentifierAcronyms": {
+              "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/a846ad9a-3284-42ab-8d1e-c8598828d56a",
+      "parameters": {
+        "resourceType": {
+            "value": "Microsoft.ContainerRegistry/registries"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('acrPrefixAcronym')]"
+        },
+        "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.eventhub/namespaces"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('evhPrefixAcronym')]"
+        },
+        "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+          "resourceType": {
+              "value": "Microsoft.Logic/workflows"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('logicPrefixAcronym')]"
+          },
+          "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/93bcf188-134e-4ceb-a617-98dd31f58e65",
+      "parameters": {
+        "resourceType": {
+            "value": "Microsoft.DocumentDb/databaseAccounts"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('cosmosPrefixAcronym')]"
+        },
+        "companyIdentifierAcronyms": {
+          "value": "[parameters('companyIdentifierAcronyms')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/virtualnetworks"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('vnetPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.network/virtualnetworkgateways"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('vngPrefixAcronym')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/localnetworkgateways"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('lgwPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+        "resourceType": {
+            "value": "microsoft.network/connections"
+        },
+        "resourceAbbreviation": {
+            "value": "[parameters('cnPrefixAcronym')]"
+        },
+        "regionPrefixAcronyms": {
+          "value": "[parameters('regionPrefixAcronyms')]"
+        },
+        "environmentAcronyms": {
+            "value": "[parameters('environmentAcronyms')]"
+        },
+        "effect": {
+            "value": "[parameters('effect')]"
+        }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/networkinterfaces"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('nicPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/publicipaddresses"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('pipPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/networksecuritygroups"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('nsgPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/routetables"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('rtPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/bastionhosts"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('bastPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/loadbalancers"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('lbPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/applicationgateways"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('agwPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/azurefirewalls"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('afwPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/4345a3c4-fb03-4c7e-a78b-e4e138b19569",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/ddosprotectionplans"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('ddosPrefixAcronym')]"
+          },
+          "regionPrefixAcronyms": {
+            "value": "[parameters('regionPrefixAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/fde37611-0ac3-40a8-a810-eba286c59798",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/frontdoors"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('fdPrefixAcronym')]"
+          },
+          "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    },
+    {
+      "policyDefinitionId": "/providers/Microsoft.Management/managementGroups/CoPilot/providers/Microsoft.Authorization/policyDefinitions/fde37611-0ac3-40a8-a810-eba286c59798",
+      "parameters": {
+          "resourceType": {
+              "value": "microsoft.network/trafficmanagerprofiles"
+          },
+          "resourceAbbreviation": {
+              "value": "[parameters('trafPrefixAcronym')]"
+          },
+          "companyIdentifierAcronyms": {
+            "value": "[parameters('companyIdentifierAcronyms')]"
+          },
+          "environmentAcronyms": {
+              "value": "[parameters('environmentAcronyms')]"
+          },
+          "effect": {
+              "value": "[parameters('effect')]"
+          }
+      }
+    }
+]

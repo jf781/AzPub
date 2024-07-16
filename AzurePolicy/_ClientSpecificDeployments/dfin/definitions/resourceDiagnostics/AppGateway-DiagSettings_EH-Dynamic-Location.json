@@ -1,0 +1,346 @@
+{
+  "mode": "all",
+  "policyRule": {
+    "if": {
+      "field": "type",
+      "equals": "Microsoft.Network/applicationGateways"
+    },
+    "then": {
+      "effect": "[parameters('effect')]",
+      "details": {
+        "type": "Microsoft.Insights/diagnosticSettings",
+        "roleDefinitionIds": [
+          "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+        ],
+        "deployment": {
+          "properties": {
+            "mode": "incremental",
+            "template": {
+              "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+              "contentVersion": "1.0.0.0",
+              "parameters": {
+                "profileName": {
+                  "type": "string"
+                },
+                "resourceName": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "applicationGatewayAccessLog": {
+                  "type": "string"
+                },
+                "applicationGatewayPerformanceLog": {
+                  "type": "string"
+                },
+                "applicationGatewayFirewallLog": {
+                  "type": "string"
+                },
+                "centralUsEventHubName": {
+                    "type": "string"
+                },
+                "centralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "eastUs2EventHubName": {
+                    "type": "string"
+                },
+                "eastUs2EventHubRuleId": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubName": {
+                    "type": "string"
+                },
+                "northCentralUsEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyWestCentralEventHubName": {
+                    "type": "string"
+                },
+                "germanyNorthEventHubRuleId": {
+                    "type": "string"
+                },
+                "germanyNorthEventHubName": {
+                    "type": "string"
+                },
+                "metrics": {
+                  "type": "string"
+                }
+              },
+              "variables": {
+                "centralUsEventHub": {
+                    "eventHubName": "[parameters('centralUsEventHubName')]",
+                    "eventHubRuleId": "[parameters('centralUsEventHubRuleId')]"
+                },
+                "eastUs2EventHub": {
+                    "eventHubName": "[parameters('eastUs2EventHubName')]",
+                    "eventHubRuleId": "[parameters('eastUs2EventHubRuleId')]"
+                },
+                "northCentralUSEventHub": {
+                    "eventHubName": "[parameters('northCentralUsEventHubName')]",
+                    "eventHubRuleId": "[parameters('northCentralUsEventHubRuleId')]"
+                },
+                "germanyWestCentralEventHub": {
+                    "eventHubName": "[parameters('germanyWestCentralEventHubName')]",
+                    "eventHubRuleId": "[parameters('germanyWestCentralEventHubRuleId')]"
+                },
+                "germanyNorthEventHub": {
+                    "eventHubName": "[parameters('germanyNorthEventHubName')]",
+                    "eventHubRuleId": "[parameters('germanyNorthEventHubRuleId')]"
+                },
+                "eventHub": "[variables(concat(parameters('location'), 'EventHub'))]"
+              },
+              "resources": [
+                {
+                  "type": "Microsoft.Network/applicationGateways/providers/diagnosticSettings",
+                  "apiVersion": "2017-05-01-preview",
+                  "name": "[concat(parameters('resourceName'), '/', 'Microsoft.Insights/', parameters('profileName'))]",
+                  "location": "[parameters('location')]",
+                  "dependsOn": [],
+                  "properties": {
+                    "eventHubName": "[variables('eventHub').eventHubName]",
+                    "eventHubAuthorizationRuleId": "[variables('eventHub').eventHubRuleId]",
+                    "metrics": [
+                      {
+                        "category": "AllMetrics",
+                        "enabled": "[parameters('metrics')]"
+                      }
+                    ],
+                    "logs": [
+                      {
+                        "category": "ApplicationGatewayAccessLog",
+                        "enabled": "[parameters('applicationGatewayAccessLog')]"
+                      },
+                      {
+                        "category": "ApplicationGatewayPerformanceLog",
+                        "enabled": "[parameters('applicationGatewayPerformanceLog')]"
+                      },
+                      {
+                        "category": "ApplicationGatewayFirewallLog",
+                        "enabled": "[parameters('applicationGatewayFirewallLog')]"
+                      }
+                    ]
+                  }
+                }
+              ],
+              "outputs": {
+                "policy": {
+                  "type": "string",
+                  "value": "[concat('Configured diagnostic settings to be sent to  EventHub ', variables('eventHub').eventHubName, 'for Application Gateway Instance ', parameters('resourceName'),'.')]"
+                }
+              }
+            },
+            "parameters": {
+              "profileName": {
+                "value": "[parameters('profileName')]"
+              },
+              "location": {
+                "value": "[field('location')]"
+              },
+              "resourceName": {
+                "value": "[field('name')]"
+              },
+              "metrics": {
+                "value": "[parameters('metrics')]"
+              },
+              "applicationGatewayAccessLog": {
+                "value": "[parameters('applicationGatewayAccessLog')]"
+              },
+              "applicationGatewayPerformanceLog": {
+                "value": "[parameters('applicationGatewayPerformanceLog')]"
+              },
+              "applicationGatewayFirewallLog": {
+                "value": "[parameters('applicationGatewayFirewallLog')]"
+              },
+              "centralUsEventHubName": {
+                "value": "[last(split(parameters('centralUsEventHub'),'/'))]"
+              },
+              "centralUsEventHubRuleId": {
+                "value": "[parameters('centraUsEventHubRuleId')]"
+              },
+              "eastUs2EventHubName": {
+                "value": "[last(split(parameters('eastUs2EventHub'),'/'))]"
+              },
+              "eastUs2EventHubRuleId": {
+                "value": "[parameters('eastUs2EventHubRuleId')]"
+              },
+              "northCentralUsEventHubName": {
+                "value": "[last(split(parameters('northCentralUsEventHub'),'/'))]"
+              },
+              "germanyWestCentralEventHubRuleId": {
+                "value": "[parameters('germanyWestCentralEventHubRuleId')]"
+              },
+              "northCentralUsEventHubRuleId": {
+                "value": "[parameters('northCentralUsEventHubRuleId')]"
+              },
+              "germanyWestCentralEventHubName": {
+                "value": "[last(split(parameters('germanyWestCentralEventHub'),'/'))]"
+              },
+              "germanyNorthEventHubRuleId": {
+                "value": "[parameters('germanyNorthEventHubRuleId')]"
+              },
+              "germanyNorthEventHubName": {
+                "value": "[last(split(parameters('germanyNorthEventHub'),'/'))]"
+              }           
+            }
+          }
+        }
+      }
+    }
+  },
+  "parameters": {
+    "effect": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Effect",
+        "description": "The effect determines what happens when the policy rule is evaluated to match"
+      },
+      "allowedValues": [
+        "Audit",
+        "Deny",
+        "deployIfNotExists"
+      ],
+      "defaultValue": "Audit"
+    },
+    "profileName": {
+      "type": "string",
+      "metadata": {
+        "displayName": "Profile name",
+        "description": "The diagnostic settings profile name"
+      },
+      "defaultValue": "setByPolicy"
+    },
+    "centralUsEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Central US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "centraUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Central US Event Hub Authorization Rule Id",
+            "description": "The Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "eastUs2EventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "East US 2 Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "eastUs2EventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "East US 2 Event Hub Authorization Rule Id",
+            "description": "The East US 2 Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "northCentralUsEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Central US Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "northCentralUsEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "North Central US Event Hub Authorization Rule Id",
+            "description": "The North Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyWestCentralEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Germany West Central Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyWestCentralEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany West Central Event Hub Authorization Rule Id",
+            "description": "The Germany West Central Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "germanyNorthEventHub": {
+        "type": "string",
+        "metadata": {
+            "displayName": "Germany North Event hub where data will be sent to",
+            "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+        }
+    },
+    "germanyNorthEventHubRuleId": {
+        "type": "String",
+        "metadata": {
+            "displayName": "Germany North Event Hub Authorization Rule Id",
+            "description": "The Germany North Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+            "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+            "assignPermissions": true
+        }
+    },
+    "metrics": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Metrics",
+        "description": "Whether to log Application Gateway Access metrics - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "applicationGatewayAccessLog": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Access Logs",
+        "description": "Whether to log Application Gateway Access traffic - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "applicationGatewayPerformanceLog": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Performance Logs",
+        "description": "Whether to log tApplication Gateway Performance data - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    },
+    "applicationGatewayFirewallLog": {
+      "type": "String",
+      "metadata": {
+        "displayName": "Application Gateway Firewall Logs",
+        "description": "Whether to log Application Gateway Firewall activity - True or False"
+      },
+      "allowedValues": [
+        "True",
+        "False"
+      ],
+      "defaultValue": "True"
+    }
+  }
+}

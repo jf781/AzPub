@@ -1,0 +1,302 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.Resources/subscriptions"
+        },
+        "then": {
+            "effect": "[parameters('effect')]",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "centralus",
+                "existenceScope": "subscription",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "equals": "true"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                            "like": "*"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/f25e0fa2-a7c8-4377-a976-54943a77a395",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec",
+                    "/providers/microsoft.authorization/roleDefinitions/92aaf0da-9dab-42b6-94a3-d43ce8d16293"
+                ],
+                "deploymentScope": "subscription",
+                "deployment": {
+                    "location": "centralus",
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "eventHubRuleId": {
+                                    "type": "string"
+                                },
+                                "eventHubName": {
+                                    "type": "string"
+                                },
+                                "logAdministrativeEvents": {
+                                    "type": "string"
+                                },
+                                "logSecurityEvents": {
+                                    "type": "string"
+                                },
+                                "logServiceHealth" : {
+                                    "type": "string"
+                                },
+                                "logAlerts": {
+                                    "type": "string"
+                                },
+                                "logRecomendations": {
+                                    "type": "string"
+                                },
+                                "logPolicy": {
+                                    "type": "string"
+                                },
+                                "logAutoscale": {
+                                    "type": "string"
+                                },
+                                "logResourceHealth":{
+                                    "type": "string"
+                                }
+                            },
+                            "resources": [
+                                {
+                                    "type": "Microsoft.Insights/diagnosticSettings",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "name": "[parameters('profileName')]",
+                                    "location": "global",
+                                    "properties": {
+                                        "eventHubName": "[parameters('eventHubName')]",
+                                        "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
+                                        "logs": [
+                                            {
+                                                "category": "Administrative",
+                                                "enabled": "[parameters('logAdministrativeEvents')]"
+                                            },
+                                            {
+                                                "category": "Security",
+                                                "enabled": "[parameters('logSecurityEvents')]"
+                                            },
+                                            {
+                                                "category": "ServiceHealth",
+                                                "enabled": "[parameters('logServiceHealth')]"
+                                            },
+                                            {
+                                                "category": "Alert",
+                                                "enabled": "[parameters('logAlerts')]"
+                                            },
+                                            {
+                                                "category": "Recommendation",
+                                                "enabled": "[parameters('logRecomendations')]"
+                                            },
+                                            {
+                                                "category": "Policy",
+                                                "enabled": "[parameters('logPolicy')]"
+                                            },
+                                            {
+                                                "category": "Autoscale",
+                                                "enabled": "[parameters('logAutoScale')]"
+                                            },
+                                            {
+                                                "category": "ResourceHealth",
+                                                "enabled": "[parameters('logResourceHealth')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('The Activity Log is sending events to EventHub ', variables('eventHub').eventHubName,'.')]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "eventHubRuleId": {
+                                "value": "[parameters('eventHubRuleId')]"
+                            },
+                            "eventHubName": {
+                                "value": "[last(split(parameters('eventHub'),'/'))]"
+                            },
+                            "logAdministrativeEvents": {
+                                "value": "[parameters('logAdministrativeEvents')]"
+                            },
+                            "logSecurityEvents": {
+                                "value": "[parameters('logSecurityEvents')]"
+                            },
+                            "logServiceHealth": {
+                                "value": "[parameters('logServiceHealth')]"
+                            },
+                            "logAlerts":{
+                                "value": "[parameters('logAlerts')]"
+                            },
+                            "logRecomendations":{
+                                "value": "[parameters('logRecomendations')]"
+                            },
+                            "logPolicy":{
+                                "value": "[parameters('logPolicy')]"
+                            },
+                            "logAutoscale":{
+                                "value": "[parameters('logAutoscale')]"
+                            },
+                            "logResourceHealth":{
+                                "value": "[parameters('logResourceHealth')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "effect": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Effect",
+              "description": "The effect determines what happens when the policy rule is evaluated to match"
+            },
+            "allowedValues": [
+              "Audit",
+              "Deny",
+              "deployIfNotExists"
+            ],
+            "defaultValue": "Audit"
+        },
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setbypolicy"
+        },
+        "EventHub": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event Hub Authorization Rule Id",
+                "description": "The Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "logAdministrativeEvents": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log administrative events",
+                "description": "Whether to stream administrative events to the event hub - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logSecurityEvents": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log security events Metrics",
+                "description": "Whether to stream security events to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logServiceHealth": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log sevice health",
+                "description": "Whether to stream service health to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logAlerts": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Alerts",
+                "description": "Whether to stream alerts to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logRecomendations": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Recomendations",
+                "description": "Whether to stream alerts to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logPolicy": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Policy",
+                "description": "Whether to stream policy events to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logAutoscale": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Autoscale",
+                "description": "Whether to stream autoscale events to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        },
+        "logResourceHealth": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Log Resource Health",
+                "description": "Whether to stream resource health events to the event hub  - True or False"
+            },
+            "allowedValues": [
+                "True",
+                "False"
+            ],
+            "defaultValue": "True"
+        }
+    }
+}

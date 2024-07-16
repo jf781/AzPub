@@ -1,2 +1,2 @@
-## Contains Azure Policie Templates
+## Contains Azure Policies Templates
 

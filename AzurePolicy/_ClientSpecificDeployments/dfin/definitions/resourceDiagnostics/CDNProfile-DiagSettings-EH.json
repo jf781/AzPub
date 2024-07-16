@@ -1,0 +1,185 @@
+{
+    "mode": "All",
+    "policyRule": {
+        "if": {
+            "field": "type",
+            "equals": "Microsoft.Cdn/profiles"
+        },
+        "then": {
+            "effect": "[parameters('effect')]",
+            "details": {
+                "type": "Microsoft.Insights/diagnosticSettings",
+                "name": "centralus",
+                "existenceScope": "subscription",
+                "existenceCondition": {
+                    "allOf": [
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/logs.enabled",
+                            "equals": "[parameters('azureCdnAccessLog')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/metrics.enabled",
+                            "equals": "[parameters('allMetrics')]"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubAuthorizationRuleId",
+                            "like": "*"
+                        },
+                        {
+                            "field": "Microsoft.Insights/diagnosticSettings/eventHubName",
+                            "like": "*"
+                        }
+                    ]
+                },
+                "roleDefinitionIds": [
+                    "/providers/microsoft.authorization/roleDefinitions/ec156ff8-a8d1-4d15-830c-5b80698ca432",
+                    "/providers/microsoft.authorization/roleDefinitions/749f88d5-cbae-40b8-bcfc-e573ddc772fa",
+                    "/providers/microsoft.authorization/roleDefinitions/f526a384-b230-433a-b45c-95f59c4a2dec"
+                ],
+                "deploymentScope": "subscription",
+                "deployment": {
+                    "location": "centralus",
+                    "properties": {
+                        "mode": "incremental",
+                        "template": {
+                            "$schema": "http://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {
+                                "siteName": {
+                                    "type": "string"
+                                },
+                                "profileName": {
+                                    "type": "string"
+                                },
+                                "azureCdnAccessLog": {
+                                    "type": "string"
+                                },
+                                "allMetrics":{
+                                    "type": "string"
+                                },
+                                "eventHubName": {
+                                    "type": "string"
+                                },
+                                "eventHubRuleId": {
+                                    "type": "string"
+                                }
+                            },
+                            "resources": [
+                                {
+                                    "type": "microsoft.cdn/profiles/providers/diagnosticSettings",
+                                    "name": "[concat(parameters('siteName'), '/Microsoft.Insights/', parameters('profileName'))]",
+                                    "apiVersion": "2017-05-01-preview",
+                                    "properties": {
+                                        "eventHubName": "[parameters('eventHubName')]",
+                                        "eventHubAuthorizationRuleId": "[parameters('eventHubRuleId')]",
+                                        "logs": [
+                                            {
+                                                "category": "azureCdnAccessLog",
+                                                "enabled": "[parameters('azureCdnAccessLog')]"
+                                            }
+                                        ],
+                                        "metrics": [
+                                            {
+                                                "category": "AllMetrics",
+                                                "enabled": "[parameters('allMetrics')]"
+                                            }
+                                        ]
+                                    }
+                                }
+                            ],
+                            "outputs": {
+                                "policy": {
+                                    "type": "string",
+                                    "value": "[concat('The CDN Profile is sending events to EventHub ', parameters('eventHubName'),'.')]"
+                                }
+                            }
+                        },
+                        "parameters": {
+                            "profileName": {
+                                "value": "[parameters('profileName')]"
+                            },
+                            "eventHubRuleId": {
+                                "value": "[parameters('eventHubRuleId')]"
+                            },
+                            "eventHubName": {
+                                "value": "[last(split(parameters('eventHub'),'/'))]"
+                            },
+                            "siteName": {
+                                "value": "[field('fullName')]"
+                            },
+                            "azureCdnAccessLog": {
+                                "value":"[parameters('azureCdnAccessLog')]"
+                            },
+                            "allMetrics": {
+                                "value":"[parameters('allMetrics')]"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "parameters": {
+        "effect": {
+            "type": "String",
+            "metadata": {
+              "displayName": "Effect",
+              "description": "The effect determines what happens when the policy rule is evaluated to match"
+            },
+            "allowedValues": [
+              "Audit",
+              "Deny",
+              "deployIfNotExists"
+            ],
+            "defaultValue": "Audit"
+        },
+        "profileName": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Profile name",
+                "description": "The diagnostic settings profile name"
+            },
+            "defaultValue": "setByPolicy"
+        },
+        "EventHub": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event hub where data will be sent to",
+                "strongType": "Microsoft.EventHub/Namespaces/EventHubs"
+            }
+        },
+        "eventHubRuleId": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Event Hub Authorization Rule Id",
+                "description": "The Event Hub authorization rule Id for Azure Diagnostics. The authorization rule needs to be at Event Hub namespace level. e.g. /subscriptions/{subscription Id}/resourceGroups/{resource group}/providers/Microsoft.EventHub/namespaces/{Event Hub namespace}/authorizationrules/{authorization rule}",
+                "strongType": "Microsoft.EventHub/Namespaces/AuthorizationRules",
+                "assignPermissions": true
+            }
+        },
+        "azureCdnAccessLog": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Azure Cdn Access Logging",
+                "description": "Whether to enable Azure Cdn Access Logging - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        },
+        "allMetrics": {
+            "type": "String",
+            "metadata": {
+                "displayName": "Enable metric monitoring ",
+                "description": "Logs all metrics available to Microsoft.Web/Sites provider - True or False"
+            },
+            "allowedValues": [
+                "true",
+                "false"
+            ],
+            "defaultValue": "true"
+        }
+    }
+}
